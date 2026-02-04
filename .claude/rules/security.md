@@ -270,3 +270,72 @@ npm update
 - [ ] Security headers are set (Helmet)
 - [ ] Authentication tokens are properly handled
 - [ ] File uploads are validated and sanitized
+
+## Multi-Agent Security
+
+Security considerations for multi-agent workflows (Claude Code, Codex, Gemini).
+
+### Subagent Constraints
+
+Subagents (Task tool) have full tool access by default. Always specify constraints:
+
+```markdown
+SUBAGENT CONSTRAINTS:
+- Do NOT modify any files
+- Do NOT use Edit or Write tools
+- Return analysis as TEXT ONLY
+- Only use Bash for calling CLI tools
+```
+
+### Protected Files (File Locking)
+
+Files requiring exclusive access via file locking:
+
+- `DESIGN.md` - Architecture decisions
+- `CLAUDE.md` - Project context
+- `AGENTS.md` - Codex context
+- `GEMINI.md` - Gemini context
+
+Use the FileLock class from `.claude/lib/file_lock.py`:
+
+```python
+from file_lock import FileLock
+
+with FileLock('.claude/docs/DESIGN.md'):
+    # Safe to edit - lock automatically released
+    pass
+```
+
+### CLI Tool Sandboxing
+
+When invoking external CLI tools:
+
+```bash
+# Good: Read-only sandbox for analysis
+codex exec --sandbox read-only --full-auto "Review this code"
+
+# Avoid: Write access unless explicitly needed
+codex exec --sandbox workspace-write --full-auto "..."
+```
+
+### Log Security
+
+CLI tool logs (`.claude/logs/cli-tools.jsonl`) are automatically:
+
+- Filtered for sensitive data (API keys, passwords, tokens)
+- Rotated when exceeding 50MB
+- Excluded from git via `.gitignore`
+
+Do NOT:
+- Commit logs to git
+- Share logs without reviewing for secrets
+- Include secrets in prompts
+
+### Security Checklist (Multi-Agent)
+
+- [ ] Subagent constraints are specified in prompts
+- [ ] File locks used for protected files
+- [ ] CLI tools use minimal sandbox permissions
+- [ ] Logs are excluded from git
+- [ ] Secrets are not passed in agent prompts
+- [ ] Research output saved only to `.claude/docs/research/`

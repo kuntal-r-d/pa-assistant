@@ -8,14 +8,30 @@ Logs are stored in .claude/logs/cli-tools.jsonl
 All agents (Claude Code, subagents, Codex, Gemini) can read this log.
 """
 
+from __future__ import annotations
+
 import json
+import logging
 import os
 import re
 import sys
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Setup logging for errors
 LOG_DIR = Path(__file__).parent.parent / "logs"
+ERROR_LOG_FILE = LOG_DIR / "hook-errors.log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    filename=str(ERROR_LOG_FILE),
+    level=logging.WARNING,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+)
+logger = logging.getLogger("log-cli-tools")
+
+# CLI tools log file
 LOG_FILE = LOG_DIR / "cli-tools.jsonl"
 
 
@@ -62,18 +78,87 @@ def truncate_text(text: str, max_length: int = 2000) -> str:
     return text[:max_length] + f"... [truncated, {len(text)} total chars]"
 
 
+# Patterns for sensitive data filtering (compiled for performance)
+SENSITIVE_PATTERNS = [
+    # API keys (common formats)
+    (re.compile(r'(?i)(api[_-]?key|apikey)["\s:=]+["\']?([a-zA-Z0-9_\-]{20,})["\']?'), r'\1="[REDACTED]"'),
+    # Secrets, passwords
+    (re.compile(r'(?i)(secret|password|passwd|pwd)["\s:=]+["\']?([^\s"\']{4,})["\']?'), r'\1="[REDACTED]"'),
+    # Bearer tokens
+    (re.compile(r'(?i)(bearer\s+)([a-zA-Z0-9_\-\.]{10,})'), r'\1[REDACTED]'),
+    # JWT tokens (three base64 segments)
+    (re.compile(r'eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*'), '[REDACTED_JWT]'),
+    # Environment variable secrets
+    (re.compile(r'([A-Z_]*(?:SECRET|TOKEN|KEY|PASSWORD|PASSWD)[A-Z_]*)[=\s]+["\']?([^\s"\']{4,})'), r'\1=[REDACTED]'),
+    # Connection strings with credentials
+    (re.compile(r'(?i)(mongodb\+srv|postgres|mysql|redis)://[^@]+@'), r'\1://[REDACTED]@'),
+    # AWS keys
+    (re.compile(r'(?i)(aws[_-]?access[_-]?key[_-]?id)["\s:=]+["\']?([A-Z0-9]{16,})["\']?'), r'\1="[REDACTED]"'),
+    (re.compile(r'(?i)(aws[_-]?secret[_-]?access[_-]?key)["\s:=]+["\']?([a-zA-Z0-9/+=]{30,})["\']?'), r'\1="[REDACTED]"'),
+]
+
+
+def filter_sensitive_data(text: str) -> str:
+    """Remove sensitive data patterns from text."""
+    if not text:
+        return text
+    result = text
+    for pattern, replacement in SENSITIVE_PATTERNS:
+        result = pattern.sub(replacement, result)
+    return result
+
+
+# Log rotation settings
+MAX_LOG_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB
+MAX_BACKUP_FILES = 5
+
+
+def rotate_log_if_needed() -> None:
+    """Rotate log file if it exceeds size limit."""
+    if not LOG_FILE.exists():
+        return
+
+    try:
+        if LOG_FILE.stat().st_size < MAX_LOG_SIZE_BYTES:
+            return
+
+        # Rotate: .1 -> .2 -> .3 -> .4 -> .5 (delete oldest)
+        for i in range(MAX_BACKUP_FILES - 1, 0, -1):
+            old_backup = LOG_FILE.with_suffix(f".jsonl.{i}")
+            new_backup = LOG_FILE.with_suffix(f".jsonl.{i + 1}")
+            if old_backup.exists():
+                if i + 1 >= MAX_BACKUP_FILES:
+                    old_backup.unlink()  # Delete oldest
+                else:
+                    old_backup.rename(new_backup)
+
+        # Move current to .1
+        backup_1 = LOG_FILE.with_suffix(".jsonl.1")
+        LOG_FILE.rename(backup_1)
+        logger.info(f"Rotated log file to {backup_1}")
+
+    except Exception as e:
+        logger.warning(f"Log rotation failed: {e}")
+
+
 def log_entry(entry: dict) -> None:
-    """Append entry to JSONL log file."""
+    """Append entry to JSONL log file with rotation."""
     LOG_DIR.mkdir(parents=True, exist_ok=True)
+    rotate_log_if_needed()
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 def main() -> None:
+    # Generate trace ID for request correlation
+    trace_id = str(uuid.uuid4())[:8]
+    start_time = datetime.now(timezone.utc)
+
     # Read hook input from stdin
     try:
         hook_input = json.load(sys.stdin)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        logger.error(f"[{trace_id}] Invalid JSON input: {e}")
         return
 
     # Only process Bash tool calls
@@ -113,29 +198,46 @@ def main() -> None:
     exit_code = tool_response.get("exit_code", 0)
     success = exit_code == 0 and bool(output)
 
-    # Create log entry
+    # Calculate latency
+    end_time = datetime.now(timezone.utc)
+    latency_ms = int((end_time - start_time).total_seconds() * 1000)
+
+    # Get session ID from environment if available
+    session_id = os.environ.get("CLAUDE_SESSION_ID", "unknown")
+
+    # Create log entry with trace_id and latency
     entry = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "trace_id": trace_id,
+        "session_id": session_id,
         "tool": tool,
         "model": model,
-        "prompt": truncate_text(prompt),
-        "response": truncate_text(output) if output else "",
+        "prompt": truncate_text(filter_sensitive_data(prompt)),
+        "response": truncate_text(filter_sensitive_data(output)) if output else "",
         "success": success,
         "exit_code": exit_code,
+        "latency_ms": latency_ms,
     }
 
-    log_entry(entry)
+    try:
+        log_entry(entry)
+    except Exception as e:
+        logger.error(f"[{trace_id}] Failed to write log entry: {e}", exc_info=True)
 
     # Output notification (shown to user via hook output)
     print(
         json.dumps(
             {
                 "result": "continue",
-                "message": f"[LOG] {tool.capitalize()} call logged to .claude/logs/cli-tools.jsonl",
+                "message": f"[LOG] {tool.capitalize()} call logged (trace: {trace_id})",
             }
         )
     )
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger.error(f"Hook error: {e}", exc_info=True)
+        sys.exit(0)

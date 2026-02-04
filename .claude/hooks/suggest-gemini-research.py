@@ -6,8 +6,24 @@ Analyzes web search/fetch operations and suggests using Gemini CLI
 for comprehensive research with its larger context window.
 """
 
+from __future__ import annotations
+
 import json
+import logging
 import sys
+from pathlib import Path
+
+# Setup logging
+LOG_DIR = Path(__file__).parent.parent / "logs"
+LOG_FILE = LOG_DIR / "hook-errors.log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    filename=str(LOG_FILE),
+    level=logging.WARNING,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+)
+logger = logging.getLogger("suggest-gemini-research")
 
 # Keywords that suggest deep research would benefit from Gemini
 RESEARCH_INDICATORS = [
@@ -95,8 +111,12 @@ def main():
 
         sys.exit(0)
 
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON input: {e}")
+        sys.exit(0)
+
     except Exception as e:
-        print(f"Hook error: {e}", file=sys.stderr)
+        logger.error(f"Hook error: {e}", exc_info=True)
         sys.exit(0)
 
 

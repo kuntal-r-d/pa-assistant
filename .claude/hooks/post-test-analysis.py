@@ -6,9 +6,25 @@ Analyzes test and build output and suggests Codex consultation
 for debugging complex failures.
 """
 
+from __future__ import annotations
+
 import json
-import sys
+import logging
 import re
+import sys
+from pathlib import Path
+
+# Setup logging
+LOG_DIR = Path(__file__).parent.parent / "logs"
+LOG_FILE = LOG_DIR / "hook-errors.log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    filename=str(LOG_FILE),
+    level=logging.WARNING,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+)
+logger = logging.getLogger("post-test-analysis")
 
 # Commands that run tests or builds
 TEST_BUILD_COMMANDS = [
@@ -135,8 +151,12 @@ def main():
 
         sys.exit(0)
 
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON input: {e}")
+        sys.exit(0)
+
     except Exception as e:
-        print(f"Hook error: {e}", file=sys.stderr)
+        logger.error(f"Hook error: {e}", exc_info=True)
         sys.exit(0)
 
 

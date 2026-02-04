@@ -6,10 +6,26 @@ Triggered after Edit or Write tools modify files.
 Runs ESLint, Prettier, and TypeScript compiler on TypeScript files.
 """
 
+from __future__ import annotations
+
 import json
+import logging
 import os
 import subprocess
 import sys
+from pathlib import Path
+
+# Setup logging
+LOG_DIR = Path(__file__).parent.parent / "logs"
+LOG_FILE = LOG_DIR / "hook-errors.log"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    filename=str(LOG_FILE),
+    level=logging.WARNING,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+)
+logger = logging.getLogger("lint-on-save")
 
 # Input validation constants
 MAX_PATH_LENGTH = 4096
@@ -126,4 +142,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger.error(f"Hook error: {e}", exc_info=True)

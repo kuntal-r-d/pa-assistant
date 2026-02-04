@@ -129,3 +129,36 @@ codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question
 - **Parallel work**: Background subagents enable concurrent tasks
 
 **Don't hesitate to delegate. Subagents + Codex = efficient collaboration.**
+
+## Subagent Constraints (CRITICAL)
+
+**General-purpose subagents have FULL tool access.** Without explicit constraints,
+they may modify files unexpectedly. Always include these constraints for **consultation tasks**:
+
+```markdown
+SUBAGENT CONSTRAINTS:
+- Do NOT modify any files
+- Do NOT use Edit or Write tools
+- Return analysis as TEXT ONLY
+- Only use Bash for calling Codex CLI
+```
+
+### When Subagent CAN Write
+
+Only allow writes when explicitly needed:
+
+| Task Type | Write Allowed | Constraint |
+|-----------|---------------|------------|
+| Consultation (design review, debug analysis) | NO | Text-only return |
+| Implementation (fix code, refactor) | YES | Specify allowed paths |
+| Documentation update | YES | Only `.claude/docs/` |
+
+### Protected Files
+
+These files require extra caution (concurrent access risk):
+- `DESIGN.md` - Architecture decisions
+- `CLAUDE.md` - Project context
+- `AGENTS.md` - Codex context
+- `GEMINI.md` - Gemini context
+
+**Never allow subagents to modify these without explicit user consent.**

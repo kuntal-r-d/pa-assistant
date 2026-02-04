@@ -11,7 +11,7 @@
     }
   },
   "tools": {
-    "sandbox": false,
+    "sandbox": true,
     "autoAccept": false
   },
   "experimental": {

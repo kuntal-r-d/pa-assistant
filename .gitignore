@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+
+# Claude Code - Runtime Artifacts
+.claude/logs/
+.claude/locks/
+.claude/hooks/__pycache__/
+.claude/lib/__pycache__/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if applicable)
+node_modules/
+dist/
+
+# Temporary files
+*.tmp
+*.temp

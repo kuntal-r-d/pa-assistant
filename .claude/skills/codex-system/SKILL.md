@@ -58,12 +58,21 @@ Task tool parameters:
 - prompt: |
     Consult Codex about: {topic}
 
+    SUBAGENT CONSTRAINTS (CRITICAL):
+    - Do NOT modify any files
+    - Do NOT use Edit or Write tools
+    - Return analysis as TEXT ONLY
+    - Only Bash for calling Codex CLI
+
     codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
     {question for Codex}
     " 2>/dev/null
 
     Return CONCISE summary (key recommendation + rationale).
 ```
+
+> **Why constraints?** Subagents have full tool access. Without explicit constraints,
+> they may modify files unexpectedly. Always add SUBAGENT CONSTRAINTS for consultation tasks.
 
 ### Direct Call (Short Questions Only)
 

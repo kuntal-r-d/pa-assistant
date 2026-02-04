@@ -68,11 +68,20 @@ Task tool parameters:
 - prompt: |
     Research: {topic}
 
+    SUBAGENT CONSTRAINTS (CRITICAL):
+    - ONLY modify files in .claude/docs/research/ (to save research output)
+    - Do NOT modify any other files (DESIGN.md, source code, configs)
+    - Return analysis as TEXT to main orchestrator
+    - Only use Bash for calling Gemini CLI
+
     gemini -p "{research question}" 2>/dev/null
 
     Save full output to: .claude/docs/research/{topic}.md
     Return CONCISE summary (5-7 bullet points).
 ```
+
+> **Why constraints?** Subagents have full tool access. Without explicit constraints,
+> they may modify files unexpectedly. Always add SUBAGENT CONSTRAINTS for research tasks.
 
 ### Direct Call (Short Questions Only)
 

@@ -187,3 +187,34 @@ gemini -p "{question}" --output-format json 2>/dev/null
 - **Parallel work**: Background subagents enable concurrent research
 
 **Use Gemini (via subagent) for research, Codex (via subagent) for reasoning, Claude for orchestration.**
+
+## Subagent Constraints (CRITICAL)
+
+**General-purpose subagents have FULL tool access.** Without explicit constraints,
+they may modify files unexpectedly. Always include these constraints for **research tasks**:
+
+```markdown
+SUBAGENT CONSTRAINTS:
+- ONLY modify files in .claude/docs/research/ (to save research output)
+- Do NOT modify any other files (DESIGN.md, source code, configs)
+- Return analysis as TEXT to main orchestrator
+- Only use Bash for calling Gemini CLI
+```
+
+### When Subagent CAN Write
+
+| Task Type | Write Allowed | Constraint |
+|-----------|---------------|------------|
+| Research (library, docs, codebase) | `.claude/docs/research/` only | Save findings there |
+| Analysis (multimodal) | `.claude/docs/research/` only | Save findings there |
+| Other files | NO | Return text only |
+
+### Protected Files
+
+These files require extra caution (concurrent access risk):
+- `DESIGN.md` - Architecture decisions
+- `CLAUDE.md` - Project context
+- `AGENTS.md` - Codex context
+- `GEMINI.md` - Gemini context
+
+**Never allow subagents to modify these without explicit user consent.**
