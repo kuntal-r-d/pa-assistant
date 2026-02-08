@@ -32,62 +32,17 @@
     "Recruiter marketplace or job board creation"
   ],
   "objectives": [
-    {
-      "id": "OBJ-001",
-      "description": "Reduce job search time from 15 hours/week to 3 hours/week (80% reduction)",
-      "metric": "Time spent on job search activities",
-      "target": "≤3 hours/week"
-    },
-    {
-      "id": "OBJ-002",
-      "description": "Increase job discovery from 50 jobs/week to 200+ jobs/week",
-      "metric": "Relevant jobs discovered weekly",
-      "target": "≥200 jobs/week"
-    },
-    {
-      "id": "OBJ-003",
-      "description": "Improve application response rate from 2-5% to 10%+",
-      "metric": "Response rate on applications",
-      "target": "≥10%"
-    },
-    {
-      "id": "OBJ-004",
-      "description": "Maintain zero infrastructure cost with <$5/month AI API budget",
-      "metric": "Monthly operational cost",
-      "target": "<$5/month"
-    }
+    "OBJ-001: Reduce job search time from 15 hours/week to 3 hours/week (80% reduction) - Target: ≤3 hours/week",
+    "OBJ-002: Increase job discovery from 50 jobs/week to 200+ jobs/week - Target: ≥200 jobs/week",
+    "OBJ-003: Improve application response rate from 2-5% to 10%+ - Target: ≥10%",
+    "OBJ-004: Maintain zero infrastructure cost with <$5/month AI API budget - Target: <$5/month"
   ],
   "constraints": [
-    {
-      "id": "CON-001",
-      "type": "technical",
-      "description": "Must run on 8GB RAM minimum",
-      "impact": "Limits LLM model size to 7B quantized"
-    },
-    {
-      "id": "CON-002",
-      "type": "technical",
-      "description": "LinkedIn aggressively blocks automated scrapers using fingerprinting and behavioral analysis",
-      "impact": "Requires stealth automation with human-like behavior patterns, session persistence, and conservative rate limits (20-40 jobs/day)"
-    },
-    {
-      "id": "CON-003",
-      "type": "budget",
-      "description": "Zero infrastructure cost, $5/month AI budget",
-      "impact": "Must use free local LLMs for most tasks"
-    },
-    {
-      "id": "CON-004",
-      "type": "legal",
-      "description": "Must respect job board Terms of Service",
-      "impact": "Implement rate limiting, respect robots.txt"
-    },
-    {
-      "id": "CON-005",
-      "type": "privacy",
-      "description": "All user data must stay local",
-      "impact": "No cloud storage; local PostgreSQL only"
-    }
+    "CON-001 (technical): Must run on 8GB RAM minimum - Impact: Limits LLM model size to 7B quantized",
+    "CON-002 (technical): LinkedIn aggressively blocks automated scrapers using fingerprinting and behavioral analysis - Impact: Requires stealth automation with human-like behavior patterns, session persistence, and conservative rate limits (20-40 jobs/day)",
+    "CON-003 (budget): Zero infrastructure cost, $5/month AI budget - Impact: Must use free local LLMs for most tasks",
+    "CON-004 (legal): Must respect job board Terms of Service - Impact: Implement rate limiting, respect robots.txt",
+    "CON-005 (privacy): All user data must stay local - Impact: No cloud storage; local PostgreSQL only"
   ],
   "requirements": [
     {
@@ -617,5 +572,5 @@
     "Session Persistence": "Maintaining browser state (cookies, localStorage) across automation sessions"
   },
   "createdAt": "2026-02-08T09:00:00Z",
-  "updatedAt": "2026-02-08T12:00:00Z"
+  "updatedAt": "2026-02-08T12:26:39.725Z"
 }
