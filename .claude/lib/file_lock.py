@@ -255,6 +255,7 @@ PROTECTED_FILES = [
     "CLAUDE.md",
     "AGENTS.md",
     "GEMINI.md",
+    "mode.json",  # Session mode state file
 ]
 
 

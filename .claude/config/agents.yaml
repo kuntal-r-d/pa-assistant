@@ -1,0 +1,190 @@
+# Agent Configuration for Multi-Agent Workflow
+# This file defines the available agents and their CLI commands.
+#
+# To add a new agent:
+# 1. Add entry under 'agents' with unique key
+# 2. Specify cli_command, description, and triggers
+# 3. Update session_mode.py to add new AgentMode
+# 4. Update intent_classifier.py to add triggers
+# 5. Update agent-router.py to handle the new agent
+
+version: "1.0"
+
+# Default agent for unmatched intents (when delegation is enabled)
+default_agent: codex
+
+# Minimum confidence threshold for delegation suggestions
+min_confidence: 0.12
+
+# Agent definitions
+agents:
+  # Codex - Cloud-based AI (OpenAI)
+  codex:
+    name: "Codex"
+    type: "cloud"
+    cli_command: "codex exec --model gpt-5.2-codex --sandbox {sandbox} --full-auto"
+    sandbox_modes:
+      read_only: "read-only"
+      write: "workspace-write"
+    description: "Best for design decisions, architecture, debugging, code review"
+    strengths:
+      - "Design and architecture decisions"
+      - "Debugging complex issues"
+      - "Code review and trade-off analysis"
+      - "Implementation planning"
+    triggers:
+      high_weight:  # Weight: 4
+        - "think deeper"
+        - "codex"
+        - "second opinion"
+      medium_weight:  # Weight: 3
+        - "design"
+        - "architecture"
+        - "debug"
+        - "bug"
+        - "deeply"
+      low_weight:  # Weight: 2
+        - "error"
+        - "fix"
+        - "review"
+        - "compare"
+        - "trade-off"
+        - "build"
+        - "implement"
+
+  # Gemini - Cloud-based AI (Google)
+  gemini:
+    name: "Gemini"
+    type: "cloud"
+    cli_command: "gemini -p"
+    description: "Best for research, documentation, large context, multimodal"
+    strengths:
+      - "1M token context window"
+      - "Google Search grounding"
+      - "Multimodal (PDF, video, audio)"
+      - "Documentation research"
+    triggers:
+      high_weight:  # Weight: 4
+        - "gemini"
+        - "pdf"
+        - "video"
+        - "audio"
+        - "entire codebase"
+        - "whole repository"
+      medium_weight:  # Weight: 3
+        - "research"
+        - "investigate"
+        - "look up"
+        - "image"
+      low_weight:  # Weight: 2
+        - "documentation"
+        - "docs"
+        - "library"
+        - "package"
+        - "framework"
+        - "latest"
+        - "repository"
+
+  # Ollama - Local/Free models
+  ollama:
+    name: "Ollama"
+    type: "local"
+    cli_command: "ollama run {model}"
+    default_model: "llama3.2"
+    available_models:
+      - "llama3.2"
+      - "llama3.1"
+      - "codellama"
+      - "mistral"
+      - "deepseek-coder"
+      - "qwen2.5-coder"
+      - "phi3"
+      - "gemma2"
+    description: "Best for privacy-sensitive tasks, offline work, free processing"
+    strengths:
+      - "Complete privacy (runs locally)"
+      - "No API costs"
+      - "Works offline"
+      - "Self-hosted control"
+    triggers:
+      high_weight:  # Weight: 4
+        - "ollama"
+        - "local model"
+        - "no cloud"
+        - "air-gapped"
+        - "self-hosted"
+        - "on-device"
+        - "llama"
+        - "mistral"
+        - "codellama"
+        - "deepseek"
+        - "qwen"
+      medium_weight:  # Weight: 3
+        - "local"
+        - "private"
+        - "offline"
+        - "phi"
+        - "gemma"
+        - "vicuna"
+        - "confidential"
+      low_weight:  # Weight: 2
+        - "free"
+        - "sensitive"
+        - "openchat"
+
+# Mode configurations
+modes:
+  solo:
+    description: "Claude only - no external LLM delegation"
+    delegation_enabled: false
+    allowed_agents: []
+
+  consult:
+    description: "Ask permission before each delegation"
+    delegation_enabled: true
+    ask_permission: true
+    allowed_agents: ["codex", "gemini", "ollama"]
+
+  auto:
+    description: "Auto-delegate without prompts"
+    delegation_enabled: true
+    ask_permission: false
+    allowed_agents: ["codex", "gemini", "ollama"]
+
+  codex:
+    description: "Only Codex consultation allowed"
+    delegation_enabled: true
+    ask_permission: true  # Ask once, then auto
+    allowed_agents: ["codex"]
+
+  gemini:
+    description: "Only Gemini consultation allowed"
+    delegation_enabled: true
+    ask_permission: true  # Ask once, then auto
+    allowed_agents: ["gemini"]
+
+  ollama:
+    description: "Only local Ollama models allowed"
+    delegation_enabled: true
+    ask_permission: true  # Ask once, then auto
+    allowed_agents: ["ollama"]
+
+  local:
+    description: "Alias for ollama - local models only"
+    delegation_enabled: true
+    ask_permission: true  # Ask once, then auto
+    allowed_agents: ["ollama"]
+
+# Future extensibility: Add new agents here
+# Example for adding a new local model provider:
+#
+# opencode:
+#   name: "OpenCode"
+#   type: "local"
+#   cli_command: "opencode run"
+#   description: "Alternative local code assistant"
+#   triggers:
+#     high_weight:
+#       - "opencode"
+#     medium_weight:
+#       - "local code"
