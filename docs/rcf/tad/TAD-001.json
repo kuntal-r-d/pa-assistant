@@ -1,7 +1,7 @@
 {
   "tadId": "TAD-001",
   "prdId": "PRD-001",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "status": "draft",
   "extractedConcerns": {
     "sourceDocuments": {
@@ -1967,18 +1967,22 @@
   ],
   "components": [
     {
-      "name": "API Gateway",
-      "purpose": "Central entry point for all client requests, handling authentication, rate limiting, and request routing",
-      "location": "src/gateway",
+      "name": "api-server",
+      "purpose": "Express API server with job orchestration and real-time communication",
+      "location": "apps/api-server",
       "dependencies": [
+        "@jobsearch/types",
+        "@jobsearch/database",
+        "@jobsearch/config",
+        "@jobsearch/logger",
+        "@jobsearch/ai-client",
         "Express.js",
-        "Socket.io",
-        "Authentication Service",
-        "All backend services"
+        "Socket.io"
       ],
       "keyPatterns": [
         "API Gateway Pattern",
-        "Middleware Chain Pattern"
+        "Middleware Chain Pattern",
+        "Containerized Modular Monolith Architecture"
       ],
       "interfaces": [
         {
@@ -2002,7 +2006,8 @@
         "Authentication middleware",
         "Rate limiting",
         "CORS handling",
-        "WebSocket management"
+        "WebSocket management",
+        "Job orchestration"
       ],
       "relatedReqs": [
         "REQ-001",
@@ -2013,29 +2018,24 @@
       ]
     },
     {
-      "name": "Job Scraping Service",
-      "purpose": "Automated job discovery and extraction from multiple platforms with stealth capabilities",
-      "location": "src/services/job-scraping",
+      "name": "job-crawler",
+      "purpose": "Playwright-based job scrapers with stealth capabilities and multi-platform support",
+      "location": "apps/job-crawler",
       "dependencies": [
-        "Playwright",
-        "n8n",
-        "Database Service",
-        "Job Processing Service"
+        "@jobsearch/types",
+        "@jobsearch/logger",
+        "@jobsearch/common",
+        "Playwright"
       ],
       "keyPatterns": [
-        "Workflow-Driven Orchestration",
-        "Anti-Detection Pattern"
+        "Anti-Detection Pattern",
+        "Containerized Modular Monolith Architecture"
       ],
       "interfaces": [
         {
           "name": "Scraping API",
           "type": "api",
           "description": "REST endpoints for triggering and monitoring scraping jobs"
-        },
-        {
-          "name": "n8n Workflow Integration",
-          "type": "event",
-          "description": "Workflow triggers for scheduled and manual scraping"
         },
         {
           "name": "Browser Automation",
@@ -2058,392 +2058,20 @@
       ]
     },
     {
-      "name": "Job Processing Service",
-      "purpose": "Job data normalization, deduplication, and enrichment pipeline",
-      "location": "src/services/job-processing",
+      "name": "web-ui",
+      "purpose": "React SPA with offline support and progressive web app capabilities",
+      "location": "apps/web-ui",
       "dependencies": [
-        "Database Service",
-        "AI Matching Service"
-      ],
-      "keyPatterns": [
-        "Pipeline Pattern",
-        "Data Transformation Pattern"
-      ],
-      "interfaces": [
-        {
-          "name": "Processing API",
-          "type": "api",
-          "description": "Job processing operations and status monitoring"
-        },
-        {
-          "name": "Data Pipeline",
-          "type": "internal",
-          "description": "Internal job data transformation pipeline"
-        },
-        {
-          "name": "Match Trigger",
-          "type": "event",
-          "description": "Triggers AI matching after job processing"
-        }
-      ],
-      "responsibilities": [
-        "Job deduplication",
-        "Data normalization",
-        "Job enrichment",
-        "Quality validation"
-      ],
-      "relatedReqs": [
-        "REQ-003",
-        "REQ-004",
-        "REQ-005"
-      ]
-    },
-    {
-      "name": "AI Matching Service",
-      "purpose": "Hybrid AI-powered job-candidate matching with local-first processing and cloud fallback",
-      "location": "src/services/ai-matching",
-      "dependencies": [
-        "Ollama Local LLM",
-        "Claude API",
-        "Database Service",
-        "User Profile Service"
-      ],
-      "keyPatterns": [
-        "Hybrid AI Strategy Implementation",
-        "Local-First Data Architecture"
-      ],
-      "interfaces": [
-        {
-          "name": "Matching API",
-          "type": "api",
-          "description": "Job matching and skill gap analysis endpoints"
-        },
-        {
-          "name": "Local LLM Interface",
-          "type": "internal",
-          "description": "Integration with Ollama for local AI processing"
-        },
-        {
-          "name": "Cloud AI Interface",
-          "type": "api",
-          "description": "Fallback integration with Claude API for complex analysis"
-        }
-      ],
-      "responsibilities": [
-        "Job-candidate matching",
-        "Skill gap analysis",
-        "Match score calculation",
-        "AI model orchestration"
-      ],
-      "relatedReqs": [
-        "REQ-008",
-        "REQ-009",
-        "REQ-010"
-      ]
-    },
-    {
-      "name": "Content Generation Service",
-      "purpose": "AI-powered cover letter and CV generation with hybrid local/cloud processing",
-      "location": "src/services/content-generation",
-      "dependencies": [
-        "Ollama Local LLM",
-        "Claude API",
-        "User Profile Service"
-      ],
-      "keyPatterns": [
-        "Hybrid AI Strategy Implementation",
-        "Template Pattern"
-      ],
-      "interfaces": [
-        {
-          "name": "Generation API",
-          "type": "api",
-          "description": "Content generation endpoints for cover letters and CVs"
-        },
-        {
-          "name": "Template Engine",
-          "type": "internal",
-          "description": "Template-based content generation system"
-        },
-        {
-          "name": "AI Content Pipeline",
-          "type": "internal",
-          "description": "Hybrid AI processing pipeline for content generation"
-        }
-      ],
-      "responsibilities": [
-        "Cover letter generation",
-        "CV tailoring",
-        "Content personalization",
-        "Quality assurance"
-      ],
-      "relatedReqs": [
-        "REQ-011",
-        "REQ-012",
-        "REQ-013",
-        "REQ-014",
-        "REQ-015"
-      ]
-    },
-    {
-      "name": "User Profile Service",
-      "purpose": "User data management including CV parsing, profile management, and preferences",
-      "location": "src/services/user-profile",
-      "dependencies": [
-        "Database Service",
-        "File Storage Service"
-      ],
-      "keyPatterns": [
-        "Local-First Data Architecture",
-        "Repository Pattern"
-      ],
-      "interfaces": [
-        {
-          "name": "Profile API",
-          "type": "api",
-          "description": "User profile management and CV operations"
-        },
-        {
-          "name": "CV Parser",
-          "type": "internal",
-          "description": "CV file parsing and skill extraction"
-        },
-        {
-          "name": "Profile Events",
-          "type": "event",
-          "description": "Profile update notifications for dependent services"
-        }
-      ],
-      "responsibilities": [
-        "CV upload and parsing",
-        "User profile management",
-        "Skill extraction",
-        "Preference management"
-      ],
-      "relatedReqs": [
-        "REQ-006",
-        "REQ-007"
-      ]
-    },
-    {
-      "name": "Application Tracking Service",
-      "purpose": "Complete job application lifecycle management with Kanban visualization",
-      "location": "src/services/application-tracking",
-      "dependencies": [
-        "Database Service",
-        "Notification Service"
-      ],
-      "keyPatterns": [
-        "State Machine Pattern",
-        "Event Sourcing"
-      ],
-      "interfaces": [
-        {
-          "name": "Tracking API",
-          "type": "api",
-          "description": "Application status management and tracking operations"
-        },
-        {
-          "name": "Status Events",
-          "type": "event",
-          "description": "Application status change notifications"
-        },
-        {
-          "name": "Analytics Feed",
-          "type": "internal",
-          "description": "Application data for analytics and reporting"
-        }
-      ],
-      "responsibilities": [
-        "Application status tracking",
-        "Kanban board management",
-        "Application notes",
-        "Status automation"
-      ],
-      "relatedReqs": [
-        "REQ-016",
-        "REQ-017",
-        "REQ-018",
-        "REQ-019",
-        "REQ-020"
-      ]
-    },
-    {
-      "name": "Email Integration Service",
-      "purpose": "Email processing for LinkedIn alerts and automated notifications",
-      "location": "src/services/email-integration",
-      "dependencies": [
-        "IMAP Server",
-        "SMTP Server",
-        "Job Processing Service"
-      ],
-      "keyPatterns": [
-        "Message Processing Pattern",
-        "Event-Driven Architecture"
-      ],
-      "interfaces": [
-        {
-          "name": "Email API",
-          "type": "api",
-          "description": "Email configuration and monitoring endpoints"
-        },
-        {
-          "name": "IMAP Processor",
-          "type": "internal",
-          "description": "Incoming email processing for job alerts"
-        },
-        {
-          "name": "SMTP Sender",
-          "type": "internal",
-          "description": "Outgoing email notifications"
-        }
-      ],
-      "responsibilities": [
-        "LinkedIn alert processing",
-        "Email notifications",
-        "Job URL extraction",
-        "Email automation"
-      ],
-      "relatedReqs": [
-        "REQ-021",
-        "REQ-022",
-        "REQ-023"
-      ]
-    },
-    {
-      "name": "Analytics Service",
-      "purpose": "Performance metrics, insights, and reporting dashboard",
-      "location": "src/services/analytics",
-      "dependencies": [
-        "Database Service",
-        "All tracking services"
-      ],
-      "keyPatterns": [
-        "Data Aggregation Pattern",
-        "CQRS"
-      ],
-      "interfaces": [
-        {
-          "name": "Analytics API",
-          "type": "api",
-          "description": "Metrics and reporting endpoints"
-        },
-        {
-          "name": "Data Collector",
-          "type": "event",
-          "description": "Collects events from all system components"
-        },
-        {
-          "name": "Report Generator",
-          "type": "internal",
-          "description": "Automated report generation"
-        }
-      ],
-      "responsibilities": [
-        "Metrics collection",
-        "Performance analysis",
-        "Report generation",
-        "Dashboard data"
-      ],
-      "relatedReqs": [
-        "REQ-024",
-        "REQ-025",
-        "REQ-026",
-        "REQ-027"
-      ]
-    },
-    {
-      "name": "Database Service",
-      "purpose": "Local PostgreSQL database management with privacy-focused data handling",
-      "location": "src/services/database",
-      "dependencies": [
-        "PostgreSQL",
-        "Backup Service"
-      ],
-      "keyPatterns": [
-        "Local-First Data Architecture",
-        "Repository Pattern"
-      ],
-      "interfaces": [
-        {
-          "name": "Database API",
-          "type": "internal",
-          "description": "Database operations and connection management"
-        },
-        {
-          "name": "Migration Engine",
-          "type": "internal",
-          "description": "Database schema management and migrations"
-        },
-        {
-          "name": "Backup Interface",
-          "type": "internal",
-          "description": "Database backup and restore operations"
-        }
-      ],
-      "responsibilities": [
-        "Data persistence",
-        "Schema management",
-        "Query optimization",
-        "Data integrity"
-      ],
-      "relatedReqs": [
-        "CON-001",
-        "CON-002"
-      ]
-    },
-    {
-      "name": "Backup Service",
-      "purpose": "Automated backup management with optional cloud synchronization",
-      "location": "src/services/backup",
-      "dependencies": [
-        "Database Service",
-        "Google Drive API",
-        "rclone"
-      ],
-      "keyPatterns": [
-        "Local-First Data Architecture",
-        "Encryption Pattern"
-      ],
-      "interfaces": [
-        {
-          "name": "Backup API",
-          "type": "api",
-          "description": "Backup configuration and monitoring"
-        },
-        {
-          "name": "Cloud Sync",
-          "type": "api",
-          "description": "Optional cloud backup synchronization"
-        },
-        {
-          "name": "Scheduler Interface",
-          "type": "event",
-          "description": "Automated backup scheduling"
-        }
-      ],
-      "responsibilities": [
-        "Automated backups",
-        "Data encryption",
-        "Cloud synchronization",
-        "Backup verification"
-      ],
-      "relatedReqs": [
-        "REQ-028",
-        "REQ-029"
-      ]
-    },
-    {
-      "name": "Web UI Application",
-      "purpose": "React-based progressive web application for user interaction",
-      "location": "src/web-ui",
-      "dependencies": [
-        "API Gateway",
-        "WebSocket connection"
+        "@jobsearch/types",
+        "React",
+        "Zustand",
+        "TanStack Query",
+        "Workbox"
       ],
       "keyPatterns": [
         "Progressive Web Application",
-        "Component-Based Architecture"
+        "Component-Based Architecture",
+        "Local-First Data Architecture"
       ],
       "interfaces": [
         {
@@ -2473,6 +2101,241 @@
         "REQ-031",
         "REQ-032",
         "REQ-033"
+      ]
+    },
+    {
+      "name": "n8n-workflows",
+      "purpose": "Workflow automation definitions and orchestration templates",
+      "location": "apps/n8n-workflows",
+      "dependencies": [
+        "n8n"
+      ],
+      "keyPatterns": [
+        "Workflow-Driven Orchestration",
+        "Event-Driven Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "Workflow Definitions",
+          "type": "internal",
+          "description": "JSON workflow definitions for automation"
+        },
+        {
+          "name": "Webhook Endpoints",
+          "type": "api",
+          "description": "Webhook triggers for workflow execution"
+        }
+      ],
+      "responsibilities": [
+        "Workflow automation",
+        "Scheduled job execution",
+        "Event-driven processing",
+        "Integration orchestration"
+      ],
+      "relatedReqs": [
+        "REQ-001",
+        "REQ-021",
+        "REQ-028"
+      ]
+    },
+    {
+      "name": "@jobsearch/types",
+      "purpose": "Shared TypeScript type definitions for all applications and packages",
+      "location": "packages/@jobsearch/types",
+      "dependencies": [],
+      "keyPatterns": [
+        "Shared Types Pattern",
+        "Type Safety"
+      ],
+      "interfaces": [
+        {
+          "name": "Type Exports",
+          "type": "internal",
+          "description": "TypeScript type definitions and interfaces"
+        }
+      ],
+      "responsibilities": [
+        "Type definitions",
+        "Interface contracts",
+        "Data models",
+        "API schemas"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/database",
+      "purpose": "Prisma client and repository patterns for PostgreSQL database access",
+      "location": "packages/@jobsearch/database",
+      "dependencies": [
+        "@jobsearch/types",
+        "Prisma",
+        "PostgreSQL"
+      ],
+      "keyPatterns": [
+        "Repository Pattern",
+        "Local-First Data Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "Database Client",
+          "type": "internal",
+          "description": "Prisma client with type-safe database operations"
+        },
+        {
+          "name": "Repository Layer",
+          "type": "internal",
+          "description": "Domain-specific data access patterns"
+        }
+      ],
+      "responsibilities": [
+        "Database schema management",
+        "Type-safe queries",
+        "Migration handling",
+        "Connection pooling"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-002"
+      ]
+    },
+    {
+      "name": "@jobsearch/config",
+      "purpose": "Zod-validated configuration management for all applications",
+      "location": "packages/@jobsearch/config",
+      "dependencies": [
+        "Zod"
+      ],
+      "keyPatterns": [
+        "Configuration Pattern",
+        "Validation Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Config Schema",
+          "type": "internal",
+          "description": "Zod schemas for configuration validation"
+        },
+        {
+          "name": "Environment Parser",
+          "type": "internal",
+          "description": "Environment variable parsing and validation"
+        }
+      ],
+      "responsibilities": [
+        "Configuration validation",
+        "Environment parsing",
+        "Type-safe config access",
+        "Default value management"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/logger",
+      "purpose": "Pino structured logging with consistent formatting across all services",
+      "location": "packages/@jobsearch/logger",
+      "dependencies": [
+        "Pino"
+      ],
+      "keyPatterns": [
+        "Structured Logging Pattern",
+        "Observability Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Logger Instance",
+          "type": "internal",
+          "description": "Configured Pino logger with structured output"
+        },
+        {
+          "name": "Log Formatters",
+          "type": "internal",
+          "description": "Custom formatters for different log contexts"
+        }
+      ],
+      "responsibilities": [
+        "Structured logging",
+        "Log formatting",
+        "Performance monitoring",
+        "Error tracking"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/ai-client",
+      "purpose": "LiteLLM wrapper for unified access to Ollama and Claude APIs",
+      "location": "packages/@jobsearch/ai-client",
+      "dependencies": [
+        "@jobsearch/types",
+        "@jobsearch/config",
+        "LiteLLM"
+      ],
+      "keyPatterns": [
+        "Hybrid AI Strategy Implementation",
+        "Adapter Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "AI Client",
+          "type": "internal",
+          "description": "Unified interface for local and cloud AI services"
+        },
+        {
+          "name": "Model Router",
+          "type": "internal",
+          "description": "Intelligent routing between Ollama and Claude"
+        }
+      ],
+      "responsibilities": [
+        "AI model abstraction",
+        "Local/cloud routing",
+        "Response normalization",
+        "Error handling"
+      ],
+      "relatedReqs": [
+        "REQ-008",
+        "REQ-009",
+        "REQ-010",
+        "REQ-011",
+        "REQ-012"
+      ]
+    },
+    {
+      "name": "@jobsearch/common",
+      "purpose": "Shared utilities, error handling, and common functionality",
+      "location": "packages/@jobsearch/common",
+      "dependencies": [
+        "@jobsearch/types"
+      ],
+      "keyPatterns": [
+        "Utility Pattern",
+        "Error Handling Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Utility Functions",
+          "type": "internal",
+          "description": "Common utility functions and helpers"
+        },
+        {
+          "name": "Error Classes",
+          "type": "internal",
+          "description": "Standardized error handling classes"
+        }
+      ],
+      "responsibilities": [
+        "Utility functions",
+        "Error handling",
+        "Validation helpers",
+        "Common constants"
+      ],
+      "relatedReqs": [
+        "CON-001"
       ]
     }
   ],
@@ -2895,6 +2758,47 @@
       ],
       "requestResponseFormat": "{ \"data\": {}, \"meta\": { \"timestamp\": \"ISO8601\", \"requestId\": \"uuid\" }, \"error\": null }"
     },
+    "packageDependencies": {
+      "description": "Internal package dependency graph following WESPA monorepo architecture",
+      "flow": "apps → packages/@jobsearch/* → external dependencies",
+      "rules": [
+        "Packages cannot depend on apps",
+        "Apps import packages via workspace protocol",
+        "Shared packages provide common functionality",
+        "Type-safe imports across workspace"
+      ],
+      "dependencyGraph": {
+        "apps/api-server": [
+          "@jobsearch/types",
+          "@jobsearch/database",
+          "@jobsearch/config",
+          "@jobsearch/logger",
+          "@jobsearch/ai-client"
+        ],
+        "apps/job-crawler": [
+          "@jobsearch/types",
+          "@jobsearch/logger",
+          "@jobsearch/common"
+        ],
+        "apps/web-ui": [
+          "@jobsearch/types"
+        ],
+        "apps/n8n-workflows": [],
+        "@jobsearch/database": [
+          "@jobsearch/types"
+        ],
+        "@jobsearch/ai-client": [
+          "@jobsearch/types",
+          "@jobsearch/config"
+        ],
+        "@jobsearch/common": [
+          "@jobsearch/types"
+        ],
+        "@jobsearch/config": [],
+        "@jobsearch/logger": [],
+        "@jobsearch/types": []
+      }
+    },
     "integrationContracts": [
       {
         "systemName": "RemoteOK API",
@@ -3105,8 +3009,8 @@
     "securityBoundaries": "Four security zones: (1) External Zone - untrusted internet and external APIs, (2) Gateway Zone - API Gateway with rate limiting and authentication, (3) Application Zone - internal services with service-to-service communication, (4) Data Zone - PostgreSQL and Redis with encrypted storage. All zones communicate through defined interfaces with input validation.",
     "securityBoundaryDiagram": "Internet → [API Gateway] → [Services] → [Data Layer]\n  ↑           ↑              ↑           ↑\nUntrusted   Auth/Rate    Internal    Encrypted\n Zone       Limiting      Zone        Storage",
     "authenticationPattern": {
-      "type": "JWT",
-      "flow": "Single-user authentication with JWT tokens issued by API Gateway. Initial setup creates master credentials stored in environment variables. JWT tokens include user ID and session expiration, signed with local secret key.",
+      "type": "local-trust",
+      "flow": "No user authentication - single-user local deployment trusts localhost connections. Internal service-to-service uses environment-based shared secrets.",
       "tokenStructure": "{ \"sub\": \"user_id\", \"iat\": timestamp, \"exp\": timestamp, \"role\": \"user\" }"
     },
     "authorizationModel": {
@@ -3249,7 +3153,7 @@
     "targetEnvironment": {
       "platform": "Docker Compose",
       "topology": "Single-host containerized deployment with service mesh networking. All services run on localhost with internal Docker network communication. External access only through API Gateway on port 3000.",
-      "topologyDiagram": "┌─────────────────┐\n│   Web UI (3000) │\n└─────────┬───────┘\n          │\n┌─────────▼───────┐\n│  API Gateway    │\n└─────────┬───────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Internal Services Network (docker)      │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │Job Scrp │ │AI Match │ │Content Gen  │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │User Prof│ │App Track│ │Email Integ  │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │Analytics│ │n8n Work │ │Backup Svc   │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n└─────────────────────────────────────────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Data Layer                              │\n│ ┌─────────────┐ ┌─────────────────────┐ │\n│ │PostgreSQL 15│ │Redis 7 + Volumes   │ │\n│ └─────────────┘ └─────────────────────┘ │\n└─────────────────────────────────────────┘",
+      "topologyDiagram": "┌─────────────────┐\n│   Web UI (3000) │\n└─────────┬───────┘\n          │\n┌─────────▼───────┐\n│  API Gateway    │\n└─────────┬───────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Internal Services Network (docker)      │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │API Servr│ │Job Crawl│ │n8n Workflow │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │LiteLLM  │ │Ollama   │ │Backup Svc   │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n└─────────────────────────────────────────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Data Layer                              │\n│ ┌─────────────┐ ┌─────────────────────┐ │\n│ │PostgreSQL 15│ │Redis 7 + Volumes   │ │\n│ └─────────────┘ └─────────────────────┘ │\n└─────────────────────────────────────────┘",
       "environmentVariables": [
         {
           "name": "JWT_SECRET",
@@ -3301,22 +3205,28 @@
         "scalingTrigger": "Fixed single instance for single-user deployment"
       },
       {
-        "component": "Job Scraping Service",
+        "component": "API Server",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance for single-user deployment"
+      },
+      {
+        "component": "Job Crawler",
         "minInstances": 1,
         "maxInstances": 3,
         "scalingTrigger": "Queue depth > 50 jobs or memory > 80%"
       },
       {
-        "component": "AI Matching Service",
+        "component": "LiteLLM",
         "minInstances": 1,
         "maxInstances": 2,
         "scalingTrigger": "Processing time > 8 seconds or CPU > 75%"
       },
       {
-        "component": "Content Generation Service",
+        "component": "Ollama",
         "minInstances": 1,
-        "maxInstances": 2,
-        "scalingTrigger": "Queue depth > 10 requests or response time > 60s"
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance with model auto-unloading"
       },
       {
         "component": "Database Service",
@@ -3340,25 +3250,32 @@
         "memoryLimit": "256Mi"
       },
       {
-        "component": "Job Scraping Service",
+        "component": "API Server",
+        "cpuRequest": "200m",
+        "cpuLimit": "800m",
+        "memoryRequest": "256Mi",
+        "memoryLimit": "512Mi"
+      },
+      {
+        "component": "Job Crawler",
         "cpuRequest": "250m",
         "cpuLimit": "1000m",
         "memoryRequest": "512Mi",
         "memoryLimit": "1Gi"
       },
       {
-        "component": "AI Matching Service",
-        "cpuRequest": "500m",
-        "cpuLimit": "1500m",
-        "memoryRequest": "1Gi",
-        "memoryLimit": "2Gi"
+        "component": "LiteLLM",
+        "cpuRequest": "200m",
+        "cpuLimit": "800m",
+        "memoryRequest": "256Mi",
+        "memoryLimit": "512Mi"
       },
       {
-        "component": "Content Generation Service",
-        "cpuRequest": "250m",
-        "cpuLimit": "1000m",
-        "memoryRequest": "512Mi",
-        "memoryLimit": "1Gi"
+        "component": "Ollama",
+        "cpuRequest": "1000m",
+        "cpuLimit": "2000m",
+        "memoryRequest": "2Gi",
+        "memoryLimit": "4Gi"
       },
       {
         "component": "PostgreSQL",
@@ -3382,6 +3299,24 @@
         "memoryLimit": "128Mi"
       }
     ],
+    "memoryBudget": {
+      "total": "8GB",
+      "allocations": {
+        "ollama": "4GB",
+        "postgres": "1GB",
+        "job-crawler": "1.5GB",
+        "n8n": "512MB",
+        "redis": "256MB",
+        "api-server": "256MB",
+        "litellm": "256MB",
+        "web-ui": "128MB"
+      },
+      "monitoring": {
+        "warningThreshold": "80%",
+        "criticalThreshold": "90%",
+        "action": "Auto-unload Ollama model"
+      }
+    },
     "containerization": {
       "enabled": true,
       "baseImage": "node:24-alpine",
@@ -4101,6 +4036,134 @@
         "ADR-001",
         "ADR-005"
       ]
+    },
+    {
+      "id": "ADR-009",
+      "title": "pnpm Workspaces for Monorepo",
+      "status": "accepted",
+      "context": "Need to manage multiple TypeScript packages and services in a monorepo structure while maintaining simplicity for single-user deployment and avoiding complex build orchestration tools.",
+      "optionsConsidered": [
+        {
+          "option": "npm Workspaces",
+          "pros": [
+            "Built into npm",
+            "Simple configuration",
+            "No additional tools"
+          ],
+          "cons": [
+            "Limited features",
+            "Slower installs",
+            "No advanced caching"
+          ]
+        },
+        {
+          "option": "pnpm Workspaces + Turborepo",
+          "pros": [
+            "Fast installs",
+            "Advanced caching",
+            "Build optimization"
+          ],
+          "cons": [
+            "Additional complexity",
+            "Learning curve",
+            "Overkill for single-user"
+          ]
+        },
+        {
+          "option": "pnpm Workspaces Only",
+          "pros": [
+            "Fast installs",
+            "Efficient disk usage",
+            "Good workspace support",
+            "Simple setup"
+          ],
+          "cons": [
+            "No build orchestration",
+            "Manual dependency management"
+          ]
+        }
+      ],
+      "decision": "Use pnpm workspaces without Turborepo for monorepo management",
+      "rationale": "Provides efficient package management and workspace support without the complexity of build orchestration tools. Perfect balance for single-user deployment while maintaining development efficiency.",
+      "consequences": [
+        "Single pnpm workspace root",
+        "Shared dependencies across packages",
+        "Fast, efficient installs",
+        "Simple build scripts"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-005",
+        "REQ-001"
+      ],
+      "relatedDecisions": [
+        "ADR-001",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "ADR-010",
+      "title": "Memory Budget Allocation",
+      "status": "accepted",
+      "context": "Need to ensure the system operates within 8GB memory constraint while providing optimal performance for AI processing, job scraping, and data storage. Must prevent out-of-memory conditions.",
+      "optionsConsidered": [
+        {
+          "option": "Dynamic Memory Allocation",
+          "pros": [
+            "Flexible resource usage",
+            "Optimal utilization",
+            "Adaptive to workload"
+          ],
+          "cons": [
+            "Complex management",
+            "Potential conflicts",
+            "Hard to predict"
+          ]
+        },
+        {
+          "option": "Equal Memory Distribution",
+          "pros": [
+            "Simple allocation",
+            "Fair distribution",
+            "Easy to manage"
+          ],
+          "cons": [
+            "Inefficient usage",
+            "Doesn't match workload",
+            "Waste of resources"
+          ]
+        },
+        {
+          "option": "Fixed Budget with Monitoring",
+          "pros": [
+            "Predictable allocation",
+            "Prevents OOM",
+            "Clear boundaries",
+            "Monitoring triggers"
+          ],
+          "cons": [
+            "Less flexibility",
+            "May under-utilize"
+          ]
+        }
+      ],
+      "decision": "Implement fixed memory budget allocation with automated monitoring and Ollama model unloading",
+      "rationale": "Ensures predictable memory usage within 8GB constraint while allocating resources based on actual service needs. Ollama gets largest allocation as it's the most memory-intensive component.",
+      "consequences": [
+        "Fixed memory limits per service",
+        "Automated memory monitoring",
+        "Ollama model auto-unloading at 90% usage",
+        "Clear resource boundaries"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "REQ-001",
+        "REQ-034"
+      ],
+      "relatedDecisions": [
+        "ADR-004",
+        "ADR-008"
+      ]
     }
   ],
   "generationMetadata": {
@@ -4122,5 +4185,6 @@
     "generatedAt": "2026-02-08T15:06:59.796Z"
   },
   "createdAt": "2026-02-08T15:06:59.796Z",
-  "updatedAt": "2026-02-08T15:06:59.796Z"
+  "updatedAt": "2026-02-08T19:04:59.174Z",
+  "_changesSummary": "[overview] No changes required - the amendments target the components and integrationArchitecture sections which are not included in this chunk; [components] Restructured components to follow WESPA-style monorepo architecture with apps/ and packages/@jobsearch/ directories. Consolidated services into 4 main applications (api-server, job-crawler, web-ui, n8n-workflows) and 6 shared packages. Added packageDependencies section to integrationArchitecture defining internal dependency graph and workspace rules.; [data] No changes required - the amendments target components and integrationArchitecture sections which are not included in this chunk; [operations] Updated deployment architecture to reflect the WESPA-style monorepo structure with consolidated services (api-server, job-crawler, n8n-workflows, litellm, ollama) instead of individual microservices. Updated topology diagram and resource requirements accordingly."
 }
