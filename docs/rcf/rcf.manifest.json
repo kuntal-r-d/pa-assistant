@@ -2,5 +2,18 @@
   "version": "2.0.0",
   "projectName": "PA Assistant",
   "description": "Personal productivity assistant application",
-  "prds": []
+  "prds": [
+    {
+      "id": "PRD-001",
+      "name": "Zero-Cost Remote Job Search Automation System",
+      "path": "docs/rcf/prd/PRD-001.json",
+      "stories": [],
+      "tad": [],
+      "bs": [],
+      "fbs": [],
+      "ts": [],
+      "tc": []
+    }
+  ],
+  "activePrdId": "PRD-001"
 }
