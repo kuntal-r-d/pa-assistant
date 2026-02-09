@@ -1,0 +1,183 @@
+{
+  "current_session": {
+    "mode": "auto",
+    "first_delegation_done": true
+  },
+
+  "available_modes": {
+    "solo": {
+      "command": "!solo",
+      "description": "Claude only - no external LLM delegation",
+      "delegation_enabled": false,
+      "allowed_agents": []
+    },
+    "consult": {
+      "command": "!consult",
+      "description": "Ask permission before each delegation",
+      "delegation_enabled": true,
+      "ask_permission": true,
+      "allowed_agents": ["codex", "gemini", "ollama"]
+    },
+    "auto": {
+      "command": "!auto",
+      "description": "Auto-delegate without prompts based on intent",
+      "delegation_enabled": true,
+      "ask_permission": false,
+      "allowed_agents": ["codex", "gemini", "ollama"]
+    },
+    "codex": {
+      "command": "!codex",
+      "description": "Only Codex (OpenAI) consultation allowed",
+      "delegation_enabled": true,
+      "ask_permission": true,
+      "allowed_agents": ["codex"]
+    },
+    "gemini": {
+      "command": "!gemini",
+      "description": "Only Gemini (Google) consultation allowed",
+      "delegation_enabled": true,
+      "ask_permission": true,
+      "allowed_agents": ["gemini"]
+    },
+    "ollama": {
+      "command": "!ollama",
+      "description": "Only local Ollama models allowed (free, private)",
+      "delegation_enabled": true,
+      "ask_permission": true,
+      "allowed_agents": ["ollama"]
+    },
+    "local": {
+      "command": "!local",
+      "description": "Alias for ollama mode",
+      "delegation_enabled": true,
+      "ask_permission": true,
+      "allowed_agents": ["ollama"]
+    }
+  },
+
+  "available_agents": {
+    "codex": {
+      "name": "Codex",
+      "type": "cloud",
+      "provider": "OpenAI",
+      "cost": "Paid (OpenAI API)",
+      "cli_command": "codex exec --model gpt-5.2-codex --sandbox {sandbox} --full-auto",
+      "best_for": [
+        "Design and architecture decisions",
+        "Debugging complex issues",
+        "Code review and trade-off analysis",
+        "Implementation planning"
+      ],
+      "triggers": ["think deeper", "design", "architecture", "debug", "review", "compare"]
+    },
+    "gemini": {
+      "name": "Gemini",
+      "type": "cloud",
+      "provider": "Google",
+      "cost": "Free tier available (15 req/min, 1M tokens/day)",
+      "cli_command": "gemini -p",
+      "best_for": [
+        "1M token context window",
+        "Google Search grounding",
+        "Multimodal (PDF, video, audio)",
+        "Documentation research"
+      ],
+      "triggers": ["research", "investigate", "pdf", "video", "audio", "documentation"]
+    },
+    "ollama": {
+      "name": "Ollama",
+      "type": "local",
+      "provider": "Self-hosted",
+      "cost": "Free (runs locally)",
+      "cli_command": "ollama run {model}",
+      "best_for": [
+        "Complete privacy (runs locally)",
+        "No API costs",
+        "Works offline",
+        "Self-hosted control"
+      ],
+      "triggers": ["local", "private", "offline", "ollama", "llama", "mistral"],
+      "available_models": [
+        {
+          "name": "llama3.2",
+          "description": "General tasks, fast",
+          "size": "3B/11B",
+          "pull_command": "ollama pull llama3.2"
+        },
+        {
+          "name": "llama3.1",
+          "description": "Reasoning, coding",
+          "size": "8B/70B",
+          "pull_command": "ollama pull llama3.1"
+        },
+        {
+          "name": "codellama",
+          "description": "Code generation specialist",
+          "size": "7B/13B/34B",
+          "pull_command": "ollama pull codellama"
+        },
+        {
+          "name": "mistral",
+          "description": "General tasks, balanced",
+          "size": "7B",
+          "pull_command": "ollama pull mistral"
+        },
+        {
+          "name": "deepseek-coder",
+          "description": "Code analysis expert",
+          "size": "6.7B/33B",
+          "pull_command": "ollama pull deepseek-coder"
+        },
+        {
+          "name": "qwen2.5-coder",
+          "description": "Code tasks, multilingual",
+          "size": "7B/32B",
+          "pull_command": "ollama pull qwen2.5-coder"
+        },
+        {
+          "name": "phi3",
+          "description": "Fast, lightweight",
+          "size": "3.8B",
+          "pull_command": "ollama pull phi3"
+        },
+        {
+          "name": "gemma2",
+          "description": "General tasks (Google)",
+          "size": "9B/27B",
+          "pull_command": "ollama pull gemma2"
+        }
+      ]
+    }
+  },
+
+  "usage": {
+    "switch_mode": {
+      "description": "Type the command in chat to switch modes",
+      "examples": [
+        "!solo    - Use Claude only, no delegation",
+        "!consult - Ask before delegating",
+        "!auto    - Auto-delegate based on task",
+        "!codex   - Use Codex for all delegations",
+        "!gemini  - Use Gemini for all delegations",
+        "!ollama  - Use local Ollama models (free)",
+        "!local   - Same as !ollama"
+      ]
+    },
+    "ollama_setup": {
+      "description": "Setup Ollama for free local models",
+      "steps": [
+        "1. Install: brew install ollama",
+        "2. Start: ollama serve",
+        "3. Pull model: ollama pull llama3.2",
+        "4. Switch mode: !ollama"
+      ]
+    },
+    "quick_reference": {
+      "free_options": ["ollama (local)", "gemini (free tier with limits)"],
+      "paid_options": ["codex (OpenAI API)"],
+      "privacy_focused": ["ollama"],
+      "best_quality": ["codex", "gemini"],
+      "offline_capable": ["ollama"]
+    }
+  }
+}

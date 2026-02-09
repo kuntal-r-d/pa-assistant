@@ -1,0 +1,928 @@
+{
+  "prdId": "PRD-001",
+  "version": "1.2.0",
+  "status": "draft",
+  "stories": [
+    {
+      "id": "US-001",
+      "reqId": "REQ-001",
+      "title": "Daily Multi-Platform Job Scraping",
+      "description": "Automatically discover new job listings from multiple platforms each day",
+      "asA": "remote job seeker",
+      "iWant": "the system to automatically scrape jobs from RemoteOK, WeWorkRemotely, Himalayas, and Indeed daily",
+      "soThat": "I don't have to manually check each platform and can discover all relevant opportunities",
+      "acceptanceCriteria": [
+        {"id": "AC-001", "description": "System scrapes RemoteOK API and retrieves job listings", "testable": true},
+        {"id": "AC-002", "description": "System scrapes WeWorkRemotely and retrieves job listings", "testable": true},
+        {"id": "AC-003", "description": "System scrapes Himalayas API and retrieves job listings", "testable": true},
+        {"id": "AC-004", "description": "System scrapes Indeed with rate limiting and retrieves job listings", "testable": true},
+        {"id": "AC-005", "description": "Scraping completes within 60 minutes for all platforms", "testable": true}
+      ]
+    },
+    {
+      "id": "US-002",
+      "reqId": "REQ-001",
+      "title": "Scraper Circuit Breaker",
+      "description": "Handle platform failures gracefully without affecting other scrapers",
+      "asA": "remote job seeker",
+      "iWant": "the system to continue scraping other platforms when one fails",
+      "soThat": "a single platform outage doesn't prevent me from discovering jobs elsewhere",
+      "acceptanceCriteria": [
+        {"id": "AC-006", "description": "After 3 consecutive failures, scraper enters 1-hour cooldown", "testable": true},
+        {"id": "AC-007", "description": "Health check runs before each scraping attempt", "testable": true},
+        {"id": "AC-008", "description": "Other scrapers continue when one is in cooldown", "testable": true},
+        {"id": "AC-009", "description": "Alert email sent when scraper enters cooldown", "testable": true}
+      ]
+    },
+    {
+      "id": "US-003",
+      "reqId": "REQ-002",
+      "title": "Job Data Extraction",
+      "description": "Extract comprehensive structured data from each job listing",
+      "asA": "remote job seeker",
+      "iWant": "each job to have complete information extracted",
+      "soThat": "I can make informed decisions without visiting the original posting",
+      "acceptanceCriteria": [
+        {"id": "AC-010", "description": "Job title is extracted from listing", "testable": true},
+        {"id": "AC-011", "description": "Company name is extracted from listing", "testable": true},
+        {"id": "AC-012", "description": "Location (or 'Remote') is extracted from listing", "testable": true},
+        {"id": "AC-013", "description": "Salary range is extracted when available", "testable": true},
+        {"id": "AC-014", "description": "Full job description text is extracted", "testable": true},
+        {"id": "AC-015", "description": "Technologies/skills are extracted from description", "testable": true},
+        {"id": "AC-016", "description": "Posted date is extracted", "testable": true},
+        {"id": "AC-017", "description": "Application URL is captured", "testable": true}
+      ]
+    },
+    {
+      "id": "US-004",
+      "reqId": "REQ-003",
+      "title": "Cross-Platform Job Deduplication",
+      "description": "Remove duplicate job listings that appear on multiple platforms",
+      "asA": "remote job seeker",
+      "iWant": "duplicate jobs to be automatically removed",
+      "soThat": "I don't see the same job multiple times and waste time reviewing duplicates",
+      "acceptanceCriteria": [
+        {"id": "AC-018", "description": "Jobs with same title AND company (case-insensitive) are identified as duplicates", "testable": true},
+        {"id": "AC-019", "description": "The version with most complete data is retained", "testable": true},
+        {"id": "AC-020", "description": "Deduplication runs after each scraping batch", "testable": true},
+        {"id": "AC-021", "description": "Deduplication actions are logged for debugging", "testable": true}
+      ]
+    },
+    {
+      "id": "US-005",
+      "reqId": "REQ-004",
+      "title": "Job Data Normalization",
+      "description": "Standardize job data for consistent filtering and comparison",
+      "asA": "remote job seeker",
+      "iWant": "job data to be normalized into consistent formats",
+      "soThat": "I can accurately filter and compare jobs across platforms",
+      "acceptanceCriteria": [
+        {"id": "AC-022", "description": "Country names are standardized (e.g., 'USA' → 'United States')", "testable": true},
+        {"id": "AC-023", "description": "Technology names are mapped to canonical forms (e.g., 'React.js' → 'React')", "testable": true},
+        {"id": "AC-024", "description": "Salary is converted to USD equivalent", "testable": true},
+        {"id": "AC-025", "description": "Experience level is categorized (Junior/Mid/Senior/Lead)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-006",
+      "reqId": "REQ-005",
+      "title": "Job Filtering by Preferences",
+      "description": "Filter discovered jobs based on my preferences",
+      "asA": "remote job seeker",
+      "iWant": "to filter jobs by countries, technologies, salary, and experience level",
+      "soThat": "I only see jobs that match my criteria",
+      "acceptanceCriteria": [
+        {"id": "AC-026", "description": "Jobs can be filtered by one or more target countries (OR logic)", "testable": true},
+        {"id": "AC-027", "description": "Jobs can be filtered by technologies (must match at least one)", "testable": true},
+        {"id": "AC-028", "description": "Jobs can be filtered by salary range (min/max)", "testable": true},
+        {"id": "AC-029", "description": "Jobs can be filtered by remote-only toggle", "testable": true},
+        {"id": "AC-030", "description": "Jobs can be filtered by experience level", "testable": true},
+        {"id": "AC-031", "description": "Filters can be combined and applied instantly", "testable": true}
+      ]
+    },
+    {
+      "id": "US-007",
+      "reqId": "REQ-006",
+      "title": "CV Upload and Parsing",
+      "description": "Upload my CV and have it automatically parsed",
+      "asA": "remote job seeker",
+      "iWant": "to upload my CV and have the system extract my skills and experience",
+      "soThat": "the system can match me with relevant jobs",
+      "acceptanceCriteria": [
+        {"id": "AC-032", "description": "PDF files up to 5MB can be uploaded", "testable": true},
+        {"id": "AC-033", "description": "DOCX files up to 5MB can be uploaded", "testable": true},
+        {"id": "AC-034", "description": "Text is extracted with 95%+ accuracy", "testable": true},
+        {"id": "AC-035", "description": "Technical skills are identified and listed", "testable": true},
+        {"id": "AC-036", "description": "Years of experience are calculated from dates", "testable": true},
+        {"id": "AC-037", "description": "Education and certifications are extracted", "testable": true},
+        {"id": "AC-038", "description": "User can manually edit extracted data", "testable": true}
+      ]
+    },
+    {
+      "id": "US-008",
+      "reqId": "REQ-007",
+      "title": "Job Search Preferences Setup",
+      "description": "Configure my job search preferences",
+      "asA": "remote job seeker",
+      "iWant": "to set my target countries, technologies, salary expectations, and experience level",
+      "soThat": "the system knows what jobs to prioritize for me",
+      "acceptanceCriteria": [
+        {"id": "AC-039", "description": "User can select multiple target countries", "testable": true},
+        {"id": "AC-040", "description": "User can select preferred technologies with autocomplete", "testable": true},
+        {"id": "AC-041", "description": "User can set minimum and maximum salary", "testable": true},
+        {"id": "AC-042", "description": "User can select currency (USD, EUR, GBP)", "testable": true},
+        {"id": "AC-043", "description": "User can set experience level preference", "testable": true},
+        {"id": "AC-044", "description": "Preferences auto-save on change", "testable": true}
+      ]
+    },
+    {
+      "id": "US-009",
+      "reqId": "REQ-008",
+      "title": "Hybrid Job Match Scoring",
+      "description": "Calculate how well each job matches my profile",
+      "asA": "remote job seeker",
+      "iWant": "each job to have a match score showing how well it fits my profile",
+      "soThat": "I can prioritize the most relevant opportunities",
+      "acceptanceCriteria": [
+        {"id": "AC-045", "description": "Match score is calculated as 0-100%", "testable": true},
+        {"id": "AC-046", "description": "TF-IDF text similarity contributes 30% to score", "testable": true},
+        {"id": "AC-047", "description": "Skill overlap contributes 40% to score", "testable": true},
+        {"id": "AC-048", "description": "Experience match contributes 20% to score", "testable": true},
+        {"id": "AC-049", "description": "Semantic embeddings contribute 10% to score", "testable": true},
+        {"id": "AC-050", "description": "Scoring completes within 10 seconds per job", "testable": true},
+        {"id": "AC-051", "description": "Scores are cached and recalculated only when CV changes", "testable": true}
+      ]
+    },
+    {
+      "id": "US-010",
+      "reqId": "REQ-009",
+      "title": "Skill Gap Identification",
+      "description": "See which skills I have and which I'm missing for each job",
+      "asA": "remote job seeker",
+      "iWant": "to see matched skills, missing skills, and extra skills for each job",
+      "soThat": "I can assess my fit and identify areas for improvement",
+      "acceptanceCriteria": [
+        {"id": "AC-052", "description": "Matched skills (in CV AND job) are listed", "testable": true},
+        {"id": "AC-053", "description": "Missing skills (in job NOT in CV) are listed", "testable": true},
+        {"id": "AC-054", "description": "Extra skills (in CV NOT in job) are listed", "testable": true},
+        {"id": "AC-055", "description": "Match percentage is calculated", "testable": true},
+        {"id": "AC-056", "description": "Fuzzy matching handles synonyms (e.g., 'JS' matches 'JavaScript')", "testable": true}
+      ]
+    },
+    {
+      "id": "US-011",
+      "reqId": "REQ-010",
+      "title": "AI Gap Analysis Report",
+      "description": "Get AI-generated insights about my fit for a job",
+      "asA": "remote job seeker",
+      "iWant": "AI-generated analysis with strengths, gaps, and improvement suggestions",
+      "soThat": "I get actionable advice beyond simple skill matching",
+      "acceptanceCriteria": [
+        {"id": "AC-057", "description": "Analysis includes 3-5 strengths", "testable": true},
+        {"id": "AC-058", "description": "Analysis includes 3-5 missing skills", "testable": true},
+        {"id": "AC-059", "description": "Analysis includes 3-5 actionable improvement suggestions", "testable": true},
+        {"id": "AC-060", "description": "Analysis includes overall assessment (2-3 sentences)", "testable": true},
+        {"id": "AC-061", "description": "Analysis is generated using Ollama within 15 seconds", "testable": true},
+        {"id": "AC-062", "description": "Analysis is cached for 30 days", "testable": true}
+      ]
+    },
+    {
+      "id": "US-012",
+      "reqId": "REQ-011",
+      "title": "Cover Letter Generation",
+      "description": "Generate tailored cover letters for job applications",
+      "asA": "remote job seeker",
+      "iWant": "to generate 3 different cover letter styles for each job",
+      "soThat": "I can choose the style that best fits the company culture",
+      "acceptanceCriteria": [
+        {"id": "AC-063", "description": "Conservative variant is professional and formal", "testable": true},
+        {"id": "AC-064", "description": "Aggressive variant is bold and confident", "testable": true},
+        {"id": "AC-065", "description": "Story-driven variant focuses on narrative and mission alignment", "testable": true},
+        {"id": "AC-066", "description": "Each variant is 300-400 words with 3-4 paragraphs", "testable": true},
+        {"id": "AC-067", "description": "Cover letters include user name and job details", "testable": true},
+        {"id": "AC-068", "description": "Cover letters highlight relevant experience from CV", "testable": true},
+        {"id": "AC-069", "description": "All 3 variants generate within 90 seconds each", "testable": true}
+      ]
+    },
+    {
+      "id": "US-013",
+      "reqId": "REQ-012",
+      "title": "Cover Letter Polish with Claude",
+      "description": "Optionally polish cover letters with Claude API for high-priority jobs",
+      "asA": "remote job seeker",
+      "iWant": "to polish my cover letter with Claude API for important applications",
+      "soThat": "I get professional-quality cover letters for jobs I really want",
+      "acceptanceCriteria": [
+        {"id": "AC-070", "description": "Polish is auto-triggered for jobs with match ≥85%", "testable": true},
+        {"id": "AC-071", "description": "User can manually request polish for any job", "testable": true},
+        {"id": "AC-072", "description": "Polish improves grammar, clarity, and tone", "testable": true},
+        {"id": "AC-073", "description": "Polish completes within 10 seconds", "testable": true},
+        {"id": "AC-074", "description": "Both draft and polished versions are stored", "testable": true}
+      ]
+    },
+    {
+      "id": "US-014",
+      "reqId": "REQ-013",
+      "title": "CV Tailoring",
+      "description": "Generate job-specific CV versions",
+      "asA": "remote job seeker",
+      "iWant": "to generate a tailored CV that highlights relevant experience",
+      "soThat": "my CV resonates with the specific job requirements",
+      "acceptanceCriteria": [
+        {"id": "AC-075", "description": "Bullet points are reordered by relevance to job", "testable": true},
+        {"id": "AC-076", "description": "'Key Skills Match' section is added at top", "testable": true},
+        {"id": "AC-077", "description": "Matching technologies are highlighted (bold)", "testable": true},
+        {"id": "AC-078", "description": "Tailored CV can be exported as Markdown or PDF", "testable": true},
+        {"id": "AC-079", "description": "User can edit before downloading", "testable": true}
+      ]
+    },
+    {
+      "id": "US-015",
+      "reqId": "REQ-014",
+      "title": "AI Cost Tracking",
+      "description": "Track AI API usage to stay within budget",
+      "asA": "remote job seeker",
+      "iWant": "to see my AI API usage and get alerts near budget limits",
+      "soThat": "I don't exceed my monthly budget",
+      "acceptanceCriteria": [
+        {"id": "AC-080", "description": "Ollama calls are tracked (unlimited)", "testable": true},
+        {"id": "AC-081", "description": "Claude API calls are tracked with cost estimation", "testable": true},
+        {"id": "AC-082", "description": "Alert shown when approaching $10 monthly budget", "testable": true},
+        {"id": "AC-083", "description": "System falls back to Ollama-only when budget exceeded", "testable": true}
+      ]
+    },
+    {
+      "id": "US-016",
+      "reqId": "REQ-015",
+      "title": "Application Status Tracking",
+      "description": "Track the status of my job applications",
+      "asA": "remote job seeker",
+      "iWant": "to track each application through its lifecycle",
+      "soThat": "I know which applications need attention and can follow up appropriately",
+      "acceptanceCriteria": [
+        {"id": "AC-084", "description": "Applications can be marked as Saved", "testable": true},
+        {"id": "AC-085", "description": "Applications can be marked as Reviewing", "testable": true},
+        {"id": "AC-086", "description": "Applications can be marked as Applied with date", "testable": true},
+        {"id": "AC-087", "description": "Applications can be marked as Interviewing", "testable": true},
+        {"id": "AC-088", "description": "Applications can be marked as Rejected", "testable": true},
+        {"id": "AC-089", "description": "Applications can be marked as Offered", "testable": true},
+        {"id": "AC-090", "description": "Status changes record timestamps", "testable": true},
+        {"id": "AC-091", "description": "Statuses can only move forward (except Rejected)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-017",
+      "reqId": "REQ-016",
+      "title": "Application Notes",
+      "description": "Add notes to my applications",
+      "asA": "remote job seeker",
+      "iWant": "to add notes to each application",
+      "soThat": "I can track important details for interviews and follow-ups",
+      "acceptanceCriteria": [
+        {"id": "AC-092", "description": "Freeform text can be added to any application", "testable": true},
+        {"id": "AC-093", "description": "Rich text formatting (bold, italic, lists) is supported", "testable": true},
+        {"id": "AC-094", "description": "Notes auto-save with 2-second debounce", "testable": true},
+        {"id": "AC-095", "description": "Note count badge shown on application card", "testable": true}
+      ]
+    },
+    {
+      "id": "US-018",
+      "reqId": "REQ-017",
+      "title": "Automated Follow-Up Reminders",
+      "description": "Get reminders to follow up on applications",
+      "asA": "remote job seeker",
+      "iWant": "automatic email reminders 7 days after applying",
+      "soThat": "I don't forget to follow up on applications",
+      "acceptanceCriteria": [
+        {"id": "AC-096", "description": "Email reminder sent 7 days after 'Applied' status", "testable": true},
+        {"id": "AC-097", "description": "Email includes company name, job title, and days since applied", "testable": true},
+        {"id": "AC-098", "description": "User can snooze reminder (3/7/14 days)", "testable": true},
+        {"id": "AC-099", "description": "User can dismiss reminder", "testable": true},
+        {"id": "AC-100", "description": "Reminder auto-cancelled if status changes to Interviewing/Rejected", "testable": true}
+      ]
+    },
+    {
+      "id": "US-019",
+      "reqId": "REQ-018",
+      "title": "Application Timeline View",
+      "description": "Visualize application progress over time",
+      "asA": "remote job seeker",
+      "iWant": "to see a timeline of my application progress",
+      "soThat": "I can identify slow-moving applications and bottlenecks",
+      "acceptanceCriteria": [
+        {"id": "AC-101", "description": "Horizontal timeline shows all status stages", "testable": true},
+        {"id": "AC-102", "description": "Days between stages are calculated and displayed", "testable": true},
+        {"id": "AC-103", "description": "Average times shown for comparison", "testable": true},
+        {"id": "AC-104", "description": "Color-coded: green (fast), yellow (average), red (slow)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-020",
+      "reqId": "REQ-019",
+      "title": "Job List Dashboard",
+      "description": "Browse discovered jobs in an organized dashboard",
+      "asA": "remote job seeker",
+      "iWant": "to see all discovered jobs in a clean, filterable dashboard",
+      "soThat": "I can quickly find and review relevant opportunities",
+      "acceptanceCriteria": [
+        {"id": "AC-105", "description": "Jobs displayed in card layout (3 columns on desktop)", "testable": true},
+        {"id": "AC-106", "description": "Each card shows title, company, location, salary, match %, technologies", "testable": true},
+        {"id": "AC-107", "description": "Pagination with 20 jobs per page", "testable": true},
+        {"id": "AC-108", "description": "Sort by match %, posted date, or salary", "testable": true},
+        {"id": "AC-109", "description": "Filter panel on left sidebar", "testable": true},
+        {"id": "AC-110", "description": "Dashboard loads within 2 seconds for 1000 jobs", "testable": true}
+      ]
+    },
+    {
+      "id": "US-021",
+      "reqId": "REQ-020",
+      "title": "Job Detail View",
+      "description": "View comprehensive information about a job",
+      "asA": "remote job seeker",
+      "iWant": "to see all details about a job in one place",
+      "soThat": "I can make informed application decisions",
+      "acceptanceCriteria": [
+        {"id": "AC-111", "description": "Header shows title, company, location, salary, posted date", "testable": true},
+        {"id": "AC-112", "description": "Large match score card with color coding", "testable": true},
+        {"id": "AC-113", "description": "Tabs for Description, Requirements, Gap Analysis, Cover Letters, CV", "testable": true},
+        {"id": "AC-114", "description": "Requirements checklist shows matched (✓) and missing (✗) skills", "testable": true},
+        {"id": "AC-115", "description": "3 cover letter variants shown side-by-side", "testable": true},
+        {"id": "AC-116", "description": "Tailored CV preview with download button", "testable": true},
+        {"id": "AC-117", "description": "Action buttons: Save, Generate Cover Letter, Track, Open URL", "testable": true}
+      ]
+    },
+    {
+      "id": "US-022",
+      "reqId": "REQ-021",
+      "title": "Kanban Application Board",
+      "description": "Manage applications with a Kanban board",
+      "asA": "remote job seeker",
+      "iWant": "to manage my applications on a visual Kanban board",
+      "soThat": "I can easily see and update application statuses",
+      "acceptanceCriteria": [
+        {"id": "AC-118", "description": "Columns for each status: Saved, Reviewing, Applied, Interviewing, Rejected, Offered", "testable": true},
+        {"id": "AC-119", "description": "Jobs can be dragged between columns", "testable": true},
+        {"id": "AC-120", "description": "Each card shows title, company, match %, days in stage", "testable": true},
+        {"id": "AC-121", "description": "Card count displayed per column", "testable": true},
+        {"id": "AC-122", "description": "Filter by date range (Last 7/30/90 days)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-023",
+      "reqId": "REQ-022",
+      "title": "Analytics Dashboard",
+      "description": "View analytics about my job search",
+      "asA": "remote job seeker",
+      "iWant": "to see analytics about my job search performance",
+      "soThat": "I can optimize my strategy based on data",
+      "acceptanceCriteria": [
+        {"id": "AC-123", "description": "Application funnel chart (Discovered → Applied → Interview → Offer)", "testable": true},
+        {"id": "AC-124", "description": "Conversion rates between stages displayed", "testable": true},
+        {"id": "AC-125", "description": "Source performance table (Platform, Jobs, Applied, Response rate)", "testable": true},
+        {"id": "AC-126", "description": "Match score distribution histogram", "testable": true},
+        {"id": "AC-127", "description": "Weekly activity chart", "testable": true},
+        {"id": "AC-128", "description": "Export to CSV button", "testable": true}
+      ]
+    },
+    {
+      "id": "US-024",
+      "reqId": "REQ-023",
+      "title": "Daily Job Digest Email",
+      "description": "Receive daily email with top job matches",
+      "asA": "remote job seeker",
+      "iWant": "to receive a daily email with the best new job matches",
+      "soThat": "I stay informed without logging in every day",
+      "acceptanceCriteria": [
+        {"id": "AC-129", "description": "Email sent at 9:00 AM daily", "testable": true},
+        {"id": "AC-130", "description": "Only sent if new jobs with match ≥70% exist", "testable": true},
+        {"id": "AC-131", "description": "Contains top 10 jobs sorted by match score", "testable": true},
+        {"id": "AC-132", "description": "Each job shows title, company, match %, dashboard link", "testable": true},
+        {"id": "AC-133", "description": "HTML formatted and mobile-responsive", "testable": true},
+        {"id": "AC-134", "description": "Unsubscribe link in footer", "testable": true}
+      ]
+    },
+    {
+      "id": "US-025",
+      "reqId": "REQ-024",
+      "title": "Weekly Analytics Report Email",
+      "description": "Receive weekly summary of job search progress",
+      "asA": "remote job seeker",
+      "iWant": "to receive a weekly email summarizing my job search progress",
+      "soThat": "I can track my progress and stay motivated",
+      "acceptanceCriteria": [
+        {"id": "AC-135", "description": "Email sent every Sunday at 9:00 PM", "testable": true},
+        {"id": "AC-136", "description": "Contains jobs discovered this week", "testable": true},
+        {"id": "AC-137", "description": "Contains applications submitted", "testable": true},
+        {"id": "AC-138", "description": "Contains interviews scheduled", "testable": true},
+        {"id": "AC-139", "description": "Contains conversion rates", "testable": true},
+        {"id": "AC-140", "description": "Contains top trending technologies", "testable": true}
+      ]
+    },
+    {
+      "id": "US-026",
+      "reqId": "REQ-025",
+      "title": "Scheduled Daily Scraping",
+      "description": "Automate daily job scraping via n8n",
+      "asA": "remote job seeker",
+      "iWant": "job scraping to run automatically every day",
+      "soThat": "I always have fresh job data without manual intervention",
+      "acceptanceCriteria": [
+        {"id": "AC-141", "description": "n8n workflow triggers at 8:00 AM daily", "testable": true},
+        {"id": "AC-142", "description": "Workflow calls scraper API for all platforms", "testable": true},
+        {"id": "AC-143", "description": "Scraping completes within 60 minutes", "testable": true},
+        {"id": "AC-144", "description": "Failed platforms retry 3 times", "testable": true},
+        {"id": "AC-145", "description": "Alert email sent if zero jobs scraped", "testable": true}
+      ]
+    },
+    {
+      "id": "US-027",
+      "reqId": "REQ-026",
+      "title": "Automated Match Scoring",
+      "description": "Automatically score new jobs after scraping",
+      "asA": "remote job seeker",
+      "iWant": "new jobs to be automatically scored after scraping",
+      "soThat": "I can immediately see relevant matches",
+      "acceptanceCriteria": [
+        {"id": "AC-146", "description": "Scoring triggers after daily scraping completes", "testable": true},
+        {"id": "AC-147", "description": "Only new jobs (no existing score) are processed", "testable": true},
+        {"id": "AC-148", "description": "Jobs processed in batches of 10", "testable": true},
+        {"id": "AC-149", "description": "300 jobs scored within 50 minutes", "testable": true}
+      ]
+    },
+    {
+      "id": "US-028",
+      "reqId": "REQ-027",
+      "title": "Scraper Circuit Breaker Implementation",
+      "description": "Implement circuit breakers to handle scraper failures",
+      "asA": "system administrator",
+      "iWant": "circuit breakers to prevent cascade failures",
+      "soThat": "one failing platform doesn't affect the entire system",
+      "acceptanceCriteria": [
+        {"id": "AC-150", "description": "Each scraper has independent circuit breaker", "testable": true},
+        {"id": "AC-151", "description": "3 consecutive failures trigger cooldown", "testable": true},
+        {"id": "AC-152", "description": "Cooldown lasts 1 hour", "testable": true},
+        {"id": "AC-153", "description": "Health check runs before scraping attempt", "testable": true},
+        {"id": "AC-154", "description": "Graceful degradation when platform unavailable", "testable": true}
+      ]
+    },
+    {
+      "id": "US-029",
+      "reqId": "REQ-028",
+      "title": "Retry Logic with Exponential Backoff",
+      "description": "Implement retry logic for transient failures",
+      "asA": "system administrator",
+      "iWant": "automatic retries with exponential backoff",
+      "soThat": "transient failures are handled gracefully",
+      "acceptanceCriteria": [
+        {"id": "AC-155", "description": "First retry after 1 second", "testable": true},
+        {"id": "AC-156", "description": "Second retry after 2 seconds", "testable": true},
+        {"id": "AC-157", "description": "Third retry after 4 seconds", "testable": true},
+        {"id": "AC-158", "description": "Maximum backoff of 30 seconds", "testable": true},
+        {"id": "AC-159", "description": "Maximum 3 retries by default (configurable)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-030",
+      "reqId": "REQ-029",
+      "title": "Service Health Check Endpoints",
+      "description": "Expose health check endpoints for all services",
+      "asA": "system administrator",
+      "iWant": "health check endpoints for each service",
+      "soThat": "I can monitor system health and set up alerts",
+      "acceptanceCriteria": [
+        {"id": "AC-160", "description": "Scraper API exposes /health endpoint", "testable": true},
+        {"id": "AC-161", "description": "PostgreSQL connection can be tested", "testable": true},
+        {"id": "AC-162", "description": "Ollama model availability can be checked", "testable": true},
+        {"id": "AC-163", "description": "n8n workflow status can be queried", "testable": true},
+        {"id": "AC-164", "description": "Health checks run every 5 minutes", "testable": true},
+        {"id": "AC-165", "description": "Alert email sent after 3 consecutive failures", "testable": true}
+      ]
+    },
+    {
+      "id": "US-031",
+      "reqId": "REQ-030",
+      "title": "Centralized Error Logging",
+      "description": "Implement structured error logging",
+      "asA": "system administrator",
+      "iWant": "centralized, structured error logs",
+      "soThat": "I can debug issues and track incidents",
+      "acceptanceCriteria": [
+        {"id": "AC-166", "description": "All services log to ./logs/ directory", "testable": true},
+        {"id": "AC-167", "description": "Logs use JSON structured format", "testable": true},
+        {"id": "AC-168", "description": "Logs include timestamp, service, severity, message, context", "testable": true},
+        {"id": "AC-169", "description": "Logs rotate daily", "testable": true},
+        {"id": "AC-170", "description": "Last 30 days of logs retained", "testable": true}
+      ]
+    },
+    {
+      "id": "US-032",
+      "reqId": "REQ-031",
+      "title": "Automated Database Backup",
+      "description": "Implement daily database backups",
+      "asA": "system administrator",
+      "iWant": "automatic daily database backups",
+      "soThat": "I can recover from data loss",
+      "acceptanceCriteria": [
+        {"id": "AC-171", "description": "Backup runs at 2:00 AM daily", "testable": true},
+        {"id": "AC-172", "description": "Backups stored in ./backups/ directory", "testable": true},
+        {"id": "AC-173", "description": "Filename format: backup_YYYYMMDD.sql", "testable": true},
+        {"id": "AC-174", "description": "Last 7 days of backups retained", "testable": true},
+        {"id": "AC-175", "description": "Backups are compressed (gzip)", "testable": true},
+        {"id": "AC-176", "description": "Restore is tested monthly (automated)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-033",
+      "reqId": "REQ-032",
+      "title": "Data Retention Policy",
+      "description": "Implement automatic data cleanup",
+      "asA": "system administrator",
+      "iWant": "automatic cleanup of old data",
+      "soThat": "the database doesn't grow unboundedly",
+      "acceptanceCriteria": [
+        {"id": "AC-177", "description": "Unsaved jobs deleted after 90 days", "testable": true},
+        {"id": "AC-178", "description": "Saved jobs retained indefinitely", "testable": true},
+        {"id": "AC-179", "description": "Generated content deleted after 30 days", "testable": true},
+        {"id": "AC-180", "description": "Raw analytics aggregated monthly, deleted after 6 months", "testable": true},
+        {"id": "AC-181", "description": "Cleanup runs weekly (Sunday midnight)", "testable": true}
+      ]
+    },
+    {
+      "id": "US-034",
+      "reqId": "REQ-033",
+      "title": "Docker Deployment",
+      "description": "Deploy system using Docker Compose",
+      "asA": "system administrator",
+      "iWant": "to deploy the entire system with one command",
+      "soThat": "setup is simple and reproducible",
+      "acceptanceCriteria": [
+        {"id": "AC-182", "description": "docker-compose.yml defines all services", "testable": true},
+        {"id": "AC-183", "description": "Scraper API container configured", "testable": true},
+        {"id": "AC-184", "description": "PostgreSQL container configured with volume", "testable": true},
+        {"id": "AC-185", "description": "Ollama container configured", "testable": true},
+        {"id": "AC-186", "description": "n8n container configured", "testable": true},
+        {"id": "AC-187", "description": "Web frontend container configured", "testable": true},
+        {"id": "AC-188", "description": "Single 'docker-compose up' starts entire system", "testable": true}
+      ]
+    },
+    {
+      "id": "US-035",
+      "reqId": "REQ-038",
+      "title": "Local Data Storage",
+      "description": "Ensure all user data stays local",
+      "asA": "privacy-conscious job seeker",
+      "iWant": "all my data to stay on my local machine",
+      "soThat": "my job search activity remains private",
+      "acceptanceCriteria": [
+        {"id": "AC-189", "description": "CV stored only in local PostgreSQL", "testable": true},
+        {"id": "AC-190", "description": "Preferences stored only locally", "testable": true},
+        {"id": "AC-191", "description": "Application history stored only locally", "testable": true},
+        {"id": "AC-192", "description": "No data transmitted externally except optional Claude API", "testable": true},
+        {"id": "AC-193", "description": "Claude API calls only contain job description + cover letter draft", "testable": true}
+      ]
+    },
+    {
+      "id": "US-036",
+      "reqId": "REQ-039",
+      "title": "Secure API Key Management",
+      "description": "Store API keys securely",
+      "asA": "system administrator",
+      "iWant": "API keys stored securely in environment variables",
+      "soThat": "credentials are not exposed in code or logs",
+      "acceptanceCriteria": [
+        {"id": "AC-194", "description": "API keys stored in .env file", "testable": true},
+        {"id": "AC-195", "description": "API keys never appear in code", "testable": true},
+        {"id": "AC-196", "description": "API keys never appear in logs", "testable": true},
+        {"id": "AC-197", "description": ".env.example provided with documentation", "testable": true},
+        {"id": "AC-198", "description": "Startup validation checks required env vars", "testable": true}
+      ]
+    },
+    {
+      "id": "US-037",
+      "reqId": "REQ-040",
+      "title": "Single-User Local Setup",
+      "description": "Simple single-user setup without authentication",
+      "asA": "remote job seeker",
+      "iWant": "a simple setup without login requirements",
+      "soThat": "I can start using the system immediately",
+      "acceptanceCriteria": [
+        {"id": "AC-199", "description": "One-time profile setup on first launch", "testable": true},
+        {"id": "AC-200", "description": "No authentication required for local access", "testable": true},
+        {"id": "AC-201", "description": "Profile data persists between sessions", "testable": true}
+      ]
+    },
+    {
+      "id": "US-038",
+      "reqId": "REQ-041",
+      "title": "LinkedIn Stealth Job Scraping",
+      "description": "Scrape LinkedIn job listings using stealth browser automation",
+      "asA": "remote job seeker",
+      "iWant": "the system to scrape 20-40 LinkedIn jobs daily using stealth automation",
+      "soThat": "I can discover jobs from the most important professional platform without risking account bans",
+      "acceptanceCriteria": [
+        {"id": "AC-202", "description": "Playwright browser with stealth plugin is used for LinkedIn scraping", "testable": true},
+        {"id": "AC-203", "description": "Browser runs in headed mode (visible window) to mimic real usage", "testable": true},
+        {"id": "AC-204", "description": "System extracts job title, company, location, salary, and description from LinkedIn listings", "testable": true},
+        {"id": "AC-205", "description": "Daily scraping limit is 20-40 jobs to maintain conservative rate", "testable": true},
+        {"id": "AC-206", "description": "Scraping session starts from LinkedIn feed page, not directly at job search", "testable": true},
+        {"id": "AC-207", "description": "System interacts with feed (scrolls, pauses) before navigating to jobs", "testable": true}
+      ]
+    },
+    {
+      "id": "US-039",
+      "reqId": "REQ-042",
+      "title": "LinkedIn Session Persistence",
+      "description": "Maintain persistent browser sessions for LinkedIn",
+      "asA": "remote job seeker",
+      "iWant": "my LinkedIn session to persist between scraping runs",
+      "soThat": "I don't trigger detection by logging in repeatedly",
+      "acceptanceCriteria": [
+        {"id": "AC-208", "description": "Browser profile with cookies and localStorage is persisted to disk", "testable": true},
+        {"id": "AC-209", "description": "Session is resumed on subsequent scraping runs without re-login", "testable": true},
+        {"id": "AC-210", "description": "Session files are stored locally with 7-day rotation", "testable": true},
+        {"id": "AC-211", "description": "Manual re-authentication prompt shown only when session expires", "testable": true},
+        {"id": "AC-212", "description": "Session data is encrypted at rest using user-provided key", "testable": true}
+      ]
+    },
+    {
+      "id": "US-040",
+      "reqId": "REQ-043",
+      "title": "LinkedIn Human-Like Behavior",
+      "description": "Implement human-like interaction patterns for LinkedIn scraping",
+      "asA": "remote job seeker",
+      "iWant": "the scraper to behave like a real human browsing LinkedIn",
+      "soThat": "LinkedIn's behavioral analysis cannot detect automation",
+      "acceptanceCriteria": [
+        {"id": "AC-213", "description": "Delays between actions follow Gamma distribution (8s ± 4s mean)", "testable": true},
+        {"id": "AC-214", "description": "Session length varies between 15-25 minutes per run", "testable": true},
+        {"id": "AC-215", "description": "Mouse movements are simulated with realistic bezier curves", "testable": true},
+        {"id": "AC-216", "description": "Scroll behavior varies (speed, pauses, direction changes)", "testable": true},
+        {"id": "AC-217", "description": "Scraping only occurs during business hours (9 AM - 6 PM local time)", "testable": true},
+        {"id": "AC-218", "description": "Random 'reading' pauses (5-15s) occur when viewing job details", "testable": true}
+      ]
+    },
+    {
+      "id": "US-041",
+      "reqId": "REQ-044",
+      "title": "LinkedIn Detection Monitoring",
+      "description": "Monitor for and respond to LinkedIn detection signals",
+      "asA": "remote job seeker",
+      "iWant": "the system to detect when LinkedIn suspects automation and pause automatically",
+      "soThat": "my account is protected from bans",
+      "acceptanceCriteria": [
+        {"id": "AC-219", "description": "CAPTCHA challenges are detected and trigger immediate pause", "testable": true},
+        {"id": "AC-220", "description": "Rate limit responses (429) trigger immediate pause", "testable": true},
+        {"id": "AC-221", "description": "Unusual redirects (security checkpoint) are detected", "testable": true},
+        {"id": "AC-222", "description": "Account warning messages in DOM are detected", "testable": true},
+        {"id": "AC-223", "description": "Initial pause duration is 24 hours after first detection", "testable": true},
+        {"id": "AC-224", "description": "Exponential backoff (24h → 48h → 96h) on repeated detections", "testable": true},
+        {"id": "AC-225", "description": "Email alert sent to user when detection pause is triggered", "testable": true}
+      ]
+    },
+    {
+      "id": "US-042",
+      "reqId": "REQ-045",
+      "title": "LinkedIn Browser Fingerprint Injection",
+      "description": "Inject realistic browser fingerprints to avoid detection",
+      "asA": "remote job seeker",
+      "iWant": "my browser fingerprint to appear unique and human-like",
+      "soThat": "LinkedIn's fingerprinting detection cannot identify the automation",
+      "acceptanceCriteria": [
+        {"id": "AC-226", "description": "Canvas fingerprint is randomized using fingerprint-generator", "testable": true},
+        {"id": "AC-227", "description": "WebGL renderer string is varied realistically", "testable": true},
+        {"id": "AC-228", "description": "Font enumeration is masked to a common subset", "testable": true},
+        {"id": "AC-229", "description": "Timezone matches user profile location", "testable": true},
+        {"id": "AC-230", "description": "Browser language matches user profile preferences", "testable": true},
+        {"id": "AC-231", "description": "Screen resolution is set to common desktop values", "testable": true},
+        {"id": "AC-232", "description": "Fingerprint remains consistent within a session, varies between sessions", "testable": true}
+      ]
+    },
+    {
+      "id": "US-043",
+      "reqId": "REQ-046",
+      "title": "LinkedIn Email Alert Integration",
+      "description": "Parse LinkedIn job alert emails as backup source",
+      "asA": "remote job seeker",
+      "iWant": "to import jobs from my LinkedIn email alerts",
+      "soThat": "I have a zero-risk backup when stealth scraping is paused",
+      "acceptanceCriteria": [
+        {"id": "AC-233", "description": "System connects to email via IMAP with user credentials", "testable": true},
+        {"id": "AC-234", "description": "LinkedIn job alert emails are identified and parsed", "testable": true},
+        {"id": "AC-235", "description": "Job URLs are extracted from email content", "testable": true},
+        {"id": "AC-236", "description": "Job titles and companies are extracted from email", "testable": true},
+        {"id": "AC-237", "description": "Posting dates are extracted when available", "testable": true},
+        {"id": "AC-238", "description": "Duplicate jobs (already in system) are skipped", "testable": true},
+        {"id": "AC-239", "description": "Email parsing runs automatically when stealth scraping is paused", "testable": true}
+      ]
+    },
+    {
+      "id": "US-044",
+      "reqId": "REQ-047",
+      "title": "LinkedIn Manual URL Import",
+      "description": "Manually import LinkedIn job URLs as fallback",
+      "asA": "remote job seeker",
+      "iWant": "to paste LinkedIn job URLs and have them imported",
+      "soThat": "I can still track LinkedIn jobs when automation is unavailable",
+      "acceptanceCriteria": [
+        {"id": "AC-240", "description": "Text input accepts one or more LinkedIn job URLs", "testable": true},
+        {"id": "AC-241", "description": "URLs are validated as LinkedIn job posting format", "testable": true},
+        {"id": "AC-242", "description": "Full job details are fetched from provided URLs", "testable": true},
+        {"id": "AC-243", "description": "Rate limiting of 1 request per 30 seconds is enforced", "testable": true},
+        {"id": "AC-244", "description": "Progress indicator shows import status", "testable": true},
+        {"id": "AC-245", "description": "Imported jobs are marked with 'Manual Import' source tag", "testable": true}
+      ]
+    },
+    {
+      "id": "US-045",
+      "reqId": "REQ-048",
+      "title": "Cloud Backup Sync to Google Drive",
+      "description": "Automatically sync backups to cloud storage for disaster recovery",
+      "asA": "remote job seeker",
+      "iWant": "my backups to be automatically synced to Google Drive",
+      "soThat": "I can recover my data even if my local machine fails",
+      "acceptanceCriteria": [
+        {"id": "AC-246", "description": "rclone is configured to sync with Google Drive (or configurable provider)", "testable": true},
+        {"id": "AC-247", "description": "Backup files are encrypted before upload using user-provided key", "testable": true},
+        {"id": "AC-248", "description": "Cloud sync runs automatically after each daily local backup", "testable": true},
+        {"id": "AC-249", "description": "Cloud storage retains 90 days of backups", "testable": true},
+        {"id": "AC-250", "description": "Sync failures trigger email alert to user", "testable": true},
+        {"id": "AC-251", "description": "Cloud backup can be disabled via configuration", "testable": true}
+      ]
+    },
+    {
+      "id": "US-046",
+      "reqId": "REQ-049",
+      "title": "Docker Volume Data Persistence",
+      "description": "Ensure all data persists across Docker container lifecycle",
+      "asA": "system administrator",
+      "iWant": "all data to persist even when containers are recreated or updated",
+      "soThat": "I never lose data due to container operations",
+      "acceptanceCriteria": [
+        {"id": "AC-252", "description": "PostgreSQL data uses named volume (postgres_data)", "testable": true},
+        {"id": "AC-253", "description": "Backup directory uses named volume (backups)", "testable": true},
+        {"id": "AC-254", "description": "LinkedIn session data uses named volume (linkedin_sessions)", "testable": true},
+        {"id": "AC-255", "description": "User uploads use named volume (uploads)", "testable": true},
+        {"id": "AC-256", "description": "Data persists after docker-compose down followed by docker-compose up", "testable": true},
+        {"id": "AC-257", "description": "Data persists after container image updates", "testable": true},
+        {"id": "AC-258", "description": "Volume backup script is provided for manual volume export", "testable": true}
+      ]
+    },
+    {
+      "id": "US-047",
+      "reqId": "REQ-050",
+      "title": "Complete Docker Environment Backup",
+      "description": "Backup entire Docker environment for disaster recovery",
+      "asA": "system administrator",
+      "iWant": "to create a complete backup of the entire Docker environment",
+      "soThat": "I can fully recover after Docker Desktop reinstallation or machine migration",
+      "acceptanceCriteria": [
+        {"id": "AC-259", "description": "All named Docker volumes are backed up as compressed tar.gz files", "testable": true},
+        {"id": "AC-260", "description": "Custom-built images (waif-server, wespa, rcf-tools-mcp, rcf-editor) are saved as tar.gz", "testable": true},
+        {"id": "AC-261", "description": "Container configurations are exported as JSON files", "testable": true},
+        {"id": "AC-262", "description": "Docker network configurations are exported", "testable": true},
+        {"id": "AC-263", "description": "Docker-compose files are collected from project directories", "testable": true},
+        {"id": "AC-264", "description": "Backup creates timestamped directory (backup_YYYYMMDD_HHMMSS)", "testable": true},
+        {"id": "AC-265", "description": "Total backup size is reported after completion", "testable": true}
+      ]
+    },
+    {
+      "id": "US-048",
+      "reqId": "REQ-051",
+      "title": "One-Click Backup Script",
+      "description": "Execute complete backup with single command",
+      "asA": "system administrator",
+      "iWant": "to run a single backup script that backs up everything",
+      "soThat": "I can quickly create a complete backup without manual steps",
+      "acceptanceCriteria": [
+        {"id": "AC-266", "description": "backup-docker.sh script is executable without additional dependencies", "testable": true},
+        {"id": "AC-267", "description": "Script shows progress indicators for each backup stage", "testable": true},
+        {"id": "AC-268", "description": "Script handles errors gracefully and continues with remaining items", "testable": true},
+        {"id": "AC-269", "description": "Script creates MANIFEST.md with backup contents summary", "testable": true},
+        {"id": "AC-270", "description": "Script creates RESTORE.md with recovery instructions", "testable": true},
+        {"id": "AC-271", "description": "Script completes within 30 minutes for typical environment", "testable": true}
+      ]
+    },
+    {
+      "id": "US-049",
+      "reqId": "REQ-051",
+      "title": "One-Click Restore Script",
+      "description": "Restore complete environment from backup with single command",
+      "asA": "system administrator",
+      "iWant": "to run a single restore script that recovers everything from backup",
+      "soThat": "I can quickly restore my environment after fresh Docker installation",
+      "acceptanceCriteria": [
+        {"id": "AC-272", "description": "restore-docker.sh script accepts backup path as argument", "testable": true},
+        {"id": "AC-273", "description": "Script auto-detects latest backup if no path provided", "testable": true},
+        {"id": "AC-274", "description": "Script restores all volumes with data intact", "testable": true},
+        {"id": "AC-275", "description": "Script loads custom images from backup", "testable": true},
+        {"id": "AC-276", "description": "Script offers to pull registry images (mongo, postgres, redis, etc.)", "testable": true},
+        {"id": "AC-277", "description": "Script shows summary of restored resources", "testable": true},
+        {"id": "AC-278", "description": "Script provides next steps for starting services", "testable": true}
+      ]
+    },
+    {
+      "id": "US-050",
+      "reqId": "REQ-052",
+      "title": "Backup Integrity Verification",
+      "description": "Verify backup files are complete and restorable",
+      "asA": "system administrator",
+      "iWant": "to verify my backup is complete and can be restored",
+      "soThat": "I have confidence the backup will work when needed",
+      "acceptanceCriteria": [
+        {"id": "AC-279", "description": "Each tar.gz file is tested for integrity (gzip -t)", "testable": true},
+        {"id": "AC-280", "description": "MANIFEST.md includes checksums (SHA256) for all backup files", "testable": true},
+        {"id": "AC-281", "description": "verify-backup.sh script validates all checksums match", "testable": true},
+        {"id": "AC-282", "description": "Script reports file counts and sizes vs expected", "testable": true},
+        {"id": "AC-283", "description": "Optional test restore to temporary volume succeeds", "testable": true}
+      ]
+    },
+    {
+      "id": "US-051",
+      "reqId": "REQ-053",
+      "title": "Pre-Uninstall Safety Checklist",
+      "description": "Interactive checklist before uninstalling Docker",
+      "asA": "system administrator",
+      "iWant": "an interactive checklist to run before uninstalling Docker Desktop",
+      "soThat": "I don't accidentally lose data by forgetting to backup",
+      "acceptanceCriteria": [
+        {"id": "AC-284", "description": "pre-uninstall-check.sh script checks if recent backup exists (<24h old)", "testable": true},
+        {"id": "AC-285", "description": "Script lists all named volumes and their backup status", "testable": true},
+        {"id": "AC-286", "description": "Script warns if any volume is not backed up", "testable": true},
+        {"id": "AC-287", "description": "Script prompts to confirm backup is copied to external storage", "testable": true},
+        {"id": "AC-288", "description": "Script requires explicit 'YES' confirmation to proceed", "testable": true},
+        {"id": "AC-289", "description": "Script prints backup location reminder before exit", "testable": true}
+      ]
+    },
+    {
+      "id": "US-052",
+      "reqId": "REQ-054",
+      "title": "Backup Documentation and Recovery Guide",
+      "description": "Comprehensive documentation for backup and recovery",
+      "asA": "system administrator",
+      "iWant": "clear documentation for backup structure and recovery procedures",
+      "soThat": "I can successfully recover even under stress during actual disasters",
+      "acceptanceCriteria": [
+        {"id": "AC-290", "description": "MANIFEST.md documents backup directory structure and contents", "testable": true},
+        {"id": "AC-291", "description": "RESTORE.md provides step-by-step recovery instructions", "testable": true},
+        {"id": "AC-292", "description": "Documentation includes commands to pull registry images", "testable": true},
+        {"id": "AC-293", "description": "Documentation includes troubleshooting section for common issues", "testable": true},
+        {"id": "AC-294", "description": "Documentation includes estimated recovery time (ERT) per component", "testable": true},
+        {"id": "AC-295", "description": "Documentation is included in every backup automatically", "testable": true}
+      ]
+    },
+    {
+      "id": "US-053",
+      "reqId": "REQ-055",
+      "title": "n8n Automated Daily Backup Workflow",
+      "description": "Automated backup workflow using n8n for scheduled execution",
+      "asA": "system administrator",
+      "iWant": "an n8n workflow that automatically backs up Docker data daily",
+      "soThat": "I don't have to remember to run manual backups and my data is always protected",
+      "acceptanceCriteria": [
+        {"id": "AC-296", "description": "n8n workflow JSON file is provided for import", "testable": true},
+        {"id": "AC-297", "description": "Workflow triggers automatically at 2:00 AM daily", "testable": true},
+        {"id": "AC-298", "description": "Workflow executes backup-docker.sh or equivalent commands", "testable": true},
+        {"id": "AC-299", "description": "Workflow syncs backup to Google Drive via rclone if configured", "testable": true},
+        {"id": "AC-300", "description": "Workflow cleans up old local backups (keeps 7 days)", "testable": true},
+        {"id": "AC-301", "description": "Workflow cleans up old cloud backups (keeps 5 most recent)", "testable": true},
+        {"id": "AC-302", "description": "Workflow can be manually triggered for on-demand backup", "testable": true}
+      ]
+    },
+    {
+      "id": "US-054",
+      "reqId": "REQ-056",
+      "title": "Backup Email Notifications",
+      "description": "Email notifications for backup success and failure",
+      "asA": "system administrator",
+      "iWant": "to receive email notifications about backup status",
+      "soThat": "I know immediately if a backup fails and can take action",
+      "acceptanceCriteria": [
+        {"id": "AC-303", "description": "Success email includes backup timestamp", "testable": true},
+        {"id": "AC-304", "description": "Success email includes volume count, image count, and total size", "testable": true},
+        {"id": "AC-305", "description": "Success email includes cloud sync status", "testable": true},
+        {"id": "AC-306", "description": "Failure email includes error details", "testable": true},
+        {"id": "AC-307", "description": "Failure email includes manual backup instructions", "testable": true},
+        {"id": "AC-308", "description": "Email recipient is configurable via environment variable", "testable": true}
+      ]
+    },
+    {
+      "id": "US-055",
+      "reqId": "REQ-057",
+      "title": "Automated Backup Retention Policy",
+      "description": "Automatic cleanup of old backups based on retention policy",
+      "asA": "system administrator",
+      "iWant": "old backups to be automatically cleaned up",
+      "soThat": "I don't run out of storage while maintaining adequate recovery points",
+      "acceptanceCriteria": [
+        {"id": "AC-309", "description": "Local backups older than 7 days are automatically deleted", "testable": true},
+        {"id": "AC-310", "description": "Cloud backups beyond the 5 most recent are automatically deleted", "testable": true},
+        {"id": "AC-311", "description": "Cleanup runs after each successful backup", "testable": true},
+        {"id": "AC-312", "description": "Cleanup logs which backups were removed", "testable": true},
+        {"id": "AC-313", "description": "Retention periods are configurable", "testable": true},
+        {"id": "AC-314", "description": "Manual/tagged backups can be excluded from auto-cleanup", "testable": true}
+      ]
+    }
+  ],
+  "createdAt": "2026-02-08T09:30:00Z",
+  "updatedAt": "2026-02-08T12:00:00Z"
+}

@@ -2,8 +2,15 @@
 """
 UserPromptSubmit hook: Route to appropriate agent based on user intent.
 
-Uses weighted scoring to determine confidence level for routing suggestions.
-Supports manual override patterns (!codex, !gemini, !perplexity, !direct).
+Uses LLM-based classification (Gemini) with fallback to keyword matching.
+Respects session mode settings (!solo, !consult, !auto, !codex, !gemini).
+
+Modes:
+- !solo (default): Claude + Claude subagents, no Codex/Gemini CLI
+- !consult: Ask permission before consulting Codex/Gemini
+- !auto: Auto-delegate to Codex/Gemini without prompts
+- !codex: Only Codex consultation allowed
+- !gemini: Only Gemini consultation allowed
 
 Routing decisions:
 - Codex: Design, debugging, code review, trade-off analysis
@@ -15,9 +22,7 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -33,183 +38,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger("agent-router")
 
+# Add lib directory to path for imports
+LIB_DIR = Path(__file__).parent.parent / "lib"
+sys.path.insert(0, str(LIB_DIR))
 
-@dataclass
-class RoutingDecision:
-    """Result of routing analysis."""
-    agent: Optional[str]
-    confidence: float  # 0.0 - 1.0
-    triggers: list[str]
-    reason: str
-
-
-# Weighted triggers for Codex (design, debugging, deep reasoning)
-# Higher weight = stronger signal
-CODEX_TRIGGERS = {
-    # Design & Architecture (weight: 3)
-    "design": 3,
-    "architecture": 3,
-    "architect": 3,
-    "pattern": 3,
-    "structure": 2,
-    # Debugging (weight: 3)
-    "debug": 3,
-    "error": 2,
-    "bug": 3,
-    "fix": 2,
-    "broken": 2,
-    "not working": 3,
-    "fails": 2,
-    # Analysis (weight: 2)
-    "compare": 2,
-    "trade-off": 2,
-    "tradeoff": 2,
-    "analyze": 2,
-    "which is better": 3,
-    # Implementation (weight: 2)
-    "how to implement": 3,
-    "implementation": 2,
-    "refactor": 2,
-    "simplify": 2,
-    # Review (weight: 2)
-    "review": 2,
-    "check this": 2,
-    # Explicit triggers (weight: 4)
-    "think deeper": 4,
-    "codex": 4,
-    "second opinion": 4,
-    "deeply": 3,
-}
-
-# Weighted triggers for Gemini (research, multimodal, large context)
-GEMINI_TRIGGERS = {
-    # Research (weight: 3)
-    "research": 3,
-    "investigate": 3,
-    "look up": 3,
-    "find out": 2,
-    # Documentation (weight: 2)
-    "documentation": 2,
-    "docs": 2,
-    "library": 2,
-    "package": 2,
-    "framework": 2,
-    "latest": 2,
-    # Multimodal (weight: 4)
-    "pdf": 4,
-    "video": 4,
-    "audio": 4,
-    "image": 3,
-    # Large context (weight: 3)
-    "entire codebase": 4,
-    "whole repository": 4,
-    "all files": 3,
-    "repository": 2,
-    # Explicit triggers (weight: 4)
-    "gemini": 4,
-}
-
-# Perplexity triggers - ONLY explicit mention (no automatic triggers)
-PERPLEXITY_TRIGGERS = {
-    "perplexity": 4,
-}
-
-# Override patterns (bypass scoring)
-OVERRIDE_PATTERNS = {
-    r"^!codex\b": ("codex", "Manual override: !codex"),
-    r"^!gemini\b": ("gemini", "Manual override: !gemini"),
-    r"^!perplexity\b": ("perplexity", "Manual override: !perplexity"),
-    r"^!direct\b": (None, "Manual override: !direct (skip suggestion)"),
-}
-
-# Confidence threshold for showing suggestions
-MIN_CONFIDENCE = 0.30  # 30%
-
-
-def calculate_score(prompt: str, triggers: dict) -> tuple[float, list[str]]:
-    """
-    Calculate weighted score for trigger matches.
-
-    Returns:
-        (score, matched_triggers) - Score normalized to 0-1 range
-    """
-    prompt_lower = prompt.lower()
-    total_possible = sum(triggers.values())
-    matched_weight = 0
-    matched_triggers = []
-
-    for trigger, weight in triggers.items():
-        if trigger in prompt_lower:
-            matched_weight += weight
-            matched_triggers.append(trigger)
-
-    # Normalize score (cap at 1.0)
-    # Use 30% of total weight as the max to make scoring more sensitive
-    score = min(matched_weight / (total_possible * 0.3), 1.0)
-    return score, matched_triggers
-
-
-def detect_agent(prompt: str) -> RoutingDecision:
-    """
-    Detect which agent should handle this prompt.
-
-    Uses weighted scoring with confidence levels.
-    """
-    # Check for manual overrides first
-    for pattern, (agent, reason) in OVERRIDE_PATTERNS.items():
-        if re.match(pattern, prompt, re.IGNORECASE):
-            return RoutingDecision(
-                agent=agent,
-                confidence=1.0,
-                triggers=[],
-                reason=reason
-            )
-
-    # Calculate scores for each agent
-    codex_score, codex_triggers = calculate_score(prompt, CODEX_TRIGGERS)
-    gemini_score, gemini_triggers = calculate_score(prompt, GEMINI_TRIGGERS)
-    perplexity_score, perplexity_triggers = calculate_score(prompt, PERPLEXITY_TRIGGERS)
-
-    # Perplexity takes priority when explicitly mentioned (no other triggers)
-    if perplexity_score >= MIN_CONFIDENCE:
-        return RoutingDecision(
-            agent="perplexity",
-            confidence=perplexity_score,
-            triggers=perplexity_triggers,
-            reason=f"Matched {len(perplexity_triggers)} Perplexity trigger(s)"
-        )
-
-    # Determine winner between Codex and Gemini
-    if codex_score > gemini_score and codex_score >= MIN_CONFIDENCE:
-        return RoutingDecision(
-            agent="codex",
-            confidence=codex_score,
-            triggers=codex_triggers,
-            reason=f"Matched {len(codex_triggers)} Codex trigger(s)"
-        )
-    elif gemini_score > codex_score and gemini_score >= MIN_CONFIDENCE:
-        return RoutingDecision(
-            agent="gemini",
-            confidence=gemini_score,
-            triggers=gemini_triggers,
-            reason=f"Matched {len(gemini_triggers)} Gemini trigger(s)"
-        )
-    elif codex_score == gemini_score and codex_score >= MIN_CONFIDENCE:
-        # Tie-breaker: prefer Codex for implementation tasks
-        return RoutingDecision(
-            agent="codex",
-            confidence=codex_score,
-            triggers=codex_triggers,
-            reason="Tie-breaker: defaulting to Codex"
-        )
-
-    # No strong signal
-    return RoutingDecision(
-        agent=None,
-        confidence=0.0,
-        triggers=[],
-        reason="No strong routing signal detected"
+try:
+    from session_mode import (
+        AgentMode,
+        get_mode,
+        set_mode,
+        parse_mode_command,
+        get_mode_description,
     )
+    from intent_classifier import IntentClassifier, SuggestedAgent
+    MODULES_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Failed to import modules: {e}")
+    MODULES_AVAILABLE = False
 
 
 def get_confidence_label(confidence: float) -> str:
@@ -222,59 +67,199 @@ def get_confidence_label(confidence: float) -> str:
         return "low"
 
 
+def strip_mode_command(prompt: str) -> str:
+    """Remove mode command prefix from prompt."""
+    mode_prefixes = ["!solo", "!consult", "!auto", "!codex", "!gemini", "!ollama", "!local"]
+    prompt_lower = prompt.lower().strip()
+
+    for prefix in mode_prefixes:
+        if prompt_lower.startswith(prefix):
+            # Remove prefix and leading whitespace
+            return prompt[len(prefix):].lstrip()
+
+    return prompt
+
+
+def create_confirmation_output(
+    agent: str,
+    confidence: float,
+    detected_intent: str,
+    reasoning: str,
+    source: str,
+) -> dict:
+    """Create output that asks user for permission (CONSULT mode)."""
+    confidence_label = get_confidence_label(confidence)
+
+    if agent == "codex":
+        agent_desc = "Codex for design/architecture recommendations"
+    elif agent == "ollama":
+        agent_desc = "Ollama (local model) for private/offline processing"
+    else:
+        agent_desc = "Gemini for research/documentation"
+
+    confirmation_prompt = (
+        f"[Agent Suggestion] This looks like a {detected_intent} task. "
+        f"Would you like me to consult {agent_desc}? "
+        f"(Confidence: {confidence_label}, {confidence:.0%}. Source: {source})\n\n"
+        f"Options:\n"
+        f"- Say 'yes' to consult {agent.capitalize()}\n"
+        f"- Say 'no' to handle directly\n"
+        f"- Use '!solo' to switch to solo mode (no more prompts)"
+    )
+
+    return {
+        "hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": confirmation_prompt,
+        }
+    }
+
+
+def create_auto_delegate_output(
+    agent: str,
+    confidence: float,
+    detected_intent: str,
+    reasoning: str,
+    source: str,
+) -> dict:
+    """Create output for auto-delegation (AUTO mode)."""
+    confidence_label = get_confidence_label(confidence)
+
+    if agent == "codex":
+        suggestion = (
+            f"[Auto-Routing] Intent: {detected_intent}. "
+            f"Consulting Codex CLI for recommendations. "
+            f"(Confidence: {confidence_label}, {confidence:.0%}. Source: {source}. "
+            f"Reason: {reasoning})"
+        )
+    elif agent == "ollama":
+        suggestion = (
+            f"[Auto-Routing] Intent: {detected_intent}. "
+            f"Consulting Ollama (local model) for private processing. "
+            f"(Confidence: {confidence_label}, {confidence:.0%}. Source: {source}. "
+            f"Reason: {reasoning})"
+        )
+    else:
+        suggestion = (
+            f"[Auto-Routing] Intent: {detected_intent}. "
+            f"Consulting Gemini CLI for research. "
+            f"(Confidence: {confidence_label}, {confidence:.0%}. Source: {source}. "
+            f"Reason: {reasoning})"
+        )
+
+    return {
+        "hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": suggestion,
+        }
+    }
+
+
+def create_mode_change_output(mode: AgentMode) -> dict:
+    """Create output confirming mode change."""
+    description = get_mode_description(mode)
+
+    return {
+        "hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": f"[Mode Changed] {description}",
+        }
+    }
+
+
 def main():
     try:
         data = json.load(sys.stdin)
         prompt = data.get("prompt", "")
 
         # Skip very short prompts
-        if len(prompt) < 10:
+        if len(prompt) < 5:
             sys.exit(0)
 
-        decision = detect_agent(prompt)
+        # Check if modules are available
+        if not MODULES_AVAILABLE:
+            logger.warning("Modules not available, skipping routing")
+            sys.exit(0)
 
-        # Only suggest if we have a decision with sufficient confidence
-        if decision.agent and decision.confidence >= MIN_CONFIDENCE:
-            confidence_label = get_confidence_label(decision.confidence)
-            confidence_pct = f"{decision.confidence:.0%}"
-            triggers_str = ", ".join(decision.triggers[:5])  # Limit to 5 triggers
+        # Step 1: Check for mode command
+        new_mode = parse_mode_command(prompt)
+        if new_mode is not None:
+            # Set the new mode
+            set_mode(new_mode)
 
-            if decision.agent == "codex":
-                suggestion = (
-                    f"[Agent Routing] {decision.reason} "
-                    f"(confidence: {confidence_label}, {confidence_pct}). "
-                    f"Triggers: {triggers_str}. "
-                    f"This task may benefit from Codex CLI's deep reasoning. "
-                    f"Consider: `codex exec --model gpt-5.2-codex --sandbox read-only --full-auto \"...\"` "
-                    f"Override with !direct to skip."
-                )
-            elif decision.agent == "gemini":
-                suggestion = (
-                    f"[Agent Routing] {decision.reason} "
-                    f"(confidence: {confidence_label}, {confidence_pct}). "
-                    f"Triggers: {triggers_str}. "
-                    f"This task may benefit from Gemini CLI's research capabilities. "
-                    f"Consider: `gemini -p \"...\" 2>/dev/null` "
-                    f"Override with !direct to skip."
-                )
-            else:  # perplexity
-                suggestion = (
-                    f"[Agent Routing] {decision.reason} "
-                    f"(confidence: {confidence_label}, {confidence_pct}). "
-                    f"Triggers: {triggers_str}. "
-                    f"This task may benefit from Perplexity's web research with citations. "
-                    f"Consider: `mcp__MCP_DOCKER__perplexity_research` or `perplexity_ask` "
-                    f"Override with !direct to skip."
-                )
-
-            output = {
-                "hookSpecificOutput": {
-                    "hookEventName": "UserPromptSubmit",
-                    "additionalContext": suggestion
-                }
-            }
+            # Output mode change confirmation
+            output = create_mode_change_output(new_mode)
             print(json.dumps(output))
 
+            # If prompt only contains mode command, exit
+            remaining_prompt = strip_mode_command(prompt)
+            if len(remaining_prompt) < 5:
+                sys.exit(0)
+
+            # Continue processing remaining prompt
+            prompt = remaining_prompt
+
+        # Step 2: Get current mode
+        mode_config = get_mode()
+
+        # Step 3: If SOLO mode, skip routing (no external LLM delegation)
+        if mode_config.mode == AgentMode.SOLO:
+            # No output needed - Claude handles with Claude subagents
+            sys.exit(0)
+
+        # Step 4: Classify intent (LLM with keyword fallback)
+        classifier = IntentClassifier(timeout=3.5)
+        classification = classifier.classify(prompt)
+
+        # Step 5: Check if we should suggest delegation (0.12 = ~3 weight points)
+        if not classification.should_delegate(min_confidence=0.12):
+            # No strong signal, skip suggestion
+            sys.exit(0)
+
+        # Step 6: Check if suggested agent is allowed in current mode
+        agent_name = classification.suggested_agent.value if classification.suggested_agent else None
+
+        if agent_name and not mode_config.is_agent_allowed(agent_name):
+            # Agent not allowed in current mode
+            # Check if we should suggest the allowed agent instead
+            if mode_config.mode == AgentMode.CODEX:
+                agent_name = "codex"
+            elif mode_config.mode == AgentMode.GEMINI:
+                agent_name = "gemini"
+            elif mode_config.mode in (AgentMode.OLLAMA, AgentMode.LOCAL):
+                agent_name = "ollama"
+            else:
+                sys.exit(0)
+
+        if not agent_name:
+            sys.exit(0)
+
+        # Step 7: Generate output based on mode
+        if mode_config.should_ask_permission():
+            # CONSULT mode or first delegation in CODEX/GEMINI mode
+            output = create_confirmation_output(
+                agent=agent_name,
+                confidence=classification.confidence,
+                detected_intent=classification.detected_intent,
+                reasoning=classification.reasoning,
+                source=classification.source,
+            )
+
+            # Mark first delegation done for single-agent modes
+            if mode_config.mode in (AgentMode.CODEX, AgentMode.GEMINI, AgentMode.OLLAMA, AgentMode.LOCAL):
+                mode_config.mark_first_delegation_done()
+
+        else:
+            # AUTO mode or subsequent delegations in CODEX/GEMINI mode
+            output = create_auto_delegate_output(
+                agent=agent_name,
+                confidence=classification.confidence,
+                detected_intent=classification.detected_intent,
+                reasoning=classification.reasoning,
+                source=classification.source,
+            )
+
+        print(json.dumps(output))
         sys.exit(0)
 
     except json.JSONDecodeError as e:
