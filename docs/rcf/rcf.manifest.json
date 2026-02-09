@@ -19,7 +19,36 @@
           "path": "docs/rcf/tad/TAD-001.json"
         }
       ],
-      "bs": [],
+      "bs": [
+        {
+          "id": "BS-007",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-007.json"
+        },
+        {
+          "id": "BS-006",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-006.json"
+        },
+        {
+          "id": "BS-005",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-005.json"
+        },
+        {
+          "id": "BS-004",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-004.json"
+        },
+        {
+          "id": "BS-003",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-003.json"
+        },
+        {
+          "id": "BS-002",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-002.json"
+        },
+        {
+          "id": "BS-001",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-001.json"
+        }
+      ],
       "fbs": [],
       "ts": [],
       "tc": []

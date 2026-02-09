@@ -1,0 +1,1044 @@
+{
+  "bsId": "BS-005",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 5 of 7)",
+  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "dependency-first",
+  "buildSequence": [
+    {
+      "id": "FBS-041",
+      "title": "Automated Match Scoring Pipeline",
+      "summary": "Creates automated pipeline that triggers match scoring after daily scraping completion, processes jobs in batches of 10, and provides comprehensive error handling and progress monitoring for efficient job evaluation.",
+      "storyScope": [
+        {
+          "usId": "US-142",
+          "acIds": [
+            "AC-704",
+            "AC-705",
+            "AC-706",
+            "AC-707"
+          ]
+        },
+        {
+          "usId": "US-143",
+          "acIds": [
+            "AC-708",
+            "AC-709",
+            "AC-710",
+            "AC-711"
+          ]
+        },
+        {
+          "usId": "US-144",
+          "acIds": [
+            "AC-712",
+            "AC-713",
+            "AC-714",
+            "AC-715"
+          ]
+        },
+        {
+          "usId": "US-145",
+          "acIds": [
+            "AC-716",
+            "AC-717",
+            "AC-718",
+            "AC-719"
+          ]
+        },
+        {
+          "usId": "US-146",
+          "acIds": [
+            "AC-720",
+            "AC-721",
+            "AC-722",
+            "AC-723"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-019",
+        "FBS-040",
+        "FBS-027"
+      ],
+      "testableOutcomes": [
+        "System automatically initiates match scoring within 5 minutes after successful daily scraping completion",
+        "System processes exactly 10 jobs per batch with configurable wait interval between batches",
+        "System calculates match scores between 0-100 for all new jobs using skills, location, salary, and experience alignment",
+        "System continues processing remaining jobs when individual jobs fail, logging errors and marking failed jobs as 'scoring_failed'",
+        "System generates summary report after completion showing total jobs scored, failures, and processing duration",
+        "System displays real-time progress indicator with current phase and percentage completion during scoring execution"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Matching",
+            "System Architecture"
+          ],
+          "tadSections": [
+            "api-server",
+            "job-crawler",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "@jobsearch/types",
+            "@jobsearch/logger",
+            "@jobsearch/config"
+          ],
+          "schemas": [
+            "Job",
+            "UserProfile",
+            "MatchScore",
+            "ScoringSession"
+          ]
+        },
+        "deliverables": [
+          "Automated scoring trigger service",
+          "Batch processing orchestrator with resource monitoring",
+          "Match scoring pipeline with error handling",
+          "Progress tracking and reporting system",
+          "Scoring session management API",
+          "Real-time status monitoring components"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Must integrate with existing match scoring algorithms and handle resource management for batch processing. Requires careful coordination between scraping completion events and scoring initiation to avoid race conditions."
+    },
+    {
+      "id": "FBS-042",
+      "title": "Advanced Circuit Breaker System",
+      "summary": "Implements sophisticated circuit breaker pattern with failure detection, 1-hour cooldown periods, health check validation, and graceful degradation to ensure system resilience during platform unavailability.",
+      "storyScope": [
+        {
+          "usId": "US-147",
+          "acIds": [
+            "AC-724",
+            "AC-725",
+            "AC-726",
+            "AC-727",
+            "AC-728"
+          ]
+        },
+        {
+          "usId": "US-148",
+          "acIds": [
+            "AC-729",
+            "AC-730",
+            "AC-731",
+            "AC-732"
+          ]
+        },
+        {
+          "usId": "US-149",
+          "acIds": [
+            "AC-733",
+            "AC-734",
+            "AC-735",
+            "AC-736",
+            "AC-737"
+          ]
+        },
+        {
+          "usId": "US-150",
+          "acIds": [
+            "AC-738",
+            "AC-739",
+            "AC-740",
+            "AC-741"
+          ]
+        },
+        {
+          "usId": "US-151",
+          "acIds": [
+            "AC-742",
+            "AC-743",
+            "AC-744",
+            "AC-745"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-007",
+        "FBS-005",
+        "FBS-006"
+      ],
+      "testableOutcomes": [
+        "System opens circuit breaker after exactly 3 consecutive failures and rejects subsequent requests without attempting to scrape",
+        "System enforces 1-hour cooldown period from circuit breaker opening timestamp before transitioning to half-open state",
+        "System performs lightweight health check in half-open state and closes circuit breaker on success or reopens on failure",
+        "System continues returning job search results from available platforms when some circuit breakers are open",
+        "System returns current state (closed/open/half-open) for each scraper when circuit breaker status is queried",
+        "System logs all circuit breaker state changes with timestamps and displays failure rates and availability percentages in dashboard"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery",
+            "System Reliability"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "api-server",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "@jobsearch/logger",
+            "@jobsearch/config",
+            "@jobsearch/common"
+          ],
+          "schemas": [
+            "Platform",
+            "CircuitBreakerState",
+            "HealthCheck"
+          ]
+        },
+        "deliverables": [
+          "Circuit breaker state machine implementation",
+          "Persistent state storage with Redis/database",
+          "Health check validation service",
+          "Graceful degradation middleware",
+          "Circuit breaker monitoring dashboard",
+          "State transition logging and alerting system"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Requires persistent state management across system restarts, careful timing for cooldown periods, and integration with existing scraping infrastructure. Must handle concurrent access to circuit breaker state and provide thread-safe operations."
+    },
+    {
+      "id": "FBS-043",
+      "title": "Enhanced Retry & Error Handling",
+      "summary": "Implements intelligent retry mechanisms with exponential backoff for API requests, configurable retry limits, and comprehensive error classification. Provides robust handling of transient failures while avoiding unnecessary retries for permanent errors.",
+      "storyScope": [
+        {
+          "usId": "US-152",
+          "acIds": [
+            "AC-746",
+            "AC-747",
+            "AC-748",
+            "AC-749",
+            "AC-750",
+            "AC-751"
+          ]
+        },
+        {
+          "usId": "US-153",
+          "acIds": [
+            "AC-752",
+            "AC-753",
+            "AC-754",
+            "AC-755"
+          ]
+        },
+        {
+          "usId": "US-154",
+          "acIds": [
+            "AC-756",
+            "AC-757",
+            "AC-758",
+            "AC-759",
+            "AC-760",
+            "AC-761"
+          ]
+        },
+        {
+          "usId": "US-155",
+          "acIds": [
+            "AC-762",
+            "AC-763",
+            "AC-764",
+            "AC-765"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-007",
+        "FBS-008",
+        "FBS-042"
+      ],
+      "testableOutcomes": [
+        "First retry occurs exactly 1 second after initial failure",
+        "Retry delays follow exponential backoff pattern: 1s, 2s, 4s, 8s, 16s",
+        "Retry delays are capped at 30 seconds maximum regardless of exponential calculation",
+        "System stops retrying after exactly 3 attempts by default and returns error",
+        "Configuration changes for max retry count apply immediately without system restart",
+        "5xx server errors trigger retry mechanism with exponential backoff",
+        "4xx client errors (except 429) do not trigger any retry attempts",
+        "429 rate limit errors trigger retry mechanism with exponential backoff",
+        "Network connectivity failures trigger retry mechanism",
+        "System logs each retry attempt with attempt number, delay duration, and timestamp",
+        "Retry metrics show success rate and average retry count for monitoring"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "API Integration",
+            "Error Handling"
+          ],
+          "tadSections": [
+            "api-server",
+            "@jobsearch/common"
+          ],
+          "existingModules": [
+            "Circuit breaker system",
+            "Job scraping infrastructure"
+          ],
+          "schemas": [
+            "Configuration schema",
+            "Logging schema"
+          ]
+        },
+        "deliverables": [
+          "Exponential backoff retry service",
+          "Configurable retry policy manager",
+          "Error classification middleware",
+          "Retry metrics collection service",
+          "Enhanced logging for retry operations",
+          "Configuration management for retry settings"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Integrates with existing circuit breaker system. Requires careful handling of concurrent retry operations and proper resource cleanup on timeout."
+    },
+    {
+      "id": "FBS-044",
+      "title": "Performance Monitoring & Optimization",
+      "summary": "Establishes comprehensive performance monitoring for scraping operations and match scoring processes. Implements timeout enforcement, alerting thresholds, and performance tracking to ensure SLA compliance and proactive issue detection.",
+      "storyScope": [
+        {
+          "usId": "US-178",
+          "acIds": [
+            "AC-864",
+            "AC-865",
+            "AC-866",
+            "AC-867"
+          ]
+        },
+        {
+          "usId": "US-179",
+          "acIds": [
+            "AC-868",
+            "AC-869",
+            "AC-870",
+            "AC-871"
+          ]
+        },
+        {
+          "usId": "US-180",
+          "acIds": [
+            "AC-872",
+            "AC-873",
+            "AC-874",
+            "AC-875"
+          ]
+        },
+        {
+          "usId": "US-181",
+          "acIds": [
+            "AC-876",
+            "AC-877",
+            "AC-878",
+            "AC-879"
+          ]
+        },
+        {
+          "usId": "US-182",
+          "acIds": [
+            "AC-880",
+            "AC-881",
+            "AC-882",
+            "AC-883"
+          ]
+        },
+        {
+          "usId": "US-183",
+          "acIds": [
+            "AC-884",
+            "AC-885",
+            "AC-886",
+            "AC-887"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-008",
+        "FBS-019",
+        "FBS-041"
+      ],
+      "testableOutcomes": [
+        "Daily scraping process completes within 60 minutes with recorded completion timestamp",
+        "Individual platform scraping operations timeout after exactly 15 minutes",
+        "System continues processing remaining platforms when one platform times out",
+        "Warning alert triggers when total scraping time exceeds 50 minutes",
+        "Warning alert triggers when any platform exceeds 12 minutes execution time",
+        "Individual job match scoring completes within 10 seconds for any job complexity",
+        "Batch processing of exactly 300 jobs completes within 50 minutes",
+        "CPU and memory usage remain within acceptable limits during 50-minute batch processing",
+        "Alert triggers when individual job scoring exceeds 10 seconds",
+        "Escalation alerts sent when batch processing exceeds 50 minutes",
+        "Historical performance data is accessible for administrator analysis"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Performance Requirements",
+            "Monitoring"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "api-server",
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "Job scraping system",
+            "Match scoring pipeline",
+            "Health monitoring"
+          ],
+          "schemas": [
+            "Performance metrics schema",
+            "Alert configuration schema"
+          ]
+        },
+        "deliverables": [
+          "Performance monitoring service with metrics collection",
+          "Timeout enforcement middleware for scraping operations",
+          "Alert threshold configuration and notification system",
+          "Performance analytics dashboard components",
+          "Historical performance data aggregation service",
+          "Resource usage monitoring utilities"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Requires integration with existing logging system and careful performance measurement without impacting actual operation performance. Alert system needs proper escalation paths."
+    },
+    {
+      "id": "FBS-045",
+      "title": "AI Performance & Dashboard Optimization",
+      "summary": "Optimizes AI content generation performance and dashboard loading times. Implements performance monitoring for Ollama operations, efficient pagination and infinite scroll for large datasets, and ensures fast dashboard rendering within SLA requirements.",
+      "storyScope": [
+        {
+          "usId": "US-184",
+          "acIds": [
+            "AC-888",
+            "AC-889",
+            "AC-890",
+            "AC-891"
+          ]
+        },
+        {
+          "usId": "US-185",
+          "acIds": [
+            "AC-892",
+            "AC-893",
+            "AC-894",
+            "AC-895"
+          ]
+        },
+        {
+          "usId": "US-186",
+          "acIds": [
+            "AC-896",
+            "AC-897",
+            "AC-898",
+            "AC-899"
+          ]
+        },
+        {
+          "usId": "US-187",
+          "acIds": [
+            "AC-900",
+            "AC-901",
+            "AC-902",
+            "AC-903"
+          ]
+        },
+        {
+          "usId": "US-188",
+          "acIds": [
+            "AC-904",
+            "AC-905",
+            "AC-906",
+            "AC-907"
+          ]
+        },
+        {
+          "usId": "US-189",
+          "acIds": [
+            "AC-908",
+            "AC-909",
+            "AC-910"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-024",
+        "FBS-032",
+        "FBS-033"
+      ],
+      "testableOutcomes": [
+        "Cover letter variants generate within 90 seconds on 8GB RAM system",
+        "User receives error message with retry option when generation exceeds 90 seconds",
+        "Warning alert triggers when generation time exceeds 75 seconds",
+        "Performance degradation alert generates when memory usage exceeds 90%",
+        "Job dashboard renders complete job list within 2 seconds for 100, 500, and 1000 jobs",
+        "95% of dashboard load requests complete within 2 seconds across multiple browser sessions",
+        "Pagination controls display when more than 1000 jobs are available",
+        "Any paginated page loads within 2 seconds regardless of total dataset size",
+        "Only current page data loads from backend when using pagination with large datasets",
+        "Next batch of jobs loads within 2 seconds when scrolling near bottom with infinite scroll",
+        "Loading indicators appear and disappear smoothly without layout shifts during infinite scroll",
+        "Alerts trigger when dashboard load times exceed 2 seconds",
+        "Detailed timing breakdowns available for database query, rendering, and network components"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Performance Requirements",
+            "User Interface"
+          ],
+          "tadSections": [
+            "web-ui",
+            "api-server",
+            "@jobsearch/ai-client"
+          ],
+          "existingModules": [
+            "Cover letter generation",
+            "Job dashboard",
+            "AI integration"
+          ],
+          "schemas": [
+            "Performance metrics schema",
+            "Pagination schema"
+          ]
+        },
+        "deliverables": [
+          "AI performance monitoring service with timeout handling",
+          "Optimized pagination API endpoints with configurable page sizes",
+          "Infinite scroll implementation with smooth loading states",
+          "Dashboard performance optimization utilities",
+          "Memory usage monitoring for AI operations",
+          "Performance analytics collection for dashboard loads",
+          "Alert system for performance threshold violations"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Requires careful memory management for AI operations and efficient database query optimization for large datasets. Frontend optimization must balance user experience with performance constraints."
+    },
+    {
+      "id": "FBS-046",
+      "title": "Data Privacy & Security Compliance",
+      "summary": "Implements comprehensive data locality enforcement ensuring all user data (CV, preferences, applications) remains stored exclusively in local PostgreSQL database. Establishes network monitoring and validation to prevent unauthorized external data transmission while maintaining optional Claude API integration for processing.",
+      "storyScope": [
+        {
+          "usId": "US-190",
+          "acIds": [
+            "AC-911",
+            "AC-912",
+            "AC-913",
+            "AC-914"
+          ]
+        },
+        {
+          "usId": "US-191",
+          "acIds": [
+            "AC-915",
+            "AC-916",
+            "AC-917"
+          ]
+        },
+        {
+          "usId": "US-192",
+          "acIds": [
+            "AC-918",
+            "AC-919",
+            "AC-920",
+            "AC-921"
+          ]
+        },
+        {
+          "usId": "US-193",
+          "acIds": [
+            "AC-922",
+            "AC-923",
+            "AC-924",
+            "AC-925"
+          ]
+        },
+        {
+          "usId": "US-194",
+          "acIds": [
+            "AC-926",
+            "AC-927",
+            "AC-928"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-004",
+        "FBS-017",
+        "FBS-018",
+        "FBS-023",
+        "FBS-025"
+      ],
+      "testableOutcomes": [
+        "CV upload and processing operations store data only in local PostgreSQL database with no external HTTP requests",
+        "Job search preferences save and retrieve exclusively from local database tables without external API calls",
+        "Job application data persists locally with status updates recorded only in PostgreSQL instance",
+        "Claude API integration transmits only processing data, never complete user profiles, with results stored locally",
+        "Network monitoring confirms no user data transmission to unauthorized external endpoints except Claude API",
+        "Database connection validation shows all user data queries execute against local PostgreSQL instance only",
+        "System logs demonstrate no evidence of user data transmission to unauthorized external services"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Data Privacy",
+            "Security Requirements"
+          ],
+          "tadSections": [
+            "@jobsearch/database",
+            "@jobsearch/ai-client",
+            "api-server"
+          ],
+          "existingModules": [
+            "CV processing",
+            "User preferences",
+            "Application tracking"
+          ],
+          "schemas": [
+            "User data tables",
+            "Application tracking schema"
+          ]
+        },
+        "deliverables": [
+          "Data locality validation middleware",
+          "Network monitoring service",
+          "Claude API data filtering",
+          "Database connection validator",
+          "Privacy compliance audit utilities"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Security & Deployment",
+      "implementationNotes": "Critical security feature requiring careful validation of all data flows. Must implement comprehensive network monitoring and establish clear boundaries between local storage and optional external processing."
+    },
+    {
+      "id": "FBS-047",
+      "title": "Memory Management & Resource Control",
+      "summary": "Establishes comprehensive memory management system with documented allocation budgets, container-level limits, and automated monitoring with warning/critical thresholds. Implements automatic Ollama model unloading at critical memory levels to prevent system instability.",
+      "storyScope": [
+        {
+          "usId": "US-293",
+          "acIds": [
+            "AC-1404",
+            "AC-1405",
+            "AC-1406",
+            "AC-1407",
+            "AC-1408",
+            "AC-1409",
+            "AC-1410",
+            "AC-1411",
+            "AC-1412"
+          ]
+        },
+        {
+          "usId": "US-294",
+          "acIds": [
+            "AC-1413",
+            "AC-1414",
+            "AC-1415",
+            "AC-1416",
+            "AC-1417",
+            "AC-1418",
+            "AC-1419",
+            "AC-1420"
+          ]
+        },
+        {
+          "usId": "US-295",
+          "acIds": [
+            "AC-1421",
+            "AC-1422",
+            "AC-1423"
+          ]
+        },
+        {
+          "usId": "US-296",
+          "acIds": [
+            "AC-1424",
+            "AC-1425",
+            "AC-1426"
+          ]
+        },
+        {
+          "usId": "US-297",
+          "acIds": [
+            "AC-1427",
+            "AC-1428",
+            "AC-1429",
+            "AC-1430"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-003",
+        "FBS-005",
+        "FBS-023"
+      ],
+      "testableOutcomes": [
+        "System documentation displays memory allocation budgets totaling exactly 8GB across all services",
+        "Container configurations enforce memory limits: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API Server 256MB, LiteLLM 256MB, Web UI 128MB",
+        "Memory monitoring triggers warning alert when total usage reaches 6.4GB (80% threshold)",
+        "Memory monitoring triggers critical alert when total usage reaches 7.2GB (90% threshold)",
+        "Ollama model automatically unloads when memory reaches 90% threshold, increasing available memory",
+        "System memory usage below 80% maintains all services without alerts or automatic interventions",
+        "Memory alerts include current usage and percentage information for administrative action"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 4,
+        "contextRequirements": {
+          "prdSections": [
+            "System Requirements",
+            "Performance Specifications"
+          ],
+          "tadSections": [
+            "Container Infrastructure",
+            "@jobsearch/ai-client"
+          ],
+          "existingModules": [
+            "Docker compose configuration",
+            "Health monitoring"
+          ],
+          "schemas": [
+            "System metrics schema"
+          ]
+        },
+        "deliverables": [
+          "Memory allocation documentation",
+          "Container memory limit configurations",
+          "Memory monitoring service",
+          "Alert threshold management",
+          "Ollama model auto-unload service"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Requires careful coordination between container orchestration and monitoring systems. Auto-unload mechanism must be thoroughly tested to prevent service disruption while maintaining system stability."
+    },
+    {
+      "id": "FBS-048",
+      "title": "LinkedIn Legal Compliance & Opt-in",
+      "summary": "Implements comprehensive legal compliance system for LinkedIn scraping with mandatory disclaimer, explicit consent mechanism, and opt-in disabled by default configuration. Prominently promotes email parsing as zero-risk alternative while ensuring users understand ToS violation risks.",
+      "storyScope": [
+        {
+          "usId": "US-298",
+          "acIds": [
+            "AC-1431",
+            "AC-1432",
+            "AC-1433",
+            "AC-1434",
+            "AC-1435"
+          ]
+        },
+        {
+          "usId": "US-299",
+          "acIds": [
+            "AC-1436",
+            "AC-1437",
+            "AC-1438",
+            "AC-1439",
+            "AC-1440"
+          ]
+        },
+        {
+          "usId": "US-300",
+          "acIds": [
+            "AC-1441",
+            "AC-1442",
+            "AC-1443",
+            "AC-1444",
+            "AC-1445"
+          ]
+        },
+        {
+          "usId": "US-301",
+          "acIds": [
+            "AC-1446",
+            "AC-1447",
+            "AC-1448",
+            "AC-1449",
+            "AC-1450"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-007",
+        "FBS-018",
+        "FBS-032"
+      ],
+      "testableOutcomes": [
+        "Legal disclaimer modal blocks access to LinkedIn scraping controls until user interaction",
+        "Disclaimer displays comprehensive warning about LinkedIn Terms of Service violation risks and potential account suspension",
+        "Explicit consent checkbox with acknowledgment text prevents access until checked and confirmed",
+        "Consent timestamp records in user preferences when user provides explicit consent",
+        "New user accounts initialize with LinkedIn scraping disabled by default in all configurations",
+        "Users without consent cannot access LinkedIn scraping in job search options or automated searches",
+        "Email parsing prominently featured as recommended zero-risk alternative in all LinkedIn-related interfaces",
+        "Previously consented users bypass disclaimer but system verifies consent status on each access",
+        "System excludes LinkedIn from scraping sources when user has not provided explicit consent"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 4,
+        "contextRequirements": {
+          "prdSections": [
+            "Legal Compliance",
+            "User Interface",
+            "Job Scraping"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database",
+            "job-crawler"
+          ],
+          "existingModules": [
+            "User preferences",
+            "Job scraping configuration",
+            "Platform management"
+          ],
+          "schemas": [
+            "User preferences schema",
+            "Consent tracking schema"
+          ]
+        },
+        "deliverables": [
+          "Legal disclaimer modal component",
+          "Consent management service",
+          "User preference opt-in system",
+          "Email parsing promotion components",
+          "LinkedIn scraping access control"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Security & Deployment",
+      "implementationNotes": "Critical legal compliance feature requiring careful UX design to ensure informed consent. Must balance legal protection with user experience while strongly promoting safer alternatives."
+    },
+    {
+      "id": "FBS-049",
+      "title": "LinkedIn Stealth Scraping Foundation",
+      "summary": "Establishes stealth browser automation infrastructure using Playwright with anti-detection plugins and human-like browser fingerprints. Provides foundation for undetected LinkedIn job scraping with proper stealth configuration and detection monitoring.",
+      "storyScope": [
+        {
+          "usId": "US-202",
+          "acIds": [
+            "AC-957",
+            "AC-958",
+            "AC-959",
+            "AC-960"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-007",
+        "FBS-008"
+      ],
+      "testableOutcomes": [
+        "Playwright browser launches with playwright-extra and stealth plugin successfully loaded and configured",
+        "Browser runs in headed mode with randomized human-like user agent and viewport settings applied",
+        "LinkedIn pages load without triggering bot detection warnings or CAPTCHA challenges",
+        "Stealth plugins successfully mask automation signatures and browser fingerprints during LinkedIn navigation"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "LinkedIn Integration",
+            "Stealth Operations"
+          ],
+          "tadSections": [
+            "job-crawler"
+          ],
+          "existingModules": [
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "Job",
+            "ScrapingSession"
+          ]
+        },
+        "deliverables": [
+          "LinkedIn stealth scraper class with Playwright integration",
+          "Stealth plugin configuration and initialization",
+          "Human-like browser fingerprint generation",
+          "Detection monitoring and validation utilities",
+          "LinkedIn-specific scraper implementation"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "LinkedIn Stealth Operations",
+      "implementationNotes": "Requires careful configuration of playwright-extra stealth plugins to avoid LinkedIn's sophisticated bot detection. Must implement proper error handling for detection scenarios and maintain browser state consistency."
+    },
+    {
+      "id": "FBS-050",
+      "title": "LinkedIn Human-like Behavior Simulation",
+      "summary": "Implements comprehensive human-like behavior patterns including gamma distribution timing, realistic mouse movements, variable scrolling, and business hours restrictions. Coordinates all behavior patterns to create authentic human interaction simulation.",
+      "storyScope": [
+        {
+          "usId": "US-203",
+          "acIds": [
+            "AC-961",
+            "AC-962",
+            "AC-963",
+            "AC-964",
+            "AC-965"
+          ]
+        },
+        {
+          "usId": "US-213",
+          "acIds": [
+            "AC-1006",
+            "AC-1007",
+            "AC-1008",
+            "AC-1009"
+          ]
+        },
+        {
+          "usId": "US-214",
+          "acIds": [
+            "AC-1010",
+            "AC-1011",
+            "AC-1012",
+            "AC-1013"
+          ]
+        },
+        {
+          "usId": "US-215",
+          "acIds": [
+            "AC-1014",
+            "AC-1015",
+            "AC-1016",
+            "AC-1017",
+            "AC-1018"
+          ]
+        },
+        {
+          "usId": "US-216",
+          "acIds": [
+            "AC-1019",
+            "AC-1020",
+            "AC-1021",
+            "AC-1022",
+            "AC-1023"
+          ]
+        },
+        {
+          "usId": "US-217",
+          "acIds": [
+            "AC-1024",
+            "AC-1025",
+            "AC-1026",
+            "AC-1027",
+            "AC-1028"
+          ]
+        },
+        {
+          "usId": "US-218",
+          "acIds": [
+            "AC-1029",
+            "AC-1030",
+            "AC-1031",
+            "AC-1032",
+            "AC-1033"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-049"
+      ],
+      "testableOutcomes": [
+        "System applies random delays between 2-8 seconds during page navigation with gamma distribution timing",
+        "Mouse movements follow realistic Bezier curves with variable speeds and random final position offsets",
+        "Scroll behavior varies distance between 100-400 pixels with random pauses every 3-7 actions",
+        "Sessions automatically terminate after randomly selected duration between 15-25 minutes",
+        "System only operates during business hours (9 AM - 6 PM) and queues operations outside these hours",
+        "95% of gamma distribution wait intervals fall between 1 and 20 seconds with mean 8 seconds",
+        "Business hours restrictions prevent weekend operations and enforce timezone-based calculations"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Human Behavior Simulation",
+            "Timing Patterns"
+          ],
+          "tadSections": [
+            "job-crawler"
+          ],
+          "existingModules": [
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "ScrapingSession",
+            "BehaviorMetrics"
+          ]
+        },
+        "deliverables": [
+          "Gamma distribution timing service",
+          "Bezier curve mouse movement engine",
+          "Variable scroll behavior controller",
+          "Session duration management system",
+          "Business hours validation service",
+          "Behavior pattern coordination orchestrator",
+          "Human-like interaction logging utilities"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "LinkedIn Stealth Operations",
+      "implementationNotes": "Complex coordination of multiple behavior patterns requires careful state management. Gamma distribution implementation must be mathematically accurate while maintaining performance. Session timing must handle graceful termination during active operations."
+    }
+  ],
+  "createdAt": "2026-02-09T11:24:34.997Z",
+  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "partInfo": {
+    "partNumber": 5,
+    "totalParts": 7,
+    "fbsRange": {
+      "start": "FBS-041",
+      "end": "FBS-050"
+    },
+    "globalFbsCount": 68
+  }
+}
