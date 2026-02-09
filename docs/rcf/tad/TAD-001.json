@@ -1,0 +1,4190 @@
+{
+  "tadId": "TAD-001",
+  "prdId": "PRD-001",
+  "version": "1.0.2",
+  "status": "draft",
+  "extractedConcerns": {
+    "sourceDocuments": {
+      "prdId": "PRD-001",
+      "prdVersion": "1.2.0",
+      "userStoriesId": "PRD-001",
+      "userStoriesVersion": "1.0.0",
+      "extractedAt": "2026-02-08T14:54:42.709Z"
+    },
+    "productContext": {
+      "productName": "Zero-Cost Remote Job Search Automation System",
+      "problemStatement": "Remote job seekers waste 15-20 hours/week manually searching across fragmented platforms, resulting in 80% of relevant jobs being missed, 2-5% response rates from generic applications, and 30% of applications lost due to poor tracking. Cloud solutions cost $136/month, making them inaccessible for cost-conscious seekers.",
+      "targetUsers": [
+        "Remote job seekers (software developers, tech professionals)",
+        "Career changers looking for remote opportunities",
+        "Freelancers seeking full-time remote positions",
+        "International candidates targeting US/UK/EU remote jobs"
+      ],
+      "scope": {
+        "inScope": [
+          "Automated job scraping from 5+ platforms",
+          "LinkedIn stealth scraping with human-like behavior",
+          "LinkedIn email alert parsing",
+          "AI-powered job-candidate matching with skill gap analysis",
+          "Cover letter and CV generation using hybrid AI",
+          "Full application lifecycle tracking with Kanban board",
+          "Analytics dashboard and email reports",
+          "Docker-based local deployment",
+          "Error handling with circuit breakers and retry logic"
+        ],
+        "outOfScope": [
+          "Automatic job application submission",
+          "Interview preparation assistant",
+          "Salary negotiation coaching",
+          "Multi-user support or team features",
+          "Mobile application",
+          "Chrome browser extension",
+          "Recruiter marketplace or job board creation"
+        ]
+      }
+    },
+    "functionalRequirements": [
+      {
+        "reqId": "REQ-001",
+        "title": "Multi-Platform Job Scraping",
+        "description": "System shall automatically scrape job listings from multiple platforms (RemoteOK, WeWorkRemotely, Himalayas, Indeed) on a daily schedule, handling rate limits gracefully with circuit breakers and exponential backoff.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires distributed scraping service architecture",
+          "Need circuit breaker pattern implementation",
+          "Requires job scheduler component",
+          "Need rate limiting middleware",
+          "Requires fault-tolerant HTTP client library"
+        ]
+      },
+      {
+        "reqId": "REQ-002",
+        "title": "Job Data Extraction",
+        "description": "System shall extract structured data from job listings including: job title, company name, location, salary (if available), full description, required technologies, posted date, and application URL.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires HTML parsing engine",
+          "Need data extraction pipeline",
+          "Requires structured data schema design",
+          "Need content normalization service",
+          "Requires error handling for malformed HTML"
+        ]
+      },
+      {
+        "reqId": "REQ-003",
+        "title": "Job Deduplication",
+        "description": "System shall identify and remove duplicate job listings across platforms using title+company matching (case-insensitive), keeping the version with the most complete data.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires deduplication algorithm implementation",
+          "Need fuzzy string matching capability",
+          "Requires data quality scoring system",
+          "Need batch processing pipeline",
+          "Requires database indexing strategy for efficient matching"
+        ]
+      },
+      {
+        "reqId": "REQ-004",
+        "title": "Job Normalization",
+        "description": "System shall normalize extracted job data including: country name standardization, technology name mapping (React.js → React), salary conversion to USD, and experience level categorization.",
+        "category": "Job Discovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires data transformation pipeline",
+          "Need reference data management system",
+          "Requires currency conversion service",
+          "Need text normalization algorithms",
+          "Requires configurable mapping rules engine"
+        ]
+      },
+      {
+        "reqId": "REQ-005",
+        "title": "Job Filtering",
+        "description": "System shall filter jobs based on user preferences: target countries (OR logic), technologies (must match ≥1), salary range (min/max), remote-only toggle, and experience level.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires complex query engine",
+          "Need user preference management system",
+          "Requires database indexing for filter performance",
+          "Need caching layer for frequent filters",
+          "Requires boolean logic evaluation engine"
+        ]
+      },
+      {
+        "reqId": "REQ-006",
+        "title": "CV Upload and Parsing",
+        "description": "System shall accept CV uploads in PDF and DOCX formats (max 5MB), extract full text with 95%+ accuracy, and identify technical skills, experience duration, and education.",
+        "category": "Intelligent Matching",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires document parsing service",
+          "Need file upload handling with size limits",
+          "Requires OCR/text extraction libraries",
+          "Need NLP pipeline for skill extraction",
+          "Requires secure file storage system"
+        ]
+      },
+      {
+        "reqId": "REQ-007",
+        "title": "User Profile Management",
+        "description": "System shall allow users to configure job search preferences including: target countries, preferred technologies, salary expectations, experience level, and remote-only preference.",
+        "category": "Intelligent Matching",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires user profile data model",
+          "Need preference validation system",
+          "Requires configuration management service",
+          "Need data persistence layer",
+          "Requires profile versioning for changes"
+        ]
+      },
+      {
+        "reqId": "REQ-008",
+        "title": "Hybrid Match Scoring",
+        "description": "System shall calculate a match score (0-100%) for each job using a hybrid approach: 30% TF-IDF text similarity, 40% skill overlap, 20% experience match, 10% semantic embeddings.",
+        "category": "Intelligent Matching",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires ML pipeline architecture",
+          "Need TF-IDF implementation",
+          "Requires vector embedding service",
+          "Need weighted scoring algorithm",
+          "Requires batch processing for performance"
+        ]
+      },
+      {
+        "reqId": "REQ-009",
+        "title": "Skill Gap Analysis",
+        "description": "System shall analyze each job to identify: matched skills (in CV AND job), missing skills (in job NOT in CV), and extra skills (in CV NOT in job), with fuzzy matching for synonyms.",
+        "category": "Intelligent Matching",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires skill taxonomy system",
+          "Need fuzzy matching algorithms",
+          "Requires set operations implementation",
+          "Need synonym mapping database",
+          "Requires skill extraction pipeline"
+        ]
+      },
+      {
+        "reqId": "REQ-010",
+        "title": "AI-Powered Gap Analysis Report",
+        "description": "System shall use local LLM (Ollama) to generate detailed gap analysis including: strengths (3-5 points), missing skills (3-5 points), improvement suggestions (3-5 actionable items), and overall assessment.",
+        "category": "Intelligent Matching",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires LLM integration service",
+          "Need prompt engineering framework",
+          "Requires response parsing and validation",
+          "Need queue system for LLM requests",
+          "Requires local model management"
+        ]
+      },
+      {
+        "reqId": "REQ-011",
+        "title": "Cover Letter Generation",
+        "description": "System shall generate 3 cover letter variants using local LLM (Ollama): Conservative (professional, formal), Aggressive (bold, confident), and Story-driven (narrative alignment). Each 300-400 words.",
+        "category": "Content Generation",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires template management system",
+          "Need LLM orchestration service",
+          "Requires content validation pipeline",
+          "Need variant generation logic",
+          "Requires document generation service"
+        ]
+      },
+      {
+        "reqId": "REQ-012",
+        "title": "Cover Letter Polish (Optional)",
+        "description": "System shall optionally polish cover letters using Claude API for high-match jobs (≥85%) or on user request, improving grammar, clarity, and tone.",
+        "category": "Content Generation",
+        "priority": "could",
+        "architecturalImplications": [
+          "Requires external API integration",
+          "Need cost tracking system",
+          "Requires conditional processing logic",
+          "Need API rate limiting",
+          "Requires fallback mechanisms"
+        ]
+      },
+      {
+        "reqId": "REQ-013",
+        "title": "CV Tailoring",
+        "description": "System shall generate tailored CV versions that reorder bullet points by relevance to the job, add a 'Key Skills Match' section, and highlight matching technologies.",
+        "category": "Content Generation",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires document templating engine",
+          "Need relevance scoring algorithm",
+          "Requires CV parsing and reconstruction",
+          "Need content reordering logic",
+          "Requires PDF/DOCX generation"
+        ]
+      },
+      {
+        "reqId": "REQ-014",
+        "title": "Hybrid AI Cost Management",
+        "description": "System shall track AI usage (Ollama: unlimited, Claude: budget-limited) and alert users when approaching the monthly budget ($10), defaulting to Ollama-only when budget exceeded.",
+        "category": "Content Generation",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires usage tracking system",
+          "Need budget monitoring service",
+          "Requires cost calculation engine",
+          "Need alert notification system",
+          "Requires service switching logic"
+        ]
+      },
+      {
+        "reqId": "REQ-015",
+        "title": "Application Status Management",
+        "description": "System shall track application lifecycle with statuses: Saved, Reviewing, Applied, Interviewing, Rejected, Offered. Status changes must record timestamps and can only move forward (except Rejected from any).",
+        "category": "Application Tracking",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires state machine implementation",
+          "Need audit trail system",
+          "Requires status validation logic",
+          "Need timestamp tracking",
+          "Requires workflow engine"
+        ]
+      },
+      {
+        "reqId": "REQ-016",
+        "title": "Application Notes",
+        "description": "System shall allow users to add freeform notes to each application with rich text formatting and auto-save functionality.",
+        "category": "Application Tracking",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires rich text editor integration",
+          "Need auto-save mechanism",
+          "Requires versioning system",
+          "Need real-time data persistence",
+          "Requires content sanitization"
+        ]
+      },
+      {
+        "reqId": "REQ-017",
+        "title": "Follow-Up Reminders",
+        "description": "System shall automatically send email reminders 7 days after 'Applied' status, with options to snooze (3/7/14 days) or dismiss. Reminders cancelled if status changes to Interviewing/Rejected.",
+        "category": "Application Tracking",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires job scheduler system",
+          "Need email service integration",
+          "Requires reminder state management",
+          "Need conditional logic engine",
+          "Requires notification queue system"
+        ]
+      },
+      {
+        "reqId": "REQ-018",
+        "title": "Application Timeline Visualization",
+        "description": "System shall display a horizontal timeline for each application showing progression through stages with calculated durations and comparison to averages.",
+        "category": "Application Tracking",
+        "priority": "could",
+        "architecturalImplications": [
+          "Requires timeline visualization component",
+          "Need duration calculation service",
+          "Requires statistical analysis engine",
+          "Need data aggregation pipeline",
+          "Requires charting library integration"
+        ]
+      },
+      {
+        "reqId": "REQ-019",
+        "title": "Job List Dashboard",
+        "description": "System shall display discovered jobs in a card layout with match score, technologies, salary, and quick actions. Support sorting by match %, date, salary and filtering by multiple criteria.",
+        "category": "User Interface",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires responsive UI framework",
+          "Need pagination/virtualization for performance",
+          "Requires sorting and filtering engine",
+          "Need real-time data updates",
+          "Requires caching for UI performance"
+        ]
+      },
+      {
+        "reqId": "REQ-020",
+        "title": "Job Detail View",
+        "description": "System shall display comprehensive job information including full description, requirements checklist (matched/missing), gap analysis, cover letter variants, and tailored CV preview.",
+        "category": "User Interface",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires complex UI component architecture",
+          "Need data aggregation service",
+          "Requires document preview system",
+          "Need lazy loading for performance",
+          "Requires modal/drawer UI patterns"
+        ]
+      },
+      {
+        "reqId": "REQ-021",
+        "title": "Kanban Application Board",
+        "description": "System shall provide a Kanban-style board with columns for each application status, supporting drag-and-drop status changes and showing card count per column.",
+        "category": "User Interface",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires drag-and-drop UI library",
+          "Need real-time state synchronization",
+          "Requires Kanban board component",
+          "Need optimistic UI updates",
+          "Requires conflict resolution for concurrent updates"
+        ]
+      },
+      {
+        "reqId": "REQ-022",
+        "title": "Analytics Dashboard",
+        "description": "System shall display analytics including application funnel chart, conversion rates, source performance comparison, match score distribution, and weekly activity trends.",
+        "category": "Analytics",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires analytics data pipeline",
+          "Need charting/visualization library",
+          "Requires data aggregation service",
+          "Need time-series data handling",
+          "Requires dashboard framework"
+        ]
+      },
+      {
+        "reqId": "REQ-023",
+        "title": "Daily Job Digest Email",
+        "description": "System shall send daily email at 9:00 AM containing top 10 new high-match jobs (≥70%) with titles, companies, match scores, and dashboard links. Skip if no matches.",
+        "category": "Analytics",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires email templating system",
+          "Need scheduled job execution",
+          "Requires email service integration",
+          "Need conditional email logic",
+          "Requires HTML email generation"
+        ]
+      },
+      {
+        "reqId": "REQ-024",
+        "title": "Weekly Analytics Report",
+        "description": "System shall send weekly email summary including jobs discovered, applications submitted, interviews scheduled, conversion rates, and trending technologies.",
+        "category": "Analytics",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires data aggregation pipeline",
+          "Need report generation service",
+          "Requires trend analysis algorithms",
+          "Need email scheduling system",
+          "Requires metrics calculation engine"
+        ]
+      },
+      {
+        "reqId": "REQ-025",
+        "title": "Daily Automated Scraping",
+        "description": "System shall execute automated scraping workflow daily at 8:00 AM via n8n, completing within 60 minutes, with automatic retry on failure and email alert if zero jobs scraped.",
+        "category": "Automation",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires workflow orchestration system",
+          "Need cron-based scheduling",
+          "Requires monitoring and alerting",
+          "Need failure recovery mechanisms",
+          "Requires distributed task execution"
+        ]
+      },
+      {
+        "reqId": "REQ-026",
+        "title": "Automated Match Scoring",
+        "description": "System shall automatically calculate match scores for all new jobs after daily scraping completes, processing in batches of 10 to prevent resource overload.",
+        "category": "Automation",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires batch processing system",
+          "Need resource management controls",
+          "Requires job queue implementation",
+          "Need backpressure handling",
+          "Requires progress tracking"
+        ]
+      },
+      {
+        "reqId": "REQ-027",
+        "title": "Circuit Breaker Pattern",
+        "description": "System shall implement circuit breakers for each scraper: 3 consecutive failures trigger 1-hour cooldown, health check before scraping, and graceful degradation when platform unavailable.",
+        "category": "System Reliability",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires circuit breaker library/implementation",
+          "Need health check system",
+          "Requires failure tracking mechanism",
+          "Need graceful degradation patterns",
+          "Requires service isolation"
+        ]
+      },
+      {
+        "reqId": "REQ-028",
+        "title": "Retry Logic with Backoff",
+        "description": "System shall implement retry logic with exponential backoff (1s, 2s, 4s, 8s, max 30s) for transient failures, with configurable max retry count (default: 3).",
+        "category": "System Reliability",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires retry mechanism implementation",
+          "Need backoff algorithm",
+          "Requires configuration management",
+          "Need failure classification logic",
+          "Requires timeout handling"
+        ]
+      },
+      {
+        "reqId": "REQ-029",
+        "title": "Health Check Endpoints",
+        "description": "System shall expose health check endpoints for all services: scraper API (/health), PostgreSQL (connection test), Ollama (model availability), n8n (workflow status).",
+        "category": "System Reliability",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires health check framework",
+          "Need service dependency monitoring",
+          "Requires HTTP endpoint implementation",
+          "Need database connection pooling",
+          "Requires external service monitoring"
+        ]
+      },
+      {
+        "reqId": "REQ-030",
+        "title": "Centralized Error Logging",
+        "description": "System shall log all errors with structured JSON format including timestamp, service, severity, message, and context. Logs rotated daily, retained 30 days.",
+        "category": "System Reliability",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires centralized logging system",
+          "Need structured logging framework",
+          "Requires log rotation mechanism",
+          "Need log aggregation service",
+          "Requires log retention policies"
+        ]
+      },
+      {
+        "reqId": "REQ-031",
+        "title": "Automated Database Backup",
+        "description": "System shall perform daily database backup at 2:00 AM, storing compressed backups locally with 7-day retention and automated restore testing monthly.",
+        "category": "System Reliability",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires backup automation system",
+          "Need database dump utilities",
+          "Requires compression algorithms",
+          "Need backup verification system",
+          "Requires scheduled job execution"
+        ]
+      },
+      {
+        "reqId": "REQ-032",
+        "title": "Data Retention Policy",
+        "description": "System shall automatically clean up: unsaved jobs after 90 days, generated content after 30 days, raw analytics after 6 months (aggregated data retained).",
+        "category": "System Reliability",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires data lifecycle management",
+          "Need scheduled cleanup jobs",
+          "Requires data archival system",
+          "Need retention policy engine",
+          "Requires soft delete mechanisms"
+        ]
+      },
+      {
+        "reqId": "REQ-041",
+        "title": "LinkedIn Stealth Job Scraping",
+        "description": "System shall scrape LinkedIn job listings using Playwright with stealth plugins (playwright-extra, stealth plugin) in headed browser mode, extracting 20-40 jobs per daily session with human-like behavior patterns.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires browser automation framework",
+          "Need stealth detection evasion",
+          "Requires headful browser management",
+          "Need rate limiting for human-like behavior",
+          "Requires session management"
+        ]
+      },
+      {
+        "reqId": "REQ-042",
+        "title": "LinkedIn Session Management",
+        "description": "System shall maintain persistent browser sessions with cookie storage, localStorage preservation, and session resumption to avoid repeated logins. Sessions stored locally with 7-day rotation.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires session persistence layer",
+          "Need browser state management",
+          "Requires secure cookie storage",
+          "Need session rotation mechanism",
+          "Requires authentication state tracking"
+        ]
+      },
+      {
+        "reqId": "REQ-043",
+        "title": "LinkedIn Human-Like Behavior",
+        "description": "System shall implement human-like interaction patterns including: Gamma distribution timing (8s ± 4s between actions), variable session lengths (15-25 minutes), mouse movement simulation, scroll behavior variation, and operation during business hours only (9 AM - 6 PM local time).",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires behavioral simulation engine",
+          "Need statistical distribution implementation",
+          "Requires mouse/scroll simulation",
+          "Need time-based scheduling",
+          "Requires randomization algorithms"
+        ]
+      },
+      {
+        "reqId": "REQ-044",
+        "title": "LinkedIn Detection Monitoring",
+        "description": "System shall monitor for detection signals (CAPTCHA challenges, rate limit responses, unusual redirects, account warnings) and automatically pause scraping for 24-48 hours when detected, with exponential backoff on repeated triggers.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires detection signal monitoring",
+          "Need adaptive backoff algorithms",
+          "Requires anomaly detection system",
+          "Need automated pause/resume logic",
+          "Requires alert notification system"
+        ]
+      },
+      {
+        "reqId": "REQ-045",
+        "title": "LinkedIn Browser Fingerprint Injection",
+        "description": "System shall inject realistic browser fingerprints using fingerprint-generator library including: Canvas fingerprint randomization, WebGL renderer variation, font enumeration masking, and timezone/language consistency with user profile.",
+        "category": "Job Discovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires fingerprint generation service",
+          "Need browser API interception",
+          "Requires canvas/WebGL manipulation",
+          "Need profile consistency management",
+          "Requires stealth library integration"
+        ]
+      },
+      {
+        "reqId": "REQ-046",
+        "title": "LinkedIn Email Alert Integration",
+        "description": "System shall parse LinkedIn job alert emails as zero-risk backup source, extracting job URLs, titles, companies, and posting dates from email content using IMAP integration.",
+        "category": "Job Discovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires IMAP client implementation",
+          "Need email parsing engine",
+          "Requires HTML/text content extraction",
+          "Need email filtering logic",
+          "Requires duplicate detection across sources"
+        ]
+      },
+      {
+        "reqId": "REQ-047",
+        "title": "LinkedIn Manual URL Import",
+        "description": "System shall accept manual LinkedIn job URL imports as fallback, fetching full job details from provided URLs with rate-limited requests (1 request per 30 seconds).",
+        "category": "Job Discovery",
+        "priority": "could",
+        "architecturalImplications": [
+          "Requires URL validation system",
+          "Need manual input interface",
+          "Requires rate-limited HTTP client",
+          "Need job detail extraction pipeline",
+          "Requires fallback processing queue"
+        ]
+      },
+      {
+        "reqId": "REQ-048",
+        "title": "Cloud Backup Sync",
+        "description": "System shall automatically sync encrypted database backups to Google Drive (or configurable cloud provider) using rclone after each daily backup, with 90-day retention in cloud storage.",
+        "category": "System Reliability",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires cloud storage integration",
+          "Need encryption/decryption service",
+          "Requires rclone configuration management",
+          "Need backup synchronization logic",
+          "Requires cloud retention policies"
+        ]
+      },
+      {
+        "reqId": "REQ-049",
+        "title": "Docker Volume Persistence",
+        "description": "System shall use named Docker volumes for all persistent data (PostgreSQL, backups, LinkedIn sessions, user uploads) with explicit volume mounts to prevent data loss on container recreation.",
+        "category": "Infrastructure",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires Docker volume management",
+          "Need persistent storage strategy",
+          "Requires volume backup mechanisms",
+          "Need container lifecycle management",
+          "Requires data migration capabilities"
+        ]
+      },
+      {
+        "reqId": "REQ-050",
+        "title": "Complete Docker Environment Backup",
+        "description": "System shall provide comprehensive backup capability for the entire Docker environment including: all named volumes, custom-built images, container configurations, docker-compose files, and network configurations.",
+        "category": "Disaster Recovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires Docker API integration",
+          "Need container/image serialization",
+          "Requires configuration backup system",
+          "Need network topology backup",
+          "Requires comprehensive restore logic"
+        ]
+      },
+      {
+        "reqId": "REQ-051",
+        "title": "One-Click Backup and Restore Scripts",
+        "description": "System shall provide automated shell scripts for: (1) backup-docker.sh - creates timestamped backup of all Docker data, (2) restore-docker.sh - restores from backup after fresh Docker install.",
+        "category": "Disaster Recovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires shell script automation",
+          "Need cross-platform compatibility",
+          "Requires progress tracking system",
+          "Need error handling and rollback",
+          "Requires dependency checking"
+        ]
+      },
+      {
+        "reqId": "REQ-052",
+        "title": "Backup Integrity Verification",
+        "description": "System shall verify backup integrity after creation by: checking archive checksums, validating tar.gz file integrity, generating manifest with file counts and sizes, and optionally performing test restore to temporary location.",
+        "category": "Disaster Recovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires checksum calculation service",
+          "Need archive validation tools",
+          "Requires manifest generation system",
+          "Need test restore environment",
+          "Requires integrity reporting"
+        ]
+      },
+      {
+        "reqId": "REQ-053",
+        "title": "Pre-Uninstall Backup Checklist",
+        "description": "System shall provide interactive pre-uninstall checklist that: verifies latest backup exists and is recent (<24h), confirms backup copied to external storage, lists all volumes and their backup status, requires explicit confirmation before proceeding.",
+        "category": "Disaster Recovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires interactive CLI interface",
+          "Need backup status verification",
+          "Requires external storage validation",
+          "Need confirmation workflow",
+          "Requires pre-flight check system"
+        ]
+      },
+      {
+        "reqId": "REQ-054",
+        "title": "Backup Documentation and Recovery Guide",
+        "description": "System shall include comprehensive documentation covering: backup file structure (MANIFEST.md), step-by-step recovery instructions (RESTORE.md), troubleshooting common issues, and estimated recovery time for each component.",
+        "category": "Disaster Recovery",
+        "priority": "must",
+        "architecturalImplications": [
+          "Requires documentation generation system",
+          "Need structured documentation format",
+          "Requires troubleshooting knowledge base",
+          "Need recovery time estimation",
+          "Requires documentation versioning"
+        ]
+      },
+      {
+        "reqId": "REQ-055",
+        "title": "n8n Automated Backup Workflow",
+        "description": "System shall provide an n8n workflow for automated daily Docker backups that: executes at 2:00 AM daily, backs up all volumes and custom images, syncs to Google Drive via rclone, sends email notifications on success/failure, and cleans up old backups.",
+        "category": "Disaster Recovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires workflow orchestration integration",
+          "Need scheduled execution system",
+          "Requires cloud sync automation",
+          "Need notification system integration",
+          "Requires cleanup automation"
+        ]
+      },
+      {
+        "reqId": "REQ-056",
+        "title": "Backup Notification System",
+        "description": "System shall send email notifications for backup events including: successful backup with summary, failed backup with error details, cloud sync status, and weekly backup health report.",
+        "category": "Disaster Recovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires notification service",
+          "Need email templating system",
+          "Requires status tracking system",
+          "Need error reporting mechanism",
+          "Requires health monitoring dashboard"
+        ]
+      },
+      {
+        "reqId": "REQ-057",
+        "title": "Backup Retention Policy Automation",
+        "description": "System shall automatically enforce backup retention policies: local backups retained for 7 days, cloud backups retained for 90 days, cleanup runs after each successful backup, and manual backups exempt from auto-cleanup.",
+        "category": "Disaster Recovery",
+        "priority": "should",
+        "architecturalImplications": [
+          "Requires retention policy engine",
+          "Need automated cleanup system",
+          "Requires backup classification logic",
+          "Need policy configuration management",
+          "Requires audit trail for cleanup actions"
+        ]
+      }
+    ],
+    "nonFunctionalRequirements": [
+      {
+        "reqId": "REQ-033",
+        "title": "Docker Containerization",
+        "category": "maintainability",
+        "targets": [
+          "Single docker-compose up command to start",
+          "Containers for: scraper API, PostgreSQL, Ollama, n8n, and web frontend"
+        ],
+        "constraints": [
+          "Must use Docker Compose",
+          "All services containerized"
+        ],
+        "architecturalImplications": [
+          "Requires microservices architecture",
+          "Need container orchestration",
+          "Requires service discovery mechanism",
+          "Need inter-container networking",
+          "Requires volume management strategy"
+        ]
+      },
+      {
+        "reqId": "REQ-034",
+        "title": "Performance: Scraping Completion",
+        "category": "performance",
+        "targets": [
+          "Complete daily scraping within 60 minutes",
+          "Individual platform timeout of 15 minutes"
+        ],
+        "constraints": [
+          "Must handle rate limits",
+          "Circuit breaker protection required"
+        ],
+        "architecturalImplications": [
+          "Requires parallel processing architecture",
+          "Need timeout handling mechanisms",
+          "Requires resource pooling",
+          "Need performance monitoring",
+          "Requires load balancing for scrapers"
+        ]
+      },
+      {
+        "reqId": "REQ-035",
+        "title": "Performance: Match Scoring",
+        "category": "performance",
+        "targets": [
+          "Calculate match scores within 10 seconds per job",
+          "Batch processing 300 jobs within 50 minutes"
+        ],
+        "constraints": [
+          "Limited to 8GB RAM",
+          "Must use local processing"
+        ],
+        "architecturalImplications": [
+          "Requires efficient ML pipeline",
+          "Need memory optimization",
+          "Requires batch processing system",
+          "Need caching for repeated calculations",
+          "Requires resource monitoring"
+        ]
+      },
+      {
+        "reqId": "REQ-036",
+        "title": "Performance: Content Generation",
+        "category": "performance",
+        "targets": [
+          "Generate cover letter variants within 90 seconds per variant"
+        ],
+        "constraints": [
+          "Using Ollama on 8GB RAM minimum",
+          "Local LLM processing only"
+        ],
+        "architecturalImplications": [
+          "Requires LLM optimization",
+          "Need model quantization",
+          "Requires queue management for LLM requests",
+          "Need memory management",
+          "Requires response caching"
+        ]
+      },
+      {
+        "reqId": "REQ-037",
+        "title": "Performance: Dashboard Load",
+        "category": "performance",
+        "targets": [
+          "Load job list dashboard within 2 seconds for up to 1000 jobs"
+        ],
+        "constraints": [
+          "Must support pagination/infinite scroll for larger datasets"
+        ],
+        "architecturalImplications": [
+          "Requires efficient database indexing",
+          "Need UI virtualization",
+          "Requires caching layer",
+          "Need lazy loading implementation",
+          "Requires optimized queries"
+        ]
+      },
+      {
+        "reqId": "REQ-038",
+        "title": "Security: Local Data Only",
+        "category": "security",
+        "targets": [
+          "All user data stored locally",
+          "No external transmission except optional Claude API"
+        ],
+        "constraints": [
+          "Privacy-first architecture",
+          "Local PostgreSQL only"
+        ],
+        "architecturalImplications": [
+          "Requires local-first architecture",
+          "Need data encryption at rest",
+          "Requires secure local storage",
+          "Need API call isolation",
+          "Requires audit logging for external calls"
+        ]
+      },
+      {
+        "reqId": "REQ-039",
+        "title": "Security: API Key Management",
+        "category": "security",
+        "targets": [
+          "Store API keys in environment variables only",
+          "Never in code or logs"
+        ],
+        "constraints": [
+          "Must provide .env.example",
+          "Secure credential management"
+        ],
+        "architecturalImplications": [
+          "Requires configuration management system",
+          "Need secret management service",
+          "Requires environment variable validation",
+          "Need secure configuration loading",
+          "Requires credential rotation capability"
+        ]
+      },
+      {
+        "reqId": "REQ-040",
+        "title": "Usability: Single-User Setup",
+        "category": "maintainability",
+        "targets": [
+          "Single-user deployment",
+          "One-time profile setup",
+          "No authentication required for local access"
+        ],
+        "constraints": [
+          "Personal use only",
+          "Local access assumption"
+        ],
+        "architecturalImplications": [
+          "Requires simplified architecture",
+          "Need single-tenant design",
+          "Requires local-only access controls",
+          "Need simplified configuration",
+          "Requires minimal setup process"
+        ]
+      }
+    ],
+    "securityRequirements": [
+      {
+        "reqId": "REQ-038",
+        "title": "Local Data Privacy",
+        "securityDomain": "dataProtection",
+        "requirements": [
+          "All user data must remain local",
+          "No cloud storage of personal information",
+          "Optional external API calls only for content polishing"
+        ],
+        "complianceFrameworks": [
+          "GDPR"
+        ],
+        "architecturalImplications": [
+          "Local-first data architecture",
+          "Encrypted local storage",
+          "API call audit logging",
+          "Data residency controls"
+        ]
+      },
+      {
+        "reqId": "REQ-039",
+        "title": "API Key Security",
+        "securityDomain": "authentication",
+        "requirements": [
+          "API keys stored in environment variables only",
+          "No hardcoded credentials",
+          "Secure credential loading"
+        ],
+        "complianceFrameworks": [],
+        "architecturalImplications": [
+          "Environment-based configuration",
+          "Secret management system",
+          "Credential validation",
+          "Secure configuration loading"
+        ]
+      },
+      {
+        "reqId": "REQ-045",
+        "title": "LinkedIn Anti-Detection Security",
+        "securityDomain": "other",
+        "requirements": [
+          "Browser fingerprint randomization",
+          "Canvas/WebGL manipulation",
+          "Profile consistency maintenance"
+        ],
+        "complianceFrameworks": [],
+        "architecturalImplications": [
+          "Stealth automation framework",
+          "Fingerprint generation service",
+          "Browser API interception",
+          "Profile management system"
+        ]
+      }
+    ],
+    "technicalConstraints": [
+      {
+        "reqId": "CON-001",
+        "title": "Memory Constraint",
+        "constraintType": "platform",
+        "constraint": "Must run on 8GB RAM minimum",
+        "rationale": "Target deployment on consumer hardware",
+        "architecturalImplications": [
+          "Limits LLM model size to 7B quantized",
+          "Requires memory optimization",
+          "Need efficient resource management",
+          "Requires model quantization"
+        ]
+      },
+      {
+        "reqId": "CON-002",
+        "title": "LinkedIn Anti-Bot Protection",
+        "constraintType": "integration",
+        "constraint": "LinkedIn aggressively blocks automated scrapers using fingerprinting and behavioral analysis",
+        "rationale": "Platform protection against automation",
+        "architecturalImplications": [
+          "Requires stealth automation with human-like behavior",
+          "Need session persistence",
+          "Conservative rate limits (20-40 jobs/day)",
+          "Requires detection evasion"
+        ]
+      },
+      {
+        "reqId": "CON-003",
+        "title": "Zero Infrastructure Cost",
+        "constraintType": "deployment",
+        "constraint": "Zero infrastructure cost, $5/month AI budget",
+        "rationale": "Cost-conscious target users",
+        "architecturalImplications": [
+          "Must use free local LLMs for most tasks",
+          "Local deployment only",
+          "Minimal external API usage",
+          "Cost tracking required"
+        ]
+      },
+      {
+        "reqId": "CON-004",
+        "title": "Legal Compliance",
+        "constraintType": "other",
+        "constraint": "Must respect job board Terms of Service",
+        "rationale": "Legal and ethical compliance",
+        "architecturalImplications": [
+          "Implement rate limiting",
+          "Respect robots.txt",
+          "Graceful error handling",
+          "Compliance monitoring"
+        ]
+      },
+      {
+        "reqId": "CON-005",
+        "title": "Privacy Requirement",
+        "constraintType": "platform",
+        "constraint": "All user data must stay local",
+        "rationale": "Privacy-first architecture requirement",
+        "architecturalImplications": [
+          "No cloud storage",
+          "Local PostgreSQL only",
+          "Local processing",
+          "Data residency controls"
+        ]
+      }
+    ],
+    "externalIntegrations": [
+      {
+        "name": "RemoteOK API",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "REST",
+        "dataExchanged": [
+          "job listings",
+          "company information",
+          "job descriptions"
+        ],
+        "relatedReqs": [
+          "REQ-001",
+          "REQ-002"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Rate limiting",
+          "Circuit breaker protection",
+          "robots.txt compliance"
+        ]
+      },
+      {
+        "name": "WeWorkRemotely Scraping",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "HTTP",
+        "dataExchanged": [
+          "job listings",
+          "job details",
+          "application URLs"
+        ],
+        "relatedReqs": [
+          "REQ-001",
+          "REQ-002"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Rate limiting",
+          "User-agent rotation",
+          "IP blocking prevention"
+        ]
+      },
+      {
+        "name": "LinkedIn Stealth Scraping",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "HTTP",
+        "dataExchanged": [
+          "job listings",
+          "company profiles",
+          "job requirements"
+        ],
+        "relatedReqs": [
+          "REQ-041",
+          "REQ-042",
+          "REQ-043",
+          "REQ-044",
+          "REQ-045"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Stealth detection evasion",
+          "Session management",
+          "Human-like behavior simulation",
+          "Browser fingerprint randomization"
+        ]
+      },
+      {
+        "name": "Claude API",
+        "type": "thirdPartyService",
+        "direction": "outbound",
+        "protocol": "REST",
+        "dataExchanged": [
+          "cover letter content",
+          "polished text",
+          "API usage metrics"
+        ],
+        "relatedReqs": [
+          "REQ-012",
+          "REQ-014"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "API key management",
+          "Cost tracking",
+          "Rate limiting",
+          "Data privacy"
+        ]
+      },
+      {
+        "name": "Ollama Local LLM",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "REST",
+        "dataExchanged": [
+          "prompts",
+          "generated content",
+          "model responses"
+        ],
+        "relatedReqs": [
+          "REQ-010",
+          "REQ-011"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Local processing only",
+          "Model management",
+          "Resource monitoring"
+        ]
+      },
+      {
+        "name": "Email Service (SMTP)",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "SMTP",
+        "dataExchanged": [
+          "email notifications",
+          "job digests",
+          "analytics reports"
+        ],
+        "relatedReqs": [
+          "REQ-017",
+          "REQ-023",
+          "REQ-024"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "SMTP authentication",
+          "Email template security",
+          "Rate limiting"
+        ]
+      },
+      {
+        "name": "IMAP Email Integration",
+        "type": "api",
+        "direction": "inbound",
+        "protocol": "IMAP",
+        "dataExchanged": [
+          "LinkedIn job alert emails",
+          "email content",
+          "job URLs"
+        ],
+        "relatedReqs": [
+          "REQ-046"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Email authentication",
+          "Content parsing security",
+          "Spam filtering"
+        ]
+      },
+      {
+        "name": "Google Drive Backup",
+        "type": "thirdPartyService",
+        "direction": "outbound",
+        "protocol": "REST",
+        "dataExchanged": [
+          "encrypted database backups",
+          "backup metadata"
+        ],
+        "relatedReqs": [
+          "REQ-048",
+          "REQ-055"
+        ],
+        "relatedStories": [],
+        "securityConsiderations": [
+          "Encryption at rest",
+          "API authentication",
+          "Access token management"
+        ]
+      },
+      {
+        "name": "Claude API (Anthropic)",
+        "type": "thirdPartyService",
+        "direction": "outbound",
+        "protocol": "HTTPS/REST",
+        "dataExchanged": [
+          "cover letter content",
+          "job descriptions",
+          "user profiles"
+        ],
+        "relatedReqs": [
+          "REQ-011",
+          "REQ-012"
+        ],
+        "relatedStories": [
+          "US-064",
+          "US-065",
+          "US-066",
+          "US-070",
+          "US-071"
+        ],
+        "securityConsiderations": [
+          "API key management",
+          "data privacy",
+          "rate limiting",
+          "budget controls"
+        ]
+      },
+      {
+        "name": "Email Service (SMTP)",
+        "type": "thirdPartyService",
+        "direction": "outbound",
+        "protocol": "SMTP",
+        "dataExchanged": [
+          "notification emails",
+          "job alerts",
+          "backup reports"
+        ],
+        "relatedReqs": [
+          "REQ-017",
+          "REQ-023",
+          "REQ-024"
+        ],
+        "relatedStories": [
+          "US-093",
+          "US-132",
+          "US-136",
+          "US-288"
+        ],
+        "securityConsiderations": [
+          "SMTP authentication",
+          "email content privacy"
+        ]
+      },
+      {
+        "name": "IMAP Email Server",
+        "type": "thirdPartyService",
+        "direction": "inbound",
+        "protocol": "IMAP",
+        "dataExchanged": [
+          "LinkedIn job alert emails",
+          "email metadata"
+        ],
+        "relatedReqs": [
+          "REQ-046"
+        ],
+        "relatedStories": [
+          "US-237",
+          "US-238",
+          "US-239"
+        ],
+        "securityConsiderations": [
+          "IMAP authentication",
+          "email privacy",
+          "connection security"
+        ]
+      },
+      {
+        "name": "Google Drive (via rclone)",
+        "type": "storage",
+        "direction": "outbound",
+        "protocol": "HTTPS/OAuth",
+        "dataExchanged": [
+          "encrypted backup files",
+          "backup metadata"
+        ],
+        "relatedReqs": [
+          "REQ-048",
+          "REQ-055"
+        ],
+        "relatedStories": [
+          "US-250",
+          "US-251",
+          "US-285"
+        ],
+        "securityConsiderations": [
+          "OAuth authentication",
+          "data encryption",
+          "access permissions"
+        ]
+      },
+      {
+        "name": "LinkedIn Platform",
+        "type": "thirdPartyService",
+        "direction": "inbound",
+        "protocol": "HTTPS/Browser Automation",
+        "dataExchanged": [
+          "job listings",
+          "user session data",
+          "authentication cookies"
+        ],
+        "relatedReqs": [
+          "REQ-041",
+          "REQ-042",
+          "REQ-047"
+        ],
+        "relatedStories": [
+          "US-208",
+          "US-209",
+          "US-210",
+          "US-245"
+        ],
+        "securityConsiderations": [
+          "session management",
+          "anti-bot detection",
+          "rate limiting",
+          "account protection"
+        ]
+      },
+      {
+        "name": "Playwright Browser Engine",
+        "type": "api",
+        "direction": "outbound",
+        "protocol": "Local API",
+        "dataExchanged": [
+          "browser commands",
+          "page content",
+          "user interactions"
+        ],
+        "relatedReqs": [
+          "REQ-041",
+          "REQ-043",
+          "REQ-045"
+        ],
+        "relatedStories": [
+          "US-208",
+          "US-219",
+          "US-231"
+        ],
+        "securityConsiderations": [
+          "browser fingerprinting",
+          "stealth detection",
+          "resource management"
+        ]
+      }
+    ],
+    "dataArchitectureConcerns": {
+      "entities": [
+        {
+          "name": "Job",
+          "description": "Job listing with all extracted metadata",
+          "estimatedVolume": "thousands",
+          "accessPatterns": [
+            "read-heavy",
+            "batch processing",
+            "filtering"
+          ],
+          "relatedReqs": [
+            "REQ-001",
+            "REQ-002",
+            "REQ-003",
+            "REQ-005"
+          ]
+        },
+        {
+          "name": "User Profile",
+          "description": "User preferences and CV data",
+          "estimatedVolume": "single record",
+          "accessPatterns": [
+            "read-heavy",
+            "infrequent updates"
+          ],
+          "relatedReqs": [
+            "REQ-006",
+            "REQ-007"
+          ]
+        },
+        {
+          "name": "Application",
+          "description": "Job application tracking with status and notes",
+          "estimatedVolume": "hundreds",
+          "accessPatterns": [
+            "read-write balanced",
+            "status updates",
+            "timeline queries"
+          ],
+          "relatedReqs": [
+            "REQ-015",
+            "REQ-016",
+            "REQ-017"
+          ]
+        },
+        {
+          "name": "Match Score",
+          "description": "Calculated job-candidate match scores",
+          "estimatedVolume": "thousands",
+          "accessPatterns": [
+            "write-heavy during batch processing",
+            "read-heavy for filtering"
+          ],
+          "relatedReqs": [
+            "REQ-008",
+            "REQ-026"
+          ]
+        },
+        {
+          "name": "Generated Content",
+          "description": "Cover letters, tailored CVs, and AI-generated content",
+          "estimatedVolume": "hundreds",
+          "accessPatterns": [
+            "write-once",
+            "read-multiple",
+            "version tracking"
+          ],
+          "relatedReqs": [
+            "REQ-011",
+            "REQ-012",
+            "REQ-013"
+          ]
+        },
+        {
+          "name": "Analytics Data",
+          "description": "Application funnel metrics and performance data",
+          "estimatedVolume": "time-series data",
+          "accessPatterns": [
+            "time-series",
+            "aggregation queries",
+            "trending analysis"
+          ],
+          "relatedReqs": [
+            "REQ-022",
+            "REQ-024"
+          ]
+        },
+        {
+          "name": "LinkedIn Session",
+          "description": "Browser session state and cookies",
+          "estimatedVolume": "single active session",
+          "accessPatterns": [
+            "frequent updates",
+            "session persistence"
+          ],
+          "relatedReqs": [
+            "REQ-042",
+            "REQ-043"
+          ]
+        }
+      ],
+      "storageRequirements": [
+        {
+          "type": "relational",
+          "rationale": "Complex relationships between jobs, applications, and user data with ACID requirements",
+          "candidates": [
+            "PostgreSQL"
+          ]
+        },
+        {
+          "type": "blob",
+          "rationale": "CV uploads, generated documents, and backup files",
+          "candidates": [
+            "Local file system",
+            "Docker volumes"
+          ]
+        },
+        {
+          "type": "cache",
+          "rationale": "Match scores, dashboard data, and frequently accessed job listings",
+          "candidates": [
+            "Redis",
+            "In-memory cache"
+          ]
+        },
+        {
+          "type": "timeSeries",
+          "rationale": "Analytics data, scraping metrics, and performance monitoring",
+          "candidates": [
+            "PostgreSQL with time-series extensions",
+            "InfluxDB"
+          ]
+        }
+      ],
+      "dataFlows": [
+        {
+          "from": "Job Scrapers",
+          "to": "PostgreSQL",
+          "dataType": "Raw job listings",
+          "frequency": "batch",
+          "volume": "200+ jobs daily"
+        },
+        {
+          "from": "Match Scoring Service",
+          "to": "PostgreSQL",
+          "dataType": "Calculated match scores",
+          "frequency": "batch",
+          "volume": "300 scores per batch"
+        },
+        {
+          "from": "Ollama LLM",
+          "to": "Content Storage",
+          "dataType": "Generated cover letters and analysis",
+          "frequency": "on-demand",
+          "volume": "3 variants per request"
+        },
+        {
+          "from": "Analytics Service",
+          "to": "Email Service",
+          "dataType": "Daily digest and weekly reports",
+          "frequency": "scheduled",
+          "volume": "Daily and weekly emails"
+        },
+        {
+          "from": "LinkedIn Scraper",
+          "to": "Session Storage",
+          "dataType": "Browser state and cookies",
+          "frequency": "real-time",
+          "volume": "Session data updates"
+        },
+        {
+          "from": "Backup Service",
+          "to": "Google Drive",
+          "dataType": "Encrypted database backups",
+          "frequency": "daily",
+          "volume": "Compressed database dumps"
+        }
+      ]
+    },
+    "userInteractionPatterns": [
+      {
+        "pattern": "batch upload and processing",
+        "description": "Users upload CV files which are processed asynchronously for text extraction and skill analysis",
+        "relatedStories": [
+          "US-033",
+          "US-034",
+          "US-035"
+        ],
+        "architecturalImplications": [
+          "Asynchronous file processing pipeline",
+          "Progress tracking and status updates",
+          "File validation and error handling",
+          "Temporary storage for processing states"
+        ]
+      },
+      {
+        "pattern": "real-time filtering and search",
+        "description": "Users apply multiple filters simultaneously with immediate results updates",
+        "relatedStories": [
+          "US-026",
+          "US-027",
+          "US-028",
+          "US-031"
+        ],
+        "architecturalImplications": [
+          "Efficient database indexing for filter combinations",
+          "Client-side state management for filter persistence",
+          "Optimized query performance for large datasets",
+          "Real-time result counting and pagination"
+        ]
+      },
+      {
+        "pattern": "drag-and-drop workflow management",
+        "description": "Users manage job application status through intuitive drag-and-drop Kanban interface",
+        "relatedStories": [
+          "US-121",
+          "US-122",
+          "US-123"
+        ],
+        "architecturalImplications": [
+          "Real-time state synchronization",
+          "Optimistic UI updates with rollback capability",
+          "WebSocket or polling for multi-session consistency",
+          "Touch-friendly responsive design"
+        ]
+      },
+      {
+        "pattern": "automated background processing",
+        "description": "System performs automated job scraping, matching, and notifications without user intervention",
+        "relatedStories": [
+          "US-005",
+          "US-141",
+          "US-147",
+          "US-283"
+        ],
+        "architecturalImplications": [
+          "Robust job scheduling and queue management",
+          "Failure recovery and retry mechanisms",
+          "Resource management and throttling",
+          "Comprehensive monitoring and alerting"
+        ]
+      },
+      {
+        "pattern": "progressive web application",
+        "description": "Users access system through responsive web interface with offline-capable features",
+        "relatedStories": [
+          "US-103",
+          "US-194",
+          "US-195"
+        ],
+        "architecturalImplications": [
+          "Service worker implementation for offline functionality",
+          "Progressive loading and caching strategies",
+          "Responsive design for multiple device types",
+          "Performance optimization for large datasets"
+        ]
+      },
+      {
+        "pattern": "manual import with validation",
+        "description": "Users manually import job URLs with rate-limited processing and status tracking",
+        "relatedStories": [
+          "US-245",
+          "US-246",
+          "US-248"
+        ],
+        "architecturalImplications": [
+          "Queue-based processing with rate limiting",
+          "Real-time status updates and progress tracking",
+          "URL validation and duplicate detection",
+          "Graceful error handling and retry mechanisms"
+        ]
+      }
+    ],
+    "crossCuttingConcerns": [
+      {
+        "concern": "comprehensive audit logging",
+        "requirements": [
+          "All system actions logged with timestamps",
+          "User activity tracking for analytics",
+          "Error logging with structured format",
+          "Performance metrics collection"
+        ],
+        "relatedReqs": [
+          "REQ-030"
+        ],
+        "relatedACs": [
+          "AC-803",
+          "AC-804",
+          "AC-805",
+          "AC-806",
+          "AC-807",
+          "AC-808"
+        ]
+      },
+      {
+        "concern": "rate limiting and throttling",
+        "requirements": [
+          "Platform-specific rate limits for job scraping",
+          "Exponential backoff for failed requests",
+          "Circuit breaker pattern for platform failures",
+          "Human-like timing patterns for LinkedIn"
+        ],
+        "relatedReqs": [
+          "REQ-001",
+          "REQ-027",
+          "REQ-043",
+          "REQ-047"
+        ],
+        "relatedACs": [
+          "AC-003",
+          "AC-031",
+          "AC-739",
+          "AC-1032",
+          "AC-1152"
+        ]
+      },
+      {
+        "concern": "data validation and normalization",
+        "requirements": [
+          "Input validation for all user data",
+          "Job data normalization across platforms",
+          "CV content validation and sanitization",
+          "URL validation for manual imports"
+        ],
+        "relatedReqs": [
+          "REQ-002",
+          "REQ-004",
+          "REQ-006",
+          "REQ-047"
+        ],
+        "relatedACs": [
+          "AC-036",
+          "AC-102",
+          "AC-165",
+          "AC-1149"
+        ]
+      },
+      {
+        "concern": "performance monitoring and optimization",
+        "requirements": [
+          "Response time tracking for all operations",
+          "Resource usage monitoring",
+          "Performance thresholds and alerting",
+          "Database query optimization"
+        ],
+        "relatedReqs": [
+          "REQ-034",
+          "REQ-035",
+          "REQ-036",
+          "REQ-037"
+        ],
+        "relatedACs": [
+          "AC-890",
+          "AC-902",
+          "AC-914",
+          "AC-920"
+        ]
+      },
+      {
+        "concern": "backup and disaster recovery",
+        "requirements": [
+          "Automated daily backups with verification",
+          "Cloud synchronization with retention policies",
+          "Backup integrity validation",
+          "Comprehensive recovery documentation"
+        ],
+        "relatedReqs": [
+          "REQ-031",
+          "REQ-048",
+          "REQ-052",
+          "REQ-057"
+        ],
+        "relatedACs": [
+          "AC-822",
+          "AC-1174",
+          "AC-1254",
+          "AC-1387"
+        ]
+      },
+      {
+        "concern": "security and privacy",
+        "requirements": [
+          "Local-only data storage by default",
+          "API key secure management",
+          "Session persistence with rotation",
+          "Browser fingerprint randomization"
+        ],
+        "relatedReqs": [
+          "REQ-038",
+          "REQ-039",
+          "REQ-042",
+          "REQ-045"
+        ],
+        "relatedACs": [
+          "AC-932",
+          "AC-952",
+          "AC-1016",
+          "AC-1088"
+        ]
+      },
+      {
+        "concern": "notification and alerting",
+        "requirements": [
+          "Email notifications for system events",
+          "Configurable notification preferences",
+          "Failure alerting with escalation",
+          "Weekly and daily digest emails"
+        ],
+        "relatedReqs": [
+          "REQ-017",
+          "REQ-023",
+          "REQ-024",
+          "REQ-056"
+        ],
+        "relatedACs": [
+          "AC-463",
+          "AC-647",
+          "AC-665",
+          "AC-1356"
+        ]
+      }
+    ],
+    "extractionMetadata": {
+      "totalReqsAnalyzed": 49,
+      "totalStoriesAnalyzed": 297,
+      "totalACsAnalyzed": 1406,
+      "extractionWarnings": []
+    }
+  },
+  "systemOverview": {
+    "executiveSummary": "A privacy-first, containerized job search automation system that eliminates manual effort while keeping all personal data local. The system uses a modular monolith architecture with specialized components for scraping, AI processing, and workflow automation.",
+    "systemPurpose": "Automate the entire remote job search process from discovery to application tracking while maintaining zero infrastructure costs and complete data privacy through local-only deployment",
+    "architecturalApproach": "Containerized modular monolith with specialized service components, orchestrated via Docker Compose for single-command deployment and managed through n8n workflow automation",
+    "keyCapabilities": [
+      "Multi-platform job scraping with anti-detection stealth technology",
+      "AI-powered job-candidate matching with skill gap analysis",
+      "Automated cover letter and CV generation using hybrid local/cloud AI",
+      "Complete application lifecycle tracking with Kanban visualization",
+      "Email integration for LinkedIn alerts and automated reporting",
+      "Analytics dashboard with performance metrics and insights"
+    ],
+    "contextDiagram": "┌─────────────┐     ┌─────────────────────────────┐     ┌─────────────────┐\n│   Remote    │────▶│    Job Search Automation    │────▶│   Job Boards    │\n│ Job Seeker  │     │         System              │     │  (LinkedIn,     │\n│             │◀────│                             │     │  RemoteOK, etc) │\n└─────────────┘     │  ┌─────────┬─────────────┐  │     └─────────────────┘\n                    │  │   Web   │   n8n       │  │              ▲\n                    │  │Frontend │ Workflows   │  │              │\n                    │  └─────────┴─────────────┘  │              │\n                    │  ┌─────────┬─────────────┐  │              │\n                    │  │Scraper  │ PostgreSQL  │  │              │\n                    │  │   API   │  Database   │  │              │\n                    │  └─────────┴─────────────┘  │              │\n                    │  ┌─────────┬─────────────┐  │              │\n                    │  │ Ollama  │   Email     │  │              │\n                    │  │Local LLM│  Service    │  │              │\n                    │  └─────────┴─────────────┘  │              │\n                    └─────────────────────────────┘              │\n                              │                                  │\n                              ▼                                  │\n                    ┌─────────────────┐                         │\n                    │  Claude API     │─────────────────────────┘\n                    │  (Optional)     │\n                    └─────────────────┘",
+    "externalDependencies": [
+      {
+        "system": "LinkedIn Platform",
+        "purpose": "Job scraping and email alert processing",
+        "protocol": "HTTPS/Browser Automation",
+        "owner": "LinkedIn Corporation"
+      },
+      {
+        "system": "RemoteOK API",
+        "purpose": "Remote job listings aggregation",
+        "protocol": "REST",
+        "owner": "RemoteOK"
+      },
+      {
+        "system": "WeWorkRemotely",
+        "purpose": "Remote job listings scraping",
+        "protocol": "HTTP",
+        "owner": "WeWorkRemotely"
+      },
+      {
+        "system": "Claude API (Anthropic)",
+        "purpose": "High-quality content generation for cover letters",
+        "protocol": "HTTPS/REST",
+        "owner": "Anthropic"
+      },
+      {
+        "system": "Email Service (SMTP/IMAP)",
+        "purpose": "LinkedIn alert processing and report delivery",
+        "protocol": "SMTP/IMAP",
+        "owner": "User's email provider"
+      },
+      {
+        "system": "Google Drive",
+        "purpose": "Optional backup storage via rclone",
+        "protocol": "HTTPS/OAuth",
+        "owner": "Google"
+      }
+    ],
+    "assumptionsAndConstraints": [
+      "Single user deployment with 8GB RAM minimum requirement",
+      "Zero infrastructure cost constraint limits to local deployment only",
+      "LinkedIn anti-bot protection requires sophisticated stealth techniques",
+      "Legal compliance requires respecting Terms of Service for all job boards",
+      "Privacy-first approach mandates all personal data remains local",
+      "AI budget limited to $5/month for optional Claude API usage",
+      "Docker environment available for containerized deployment"
+    ]
+  },
+  "architecturePrinciples": [
+    {
+      "name": "Privacy-by-Design",
+      "description": "All personal data, job applications, and user preferences must remain on the user's local machine with no external transmission except for explicitly configured optional services",
+      "rationale": "Core value proposition is data privacy and zero-cost operation, distinguishing from expensive cloud solutions",
+      "implications": [
+        "PostgreSQL database runs locally in container",
+        "No user authentication or session management required",
+        "API keys stored only in environment variables",
+        "Optional cloud services (Claude API) require explicit user consent"
+      ],
+      "relatedReqs": [
+        "REQ-024",
+        "REQ-025",
+        "REQ-026"
+      ]
+    },
+    {
+      "name": "Stealth-First Automation",
+      "description": "All automated interactions with external platforms must mimic human behavior to avoid detection and blocking",
+      "rationale": "LinkedIn and other platforms actively block automated scrapers, requiring sophisticated anti-detection measures",
+      "implications": [
+        "Browser fingerprint randomization for each session",
+        "Human-like timing patterns with random delays",
+        "Canvas and WebGL manipulation to avoid detection",
+        "Circuit breakers and rate limiting to prevent suspicious patterns"
+      ],
+      "relatedReqs": [
+        "REQ-027",
+        "REQ-028",
+        "REQ-029"
+      ]
+    },
+    {
+      "name": "Hybrid AI Strategy",
+      "description": "Combine local open-source models with optional premium APIs to balance cost, privacy, and quality",
+      "rationale": "Provides flexibility between zero-cost local processing and high-quality cloud AI within budget constraints",
+      "implications": [
+        "Ollama runs locally for basic AI tasks and fallback processing",
+        "Claude API used optionally for premium content generation",
+        "Graceful degradation when cloud services unavailable",
+        "Cost monitoring to stay within $5/month budget"
+      ],
+      "relatedReqs": [
+        "REQ-030",
+        "REQ-031",
+        "REQ-032"
+      ]
+    },
+    {
+      "name": "Single-Command Deployment",
+      "description": "Entire system must start with a single docker-compose command with minimal configuration required",
+      "rationale": "Target users are job seekers, not DevOps engineers - complexity must be hidden behind simple interfaces",
+      "implications": [
+        "All services defined in docker-compose.yml with proper dependencies",
+        "Environment variables with sensible defaults",
+        "Automatic database initialization and schema migration",
+        "Health checks and service readiness probes"
+      ],
+      "relatedReqs": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003"
+      ]
+    },
+    {
+      "name": "Workflow-Driven Architecture",
+      "description": "Complex multi-step processes are orchestrated through n8n workflows rather than tightly coupled code",
+      "rationale": "Enables visual workflow management, easier debugging, and allows non-technical users to understand and modify processes",
+      "implications": [
+        "Job scraping pipelines implemented as n8n workflows",
+        "AI processing chains orchestrated through workflow engine",
+        "Email processing and reporting automated via workflows",
+        "Error handling and retry logic built into workflow definitions"
+      ],
+      "relatedReqs": [
+        "REQ-004",
+        "REQ-005",
+        "REQ-006"
+      ]
+    },
+    {
+      "name": "Resilient-by-Default",
+      "description": "System must gracefully handle external service failures, rate limits, and network issues without losing data or requiring manual intervention",
+      "rationale": "Job boards frequently change, APIs go down, and networks are unreliable - system must continue operating",
+      "implications": [
+        "Circuit breaker pattern for all external API calls",
+        "Exponential backoff retry logic with jitter",
+        "Persistent job queues that survive container restarts",
+        "Comprehensive error logging and alerting"
+      ],
+      "relatedReqs": [
+        "REQ-007",
+        "REQ-008",
+        "REQ-009"
+      ]
+    },
+    {
+      "name": "Performance Within Constraints",
+      "description": "Optimize for the 8GB RAM constraint while meeting performance targets for scraping and AI processing",
+      "rationale": "Target users may have limited hardware resources, requiring careful resource management",
+      "implications": [
+        "Memory-efficient batch processing for large job datasets",
+        "Lazy loading and pagination in web interface",
+        "Resource monitoring and automatic scaling within limits",
+        "Efficient database indexing and query optimization"
+      ],
+      "relatedReqs": [
+        "REQ-010",
+        "REQ-011",
+        "REQ-012",
+        "REQ-013",
+        "REQ-014"
+      ]
+    },
+    {
+      "name": "Observable Operations",
+      "description": "Provide comprehensive visibility into system health, job processing status, and performance metrics through dashboards and logs",
+      "rationale": "Users need to understand what the system is doing, especially when troubleshooting scraping issues or AI processing delays",
+      "implications": [
+        "Structured logging with correlation IDs across services",
+        "Real-time dashboard showing scraping progress and job counts",
+        "Performance metrics tracking for all major operations",
+        "Email reports with daily/weekly summaries"
+      ],
+      "relatedReqs": [
+        "REQ-015",
+        "REQ-016",
+        "REQ-017"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "name": "api-server",
+      "purpose": "Express API server with job orchestration and real-time communication",
+      "location": "apps/api-server",
+      "dependencies": [
+        "@jobsearch/types",
+        "@jobsearch/database",
+        "@jobsearch/config",
+        "@jobsearch/logger",
+        "@jobsearch/ai-client",
+        "Express.js",
+        "Socket.io"
+      ],
+      "keyPatterns": [
+        "API Gateway Pattern",
+        "Middleware Chain Pattern",
+        "Containerized Modular Monolith Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "REST API",
+          "type": "api",
+          "description": "HTTP REST endpoints for all client operations"
+        },
+        {
+          "name": "WebSocket Gateway",
+          "type": "api",
+          "description": "Real-time communication for job processing status and notifications"
+        },
+        {
+          "name": "Service Router",
+          "type": "internal",
+          "description": "Routes requests to appropriate backend services"
+        }
+      ],
+      "responsibilities": [
+        "Request routing",
+        "Authentication middleware",
+        "Rate limiting",
+        "CORS handling",
+        "WebSocket management",
+        "Job orchestration"
+      ],
+      "relatedReqs": [
+        "REQ-001",
+        "REQ-006",
+        "REQ-011",
+        "REQ-016",
+        "REQ-021"
+      ]
+    },
+    {
+      "name": "job-crawler",
+      "purpose": "Playwright-based job scrapers with stealth capabilities and multi-platform support",
+      "location": "apps/job-crawler",
+      "dependencies": [
+        "@jobsearch/types",
+        "@jobsearch/logger",
+        "@jobsearch/common",
+        "Playwright"
+      ],
+      "keyPatterns": [
+        "Anti-Detection Pattern",
+        "Containerized Modular Monolith Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "Scraping API",
+          "type": "api",
+          "description": "REST endpoints for triggering and monitoring scraping jobs"
+        },
+        {
+          "name": "Browser Automation",
+          "type": "internal",
+          "description": "Playwright integration for stealth web scraping"
+        }
+      ],
+      "responsibilities": [
+        "Multi-platform job scraping",
+        "Anti-detection mechanisms",
+        "Rate limiting compliance",
+        "Job data extraction"
+      ],
+      "relatedReqs": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003",
+        "REQ-004",
+        "REQ-005"
+      ]
+    },
+    {
+      "name": "web-ui",
+      "purpose": "React SPA with offline support and progressive web app capabilities",
+      "location": "apps/web-ui",
+      "dependencies": [
+        "@jobsearch/types",
+        "React",
+        "Zustand",
+        "TanStack Query",
+        "Workbox"
+      ],
+      "keyPatterns": [
+        "Progressive Web Application",
+        "Component-Based Architecture",
+        "Local-First Data Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "HTTP Client",
+          "type": "api",
+          "description": "REST API consumption for all backend operations"
+        },
+        {
+          "name": "WebSocket Client",
+          "type": "api",
+          "description": "Real-time updates and notifications"
+        },
+        {
+          "name": "PWA Interface",
+          "type": "api",
+          "description": "Progressive web app capabilities"
+        }
+      ],
+      "responsibilities": [
+        "User interface",
+        "Real-time updates",
+        "Offline capabilities",
+        "Responsive design"
+      ],
+      "relatedReqs": [
+        "REQ-030",
+        "REQ-031",
+        "REQ-032",
+        "REQ-033"
+      ]
+    },
+    {
+      "name": "n8n-workflows",
+      "purpose": "Workflow automation definitions and orchestration templates",
+      "location": "apps/n8n-workflows",
+      "dependencies": [
+        "n8n"
+      ],
+      "keyPatterns": [
+        "Workflow-Driven Orchestration",
+        "Event-Driven Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "Workflow Definitions",
+          "type": "internal",
+          "description": "JSON workflow definitions for automation"
+        },
+        {
+          "name": "Webhook Endpoints",
+          "type": "api",
+          "description": "Webhook triggers for workflow execution"
+        }
+      ],
+      "responsibilities": [
+        "Workflow automation",
+        "Scheduled job execution",
+        "Event-driven processing",
+        "Integration orchestration"
+      ],
+      "relatedReqs": [
+        "REQ-001",
+        "REQ-021",
+        "REQ-028"
+      ]
+    },
+    {
+      "name": "@jobsearch/types",
+      "purpose": "Shared TypeScript type definitions for all applications and packages",
+      "location": "packages/@jobsearch/types",
+      "dependencies": [],
+      "keyPatterns": [
+        "Shared Types Pattern",
+        "Type Safety"
+      ],
+      "interfaces": [
+        {
+          "name": "Type Exports",
+          "type": "internal",
+          "description": "TypeScript type definitions and interfaces"
+        }
+      ],
+      "responsibilities": [
+        "Type definitions",
+        "Interface contracts",
+        "Data models",
+        "API schemas"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/database",
+      "purpose": "Prisma client and repository patterns for PostgreSQL database access",
+      "location": "packages/@jobsearch/database",
+      "dependencies": [
+        "@jobsearch/types",
+        "Prisma",
+        "PostgreSQL"
+      ],
+      "keyPatterns": [
+        "Repository Pattern",
+        "Local-First Data Architecture"
+      ],
+      "interfaces": [
+        {
+          "name": "Database Client",
+          "type": "internal",
+          "description": "Prisma client with type-safe database operations"
+        },
+        {
+          "name": "Repository Layer",
+          "type": "internal",
+          "description": "Domain-specific data access patterns"
+        }
+      ],
+      "responsibilities": [
+        "Database schema management",
+        "Type-safe queries",
+        "Migration handling",
+        "Connection pooling"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-002"
+      ]
+    },
+    {
+      "name": "@jobsearch/config",
+      "purpose": "Zod-validated configuration management for all applications",
+      "location": "packages/@jobsearch/config",
+      "dependencies": [
+        "Zod"
+      ],
+      "keyPatterns": [
+        "Configuration Pattern",
+        "Validation Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Config Schema",
+          "type": "internal",
+          "description": "Zod schemas for configuration validation"
+        },
+        {
+          "name": "Environment Parser",
+          "type": "internal",
+          "description": "Environment variable parsing and validation"
+        }
+      ],
+      "responsibilities": [
+        "Configuration validation",
+        "Environment parsing",
+        "Type-safe config access",
+        "Default value management"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/logger",
+      "purpose": "Pino structured logging with consistent formatting across all services",
+      "location": "packages/@jobsearch/logger",
+      "dependencies": [
+        "Pino"
+      ],
+      "keyPatterns": [
+        "Structured Logging Pattern",
+        "Observability Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Logger Instance",
+          "type": "internal",
+          "description": "Configured Pino logger with structured output"
+        },
+        {
+          "name": "Log Formatters",
+          "type": "internal",
+          "description": "Custom formatters for different log contexts"
+        }
+      ],
+      "responsibilities": [
+        "Structured logging",
+        "Log formatting",
+        "Performance monitoring",
+        "Error tracking"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    },
+    {
+      "name": "@jobsearch/ai-client",
+      "purpose": "LiteLLM wrapper for unified access to Ollama and Claude APIs",
+      "location": "packages/@jobsearch/ai-client",
+      "dependencies": [
+        "@jobsearch/types",
+        "@jobsearch/config",
+        "LiteLLM"
+      ],
+      "keyPatterns": [
+        "Hybrid AI Strategy Implementation",
+        "Adapter Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "AI Client",
+          "type": "internal",
+          "description": "Unified interface for local and cloud AI services"
+        },
+        {
+          "name": "Model Router",
+          "type": "internal",
+          "description": "Intelligent routing between Ollama and Claude"
+        }
+      ],
+      "responsibilities": [
+        "AI model abstraction",
+        "Local/cloud routing",
+        "Response normalization",
+        "Error handling"
+      ],
+      "relatedReqs": [
+        "REQ-008",
+        "REQ-009",
+        "REQ-010",
+        "REQ-011",
+        "REQ-012"
+      ]
+    },
+    {
+      "name": "@jobsearch/common",
+      "purpose": "Shared utilities, error handling, and common functionality",
+      "location": "packages/@jobsearch/common",
+      "dependencies": [
+        "@jobsearch/types"
+      ],
+      "keyPatterns": [
+        "Utility Pattern",
+        "Error Handling Pattern"
+      ],
+      "interfaces": [
+        {
+          "name": "Utility Functions",
+          "type": "internal",
+          "description": "Common utility functions and helpers"
+        },
+        {
+          "name": "Error Classes",
+          "type": "internal",
+          "description": "Standardized error handling classes"
+        }
+      ],
+      "responsibilities": [
+        "Utility functions",
+        "Error handling",
+        "Validation helpers",
+        "Common constants"
+      ],
+      "relatedReqs": [
+        "CON-001"
+      ]
+    }
+  ],
+  "dataArchitecture": {
+    "dataStores": [
+      {
+        "name": "Primary Database",
+        "technology": "PostgreSQL 15",
+        "purpose": "Primary data store for jobs, applications, user profiles, and analytics",
+        "dataTypes": [
+          "job listings",
+          "user profiles",
+          "applications",
+          "match scores",
+          "analytics data"
+        ],
+        "accessPatterns": [
+          "read-heavy",
+          "batch processing",
+          "time-series queries",
+          "complex joins"
+        ],
+        "scalingStrategy": "Vertical scaling with connection pooling and query optimization"
+      },
+      {
+        "name": "Cache Layer",
+        "technology": "Redis 7",
+        "purpose": "Session storage, match score caching, and real-time data",
+        "dataTypes": [
+          "LinkedIn sessions",
+          "cached match scores",
+          "dashboard data",
+          "pub/sub messages"
+        ],
+        "accessPatterns": [
+          "read-heavy",
+          "frequent updates",
+          "TTL-based expiration"
+        ],
+        "scalingStrategy": "Single instance with memory optimization and TTL management"
+      },
+      {
+        "name": "File Storage",
+        "technology": "Docker Volumes with Local Filesystem",
+        "purpose": "CV uploads, generated documents, and backup files",
+        "dataTypes": [
+          "PDF documents",
+          "generated content",
+          "backup files",
+          "user uploads"
+        ],
+        "accessPatterns": [
+          "write-once read-multiple",
+          "version tracking",
+          "backup operations"
+        ],
+        "scalingStrategy": "Local disk expansion with automated cleanup policies"
+      }
+    ],
+    "coreEntities": [
+      {
+        "name": "Job",
+        "description": "Job listing with extracted metadata and processing status",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique job identifier",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "VARCHAR(255)",
+            "description": "Job title",
+            "required": true
+          },
+          {
+            "name": "company",
+            "type": "VARCHAR(255)",
+            "description": "Company name",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "TEXT",
+            "description": "Full job description",
+            "required": true
+          },
+          {
+            "name": "requirements",
+            "type": "JSONB",
+            "description": "Structured requirements and skills",
+            "required": false
+          },
+          {
+            "name": "source_platform",
+            "type": "VARCHAR(50)",
+            "description": "Scraping source platform",
+            "required": true
+          },
+          {
+            "name": "external_id",
+            "type": "VARCHAR(255)",
+            "description": "Platform-specific job ID",
+            "required": true
+          },
+          {
+            "name": "scraped_at",
+            "type": "TIMESTAMP",
+            "description": "When job was scraped",
+            "required": true
+          },
+          {
+            "name": "processed_at",
+            "type": "TIMESTAMP",
+            "description": "When job was processed",
+            "required": false
+          }
+        ],
+        "relationships": [
+          "One-to-many with Applications",
+          "One-to-one with MatchScore"
+        ],
+        "indexes": [
+          "idx_job_company",
+          "idx_job_scraped_at",
+          "idx_job_source_platform",
+          "idx_job_external_id"
+        ]
+      },
+      {
+        "name": "UserProfile",
+        "description": "User preferences, CV data, and profile settings",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique user identifier",
+            "required": true
+          },
+          {
+            "name": "email",
+            "type": "VARCHAR(255)",
+            "description": "User email address",
+            "required": true
+          },
+          {
+            "name": "skills",
+            "type": "JSONB",
+            "description": "User skills and proficiency levels",
+            "required": false
+          },
+          {
+            "name": "preferences",
+            "type": "JSONB",
+            "description": "Job search preferences and filters",
+            "required": false
+          },
+          {
+            "name": "cv_data",
+            "type": "JSONB",
+            "description": "Parsed CV information",
+            "required": false
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "description": "Profile creation timestamp",
+            "required": true
+          },
+          {
+            "name": "updated_at",
+            "type": "TIMESTAMP",
+            "description": "Last profile update",
+            "required": true
+          }
+        ],
+        "relationships": [
+          "One-to-many with Applications",
+          "One-to-many with GeneratedContent"
+        ],
+        "indexes": [
+          "idx_user_email",
+          "idx_user_updated_at"
+        ]
+      },
+      {
+        "name": "Application",
+        "description": "Job application tracking with status and timeline",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique application identifier",
+            "required": true
+          },
+          {
+            "name": "job_id",
+            "type": "UUID",
+            "description": "Reference to job",
+            "required": true
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "description": "Reference to user",
+            "required": true
+          },
+          {
+            "name": "status",
+            "type": "VARCHAR(50)",
+            "description": "Application status",
+            "required": true
+          },
+          {
+            "name": "notes",
+            "type": "TEXT",
+            "description": "User notes and updates",
+            "required": false
+          },
+          {
+            "name": "applied_at",
+            "type": "TIMESTAMP",
+            "description": "Application submission time",
+            "required": true
+          },
+          {
+            "name": "status_updated_at",
+            "type": "TIMESTAMP",
+            "description": "Last status change",
+            "required": true
+          }
+        ],
+        "relationships": [
+          "Many-to-one with Job",
+          "Many-to-one with UserProfile",
+          "One-to-many with GeneratedContent"
+        ],
+        "indexes": [
+          "idx_application_job_id",
+          "idx_application_user_id",
+          "idx_application_status",
+          "idx_application_applied_at"
+        ]
+      },
+      {
+        "name": "MatchScore",
+        "description": "AI-calculated job-candidate compatibility scores",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique match score identifier",
+            "required": true
+          },
+          {
+            "name": "job_id",
+            "type": "UUID",
+            "description": "Reference to job",
+            "required": true
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "description": "Reference to user",
+            "required": true
+          },
+          {
+            "name": "overall_score",
+            "type": "DECIMAL(3,2)",
+            "description": "Overall match score (0-1)",
+            "required": true
+          },
+          {
+            "name": "skill_match",
+            "type": "DECIMAL(3,2)",
+            "description": "Skills compatibility score",
+            "required": true
+          },
+          {
+            "name": "experience_match",
+            "type": "DECIMAL(3,2)",
+            "description": "Experience level match",
+            "required": true
+          },
+          {
+            "name": "calculated_at",
+            "type": "TIMESTAMP",
+            "description": "Score calculation timestamp",
+            "required": true
+          }
+        ],
+        "relationships": [
+          "One-to-one with Job",
+          "Many-to-one with UserProfile"
+        ],
+        "indexes": [
+          "idx_match_job_id",
+          "idx_match_user_id",
+          "idx_match_overall_score",
+          "idx_match_calculated_at"
+        ]
+      },
+      {
+        "name": "GeneratedContent",
+        "description": "AI-generated cover letters and tailored CVs",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique content identifier",
+            "required": true
+          },
+          {
+            "name": "application_id",
+            "type": "UUID",
+            "description": "Reference to application",
+            "required": false
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "description": "Reference to user",
+            "required": true
+          },
+          {
+            "name": "content_type",
+            "type": "VARCHAR(50)",
+            "description": "Type of generated content",
+            "required": true
+          },
+          {
+            "name": "content",
+            "type": "TEXT",
+            "description": "Generated content body",
+            "required": true
+          },
+          {
+            "name": "version",
+            "type": "INTEGER",
+            "description": "Content version number",
+            "required": true
+          },
+          {
+            "name": "generated_at",
+            "type": "TIMESTAMP",
+            "description": "Content generation timestamp",
+            "required": true
+          }
+        ],
+        "relationships": [
+          "Many-to-one with Application",
+          "Many-to-one with UserProfile"
+        ],
+        "indexes": [
+          "idx_content_application_id",
+          "idx_content_user_id",
+          "idx_content_type",
+          "idx_content_generated_at"
+        ]
+      },
+      {
+        "name": "AnalyticsEvent",
+        "description": "Time-series analytics data for performance tracking",
+        "fields": [
+          {
+            "name": "id",
+            "type": "UUID",
+            "description": "Unique event identifier",
+            "required": true
+          },
+          {
+            "name": "event_type",
+            "type": "VARCHAR(100)",
+            "description": "Type of analytics event",
+            "required": true
+          },
+          {
+            "name": "event_data",
+            "type": "JSONB",
+            "description": "Event-specific data",
+            "required": false
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "description": "Reference to user",
+            "required": false
+          },
+          {
+            "name": "timestamp",
+            "type": "TIMESTAMP",
+            "description": "Event timestamp",
+            "required": true
+          }
+        ],
+        "relationships": [
+          "Many-to-one with UserProfile"
+        ],
+        "indexes": [
+          "idx_analytics_event_type",
+          "idx_analytics_timestamp",
+          "idx_analytics_user_id"
+        ]
+      }
+    ],
+    "dataFlowDescription": "Data flows through the system in several key patterns: (1) Job Scraping: Playwright scrapers extract job data from platforms, normalize it in the Job Processing Service, and store it in PostgreSQL with deduplication. (2) AI Processing: The AI Matching Service reads jobs and user profiles to calculate match scores, caching results in Redis for fast retrieval. Content Generation Service creates tailored cover letters and CVs on-demand. (3) User Interaction: Web UI reads cached data for dashboard display, writes application status updates directly to PostgreSQL. (4) Analytics: All user actions generate events stored as time-series data in PostgreSQL for reporting. (5) Session Management: LinkedIn session state is maintained in Redis with TTL expiration for anti-detection. (6) Backup: Daily encrypted backups of PostgreSQL are created and optionally synchronized to cloud storage via rclone.",
+    "dataFlowDiagram": "External APIs → Scrapers → PostgreSQL → AI Services → Redis Cache → Web UI\n                     ↓                    ↑              ↓\n                File Storage ← Content Gen ← Match Scores → Analytics",
+    "cachingStrategy": "Multi-layer caching with Redis for session data (1-hour TTL), match scores (24-hour TTL), and dashboard aggregations (15-minute TTL). PostgreSQL query result caching for frequently accessed job listings and user preferences.",
+    "dataRetention": "Jobs: 6 months after scraping; Applications: Indefinite with user control; Match scores: 30 days with recalculation; Analytics events: 1 year; Generated content: Indefinite with versioning; Session data: 1 hour TTL"
+  },
+  "integrationArchitecture": {
+    "apiDesign": {
+      "pattern": "REST",
+      "conventions": [
+        "URL structure: /api/v1/{service}/{resource}",
+        "HTTP methods: GET (read), POST (create), PUT (update), DELETE (remove)",
+        "Response format: JSON envelope with data, meta, and error fields",
+        "Versioning: URL path versioning (/api/v1/)"
+      ],
+      "requestResponseFormat": "{ \"data\": {}, \"meta\": { \"timestamp\": \"ISO8601\", \"requestId\": \"uuid\" }, \"error\": null }"
+    },
+    "packageDependencies": {
+      "description": "Internal package dependency graph following WESPA monorepo architecture",
+      "flow": "apps → packages/@jobsearch/* → external dependencies",
+      "rules": [
+        "Packages cannot depend on apps",
+        "Apps import packages via workspace protocol",
+        "Shared packages provide common functionality",
+        "Type-safe imports across workspace"
+      ],
+      "dependencyGraph": {
+        "apps/api-server": [
+          "@jobsearch/types",
+          "@jobsearch/database",
+          "@jobsearch/config",
+          "@jobsearch/logger",
+          "@jobsearch/ai-client"
+        ],
+        "apps/job-crawler": [
+          "@jobsearch/types",
+          "@jobsearch/logger",
+          "@jobsearch/common"
+        ],
+        "apps/web-ui": [
+          "@jobsearch/types"
+        ],
+        "apps/n8n-workflows": [],
+        "@jobsearch/database": [
+          "@jobsearch/types"
+        ],
+        "@jobsearch/ai-client": [
+          "@jobsearch/types",
+          "@jobsearch/config"
+        ],
+        "@jobsearch/common": [
+          "@jobsearch/types"
+        ],
+        "@jobsearch/config": [],
+        "@jobsearch/logger": [],
+        "@jobsearch/types": []
+      }
+    },
+    "integrationContracts": [
+      {
+        "systemName": "RemoteOK API",
+        "purpose": "Job listing discovery and data extraction",
+        "protocol": "REST",
+        "authentication": "API key in headers",
+        "operations": [
+          {
+            "name": "Get Jobs",
+            "method": "GET",
+            "endpoint": "/api",
+            "requestSchema": "Query parameters for filtering",
+            "responseSchema": "Array of job objects with metadata"
+          }
+        ],
+        "errorHandling": "HTTP status codes with retry on 429, fail on 403",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 5,
+          "resetTimeout": 300
+        },
+        "retryPolicy": {
+          "maxAttempts": 3,
+          "backoffType": "exponential",
+          "backoffBase": 2000
+        }
+      },
+      {
+        "systemName": "Claude API",
+        "purpose": "AI content generation and complex analysis",
+        "protocol": "REST",
+        "authentication": "Bearer token in Authorization header",
+        "operations": [
+          {
+            "name": "Generate Content",
+            "method": "POST",
+            "endpoint": "/v1/messages",
+            "requestSchema": "Messages array with system and user prompts",
+            "responseSchema": "Generated content with usage metrics"
+          }
+        ],
+        "errorHandling": "Rate limit aware with exponential backoff, graceful degradation to local AI",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 3,
+          "resetTimeout": 60
+        },
+        "retryPolicy": {
+          "maxAttempts": 2,
+          "backoffType": "exponential",
+          "backoffBase": 1000
+        }
+      },
+      {
+        "systemName": "Ollama Local LLM",
+        "purpose": "Local AI processing for privacy-sensitive operations",
+        "protocol": "REST",
+        "authentication": "None (local service)",
+        "operations": [
+          {
+            "name": "Generate",
+            "method": "POST",
+            "endpoint": "/api/generate",
+            "requestSchema": "Model name, prompt, and generation parameters",
+            "responseSchema": "Generated text with metadata"
+          },
+          {
+            "name": "Chat",
+            "method": "POST",
+            "endpoint": "/api/chat",
+            "requestSchema": "Model name and messages array",
+            "responseSchema": "Chat response with context"
+          }
+        ],
+        "errorHandling": "Local service monitoring with health checks",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 5,
+          "resetTimeout": 30
+        },
+        "retryPolicy": {
+          "maxAttempts": 2,
+          "backoffType": "fixed",
+          "backoffBase": 1000
+        }
+      },
+      {
+        "systemName": "Email Service (SMTP/IMAP)",
+        "purpose": "Email notifications and LinkedIn alert processing",
+        "protocol": "SMTP/IMAP",
+        "authentication": "Username/password or OAuth2",
+        "operations": [
+          {
+            "name": "Send Email",
+            "method": "SMTP",
+            "endpoint": "SMTP server",
+            "requestSchema": "Email object with recipients, subject, body",
+            "responseSchema": "Delivery confirmation"
+          },
+          {
+            "name": "Fetch Emails",
+            "method": "IMAP",
+            "endpoint": "IMAP server",
+            "requestSchema": "Folder and search criteria",
+            "responseSchema": "Email messages with metadata"
+          }
+        ],
+        "errorHandling": "Connection pooling with retry on network failures",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 3,
+          "resetTimeout": 120
+        },
+        "retryPolicy": {
+          "maxAttempts": 3,
+          "backoffType": "linear",
+          "backoffBase": 5000
+        }
+      },
+      {
+        "systemName": "Google Drive (via rclone)",
+        "purpose": "Encrypted backup storage and synchronization",
+        "protocol": "REST",
+        "authentication": "OAuth2 via rclone configuration",
+        "operations": [
+          {
+            "name": "Upload Backup",
+            "method": "POST",
+            "endpoint": "rclone copy command",
+            "requestSchema": "Local file path and remote destination",
+            "responseSchema": "Upload status and file metadata"
+          },
+          {
+            "name": "List Backups",
+            "method": "GET",
+            "endpoint": "rclone ls command",
+            "requestSchema": "Remote path and filters",
+            "responseSchema": "File listing with timestamps"
+          }
+        ],
+        "errorHandling": "Network-aware with offline queuing",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 3,
+          "resetTimeout": 300
+        },
+        "retryPolicy": {
+          "maxAttempts": 3,
+          "backoffType": "exponential",
+          "backoffBase": 5000
+        }
+      },
+      {
+        "systemName": "n8n Workflow Engine",
+        "purpose": "Workflow orchestration and automation",
+        "protocol": "REST",
+        "authentication": "API key or webhook tokens",
+        "operations": [
+          {
+            "name": "Trigger Workflow",
+            "method": "POST",
+            "endpoint": "/webhook/{workflow-id}",
+            "requestSchema": "Workflow parameters and trigger data",
+            "responseSchema": "Execution ID and status"
+          },
+          {
+            "name": "Get Execution Status",
+            "method": "GET",
+            "endpoint": "/api/v1/executions/{id}",
+            "requestSchema": "Execution ID",
+            "responseSchema": "Execution status and results"
+          }
+        ],
+        "errorHandling": "Workflow-specific error handling with manual intervention options",
+        "circuitBreaker": {
+          "enabled": true,
+          "failureThreshold": 5,
+          "resetTimeout": 60
+        },
+        "retryPolicy": {
+          "maxAttempts": 2,
+          "backoffType": "fixed",
+          "backoffBase": 2000
+        }
+      }
+    ],
+    "messagingPatterns": [
+      "Event-driven notifications",
+      "WebSocket real-time updates",
+      "Workflow-triggered events"
+    ],
+    "eventDrivenArchitecture": {
+      "enabled": true,
+      "eventBus": "Internal event system with Socket.io for real-time client updates",
+      "eventTypes": [
+        "job.scraped",
+        "job.processed",
+        "match.calculated",
+        "application.status_changed",
+        "content.generated",
+        "backup.completed",
+        "workflow.triggered",
+        "user.profile_updated"
+      ]
+    }
+  },
+  "securityArchitecture": {
+    "securityBoundaries": "Four security zones: (1) External Zone - untrusted internet and external APIs, (2) Gateway Zone - API Gateway with rate limiting and authentication, (3) Application Zone - internal services with service-to-service communication, (4) Data Zone - PostgreSQL and Redis with encrypted storage. All zones communicate through defined interfaces with input validation.",
+    "securityBoundaryDiagram": "Internet → [API Gateway] → [Services] → [Data Layer]\n  ↑           ↑              ↑           ↑\nUntrusted   Auth/Rate    Internal    Encrypted\n Zone       Limiting      Zone        Storage",
+    "authenticationPattern": {
+      "type": "local-trust",
+      "flow": "No user authentication - single-user local deployment trusts localhost connections. Internal service-to-service uses environment-based shared secrets.",
+      "tokenStructure": "{ \"sub\": \"user_id\", \"iat\": timestamp, \"exp\": timestamp, \"role\": \"user\" }"
+    },
+    "authorizationModel": {
+      "type": "RBAC",
+      "roleMapping": [
+        {
+          "role": "user",
+          "permissions": [
+            "read_jobs",
+            "create_application",
+            "update_application",
+            "read_profile",
+            "update_profile",
+            "generate_content",
+            "read_analytics"
+          ]
+        },
+        {
+          "role": "system",
+          "permissions": [
+            "scrape_jobs",
+            "process_jobs",
+            "calculate_matches",
+            "backup_data",
+            "write_analytics"
+          ]
+        }
+      ]
+    },
+    "securityControls": [
+      {
+        "control": "Input Validation",
+        "implementation": "Express.js middleware with Joi schema validation for all API endpoints",
+        "location": "API Gateway and service entry points",
+        "relatedReqs": [
+          "REQ-001",
+          "REQ-002"
+        ]
+      },
+      {
+        "control": "Rate Limiting",
+        "implementation": "Express rate limiter with Redis backend, 100 requests per minute per IP",
+        "location": "API Gateway",
+        "relatedReqs": [
+          "REQ-003"
+        ]
+      },
+      {
+        "control": "Data Encryption at Rest",
+        "implementation": "PostgreSQL transparent data encryption (TDE) and encrypted Docker volumes",
+        "location": "Database Service and File Storage",
+        "relatedReqs": [
+          "REQ-004",
+          "REQ-005"
+        ]
+      },
+      {
+        "control": "Data Encryption in Transit",
+        "implementation": "TLS 1.3 for all HTTP communications, internal service mesh with mTLS",
+        "location": "All network communications",
+        "relatedReqs": [
+          "REQ-006"
+        ]
+      },
+      {
+        "control": "API Key Management",
+        "implementation": "Environment variable storage with Docker secrets, no hardcoded credentials",
+        "location": "All services requiring external API access",
+        "relatedReqs": [
+          "REQ-007",
+          "REQ-008"
+        ]
+      },
+      {
+        "control": "Session Security",
+        "implementation": "Redis session storage with secure cookies, CSRF protection",
+        "location": "Web UI and API Gateway",
+        "relatedReqs": [
+          "REQ-009"
+        ]
+      },
+      {
+        "control": "Anti-Detection Measures",
+        "implementation": "Playwright stealth mode, browser fingerprint randomization, request timing variation",
+        "location": "Job Scraping Service",
+        "relatedReqs": [
+          "REQ-010",
+          "REQ-011"
+        ]
+      },
+      {
+        "control": "Audit Logging",
+        "implementation": "Structured logging to local files with log rotation, security event tracking",
+        "location": "All services",
+        "relatedReqs": [
+          "REQ-012"
+        ]
+      },
+      {
+        "control": "Backup Encryption",
+        "implementation": "rclone encryption with user-controlled keys for cloud backup synchronization",
+        "location": "Backup Service",
+        "relatedReqs": [
+          "REQ-013"
+        ]
+      }
+    ],
+    "sensitiveDataHandling": [
+      {
+        "dataType": "Personal Identifiable Information",
+        "classification": "PII",
+        "handling": "Encrypted at rest in PostgreSQL, masked in logs, local storage only with user consent for cloud backup"
+      },
+      {
+        "dataType": "CV and Resume Data",
+        "classification": "Confidential",
+        "handling": "Encrypted file storage, access-controlled APIs, version tracking with secure deletion"
+      },
+      {
+        "dataType": "API Keys and Credentials",
+        "classification": "Confidential",
+        "handling": "Environment variables only, Docker secrets management, never logged or transmitted"
+      },
+      {
+        "dataType": "LinkedIn Session Data",
+        "classification": "Internal",
+        "handling": "Redis storage with TTL expiration, encrypted cookies, anti-detection measures"
+      },
+      {
+        "dataType": "Job Application Data",
+        "classification": "Internal",
+        "handling": "Encrypted database storage, user-controlled retention, secure API access"
+      }
+    ],
+    "complianceRequirements": [
+      "GDPR"
+    ]
+  },
+  "deploymentArchitecture": {
+    "targetEnvironment": {
+      "platform": "Docker Compose",
+      "topology": "Single-host containerized deployment with service mesh networking. All services run on localhost with internal Docker network communication. External access only through API Gateway on port 3000.",
+      "topologyDiagram": "┌─────────────────┐\n│   Web UI (3000) │\n└─────────┬───────┘\n          │\n┌─────────▼───────┐\n│  API Gateway    │\n└─────────┬───────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Internal Services Network (docker)      │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │API Servr│ │Job Crawl│ │n8n Workflow │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n│ ┌─────────┐ ┌─────────┐ ┌─────────────┐ │\n│ │LiteLLM  │ │Ollama   │ │Backup Svc   │ │\n│ └─────────┘ └─────────┘ └─────────────┘ │\n└─────────────────────────────────────────┘\n          │\n┌─────────▼───────────────────────────────┐\n│ Data Layer                              │\n│ ┌─────────────┐ ┌─────────────────────┐ │\n│ │PostgreSQL 15│ │Redis 7 + Volumes   │ │\n│ └─────────────┘ └─────────────────────┘ │\n└─────────────────────────────────────────┘",
+      "environmentVariables": [
+        {
+          "name": "JWT_SECRET",
+          "description": "Secret key for JWT token signing and verification",
+          "sensitive": true
+        },
+        {
+          "name": "DATABASE_URL",
+          "description": "PostgreSQL connection string with credentials",
+          "sensitive": true
+        },
+        {
+          "name": "REDIS_URL",
+          "description": "Redis connection string for cache and sessions",
+          "sensitive": true
+        },
+        {
+          "name": "CLAUDE_API_KEY",
+          "description": "Anthropic Claude API key for AI content generation",
+          "sensitive": true
+        },
+        {
+          "name": "ENCRYPTION_KEY",
+          "description": "AES-256 key for encrypting sensitive user data at rest",
+          "sensitive": true
+        },
+        {
+          "name": "BACKUP_ENCRYPTION_KEY",
+          "description": "Separate key for encrypting backup data",
+          "sensitive": true
+        },
+        {
+          "name": "NODE_ENV",
+          "description": "Application environment (development/production)",
+          "sensitive": false
+        },
+        {
+          "name": "LOG_LEVEL",
+          "description": "Logging verbosity level (debug/info/warn/error)",
+          "sensitive": false
+        }
+      ]
+    },
+    "scalingStrategy": [
+      {
+        "component": "API Gateway",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance for single-user deployment"
+      },
+      {
+        "component": "API Server",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance for single-user deployment"
+      },
+      {
+        "component": "Job Crawler",
+        "minInstances": 1,
+        "maxInstances": 3,
+        "scalingTrigger": "Queue depth > 50 jobs or memory > 80%"
+      },
+      {
+        "component": "LiteLLM",
+        "minInstances": 1,
+        "maxInstances": 2,
+        "scalingTrigger": "Processing time > 8 seconds or CPU > 75%"
+      },
+      {
+        "component": "Ollama",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance with model auto-unloading"
+      },
+      {
+        "component": "Database Service",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance with connection pooling"
+      },
+      {
+        "component": "Web UI",
+        "minInstances": 1,
+        "maxInstances": 1,
+        "scalingTrigger": "Fixed single instance for single-user access"
+      }
+    ],
+    "resourceRequirements": [
+      {
+        "component": "API Gateway",
+        "cpuRequest": "100m",
+        "cpuLimit": "500m",
+        "memoryRequest": "128Mi",
+        "memoryLimit": "256Mi"
+      },
+      {
+        "component": "API Server",
+        "cpuRequest": "200m",
+        "cpuLimit": "800m",
+        "memoryRequest": "256Mi",
+        "memoryLimit": "512Mi"
+      },
+      {
+        "component": "Job Crawler",
+        "cpuRequest": "250m",
+        "cpuLimit": "1000m",
+        "memoryRequest": "512Mi",
+        "memoryLimit": "1Gi"
+      },
+      {
+        "component": "LiteLLM",
+        "cpuRequest": "200m",
+        "cpuLimit": "800m",
+        "memoryRequest": "256Mi",
+        "memoryLimit": "512Mi"
+      },
+      {
+        "component": "Ollama",
+        "cpuRequest": "1000m",
+        "cpuLimit": "2000m",
+        "memoryRequest": "2Gi",
+        "memoryLimit": "4Gi"
+      },
+      {
+        "component": "PostgreSQL",
+        "cpuRequest": "250m",
+        "cpuLimit": "1000m",
+        "memoryRequest": "1Gi",
+        "memoryLimit": "2Gi"
+      },
+      {
+        "component": "Redis",
+        "cpuRequest": "100m",
+        "cpuLimit": "500m",
+        "memoryRequest": "256Mi",
+        "memoryLimit": "512Mi"
+      },
+      {
+        "component": "Web UI",
+        "cpuRequest": "50m",
+        "cpuLimit": "200m",
+        "memoryRequest": "64Mi",
+        "memoryLimit": "128Mi"
+      }
+    ],
+    "memoryBudget": {
+      "total": "8GB",
+      "allocations": {
+        "ollama": "4GB",
+        "postgres": "1GB",
+        "job-crawler": "1.5GB",
+        "n8n": "512MB",
+        "redis": "256MB",
+        "api-server": "256MB",
+        "litellm": "256MB",
+        "web-ui": "128MB"
+      },
+      "monitoring": {
+        "warningThreshold": "80%",
+        "criticalThreshold": "90%",
+        "action": "Auto-unload Ollama model"
+      }
+    },
+    "containerization": {
+      "enabled": true,
+      "baseImage": "node:24-alpine",
+      "buildStrategy": "multi-stage with separate build and runtime stages for optimized image sizes"
+    },
+    "cicdPipeline": "Local development workflow with Docker Compose for testing. Production deployment via single docker-compose.yml file with environment-specific .env files. Automated testing in containers before deployment. Backup verification as part of deployment health checks."
+  },
+  "operationalConcerns": {
+    "configurationManagement": {
+      "environmentVariables": [
+        "JWT_SECRET",
+        "DATABASE_URL",
+        "REDIS_URL",
+        "CLAUDE_API_KEY",
+        "ENCRYPTION_KEY",
+        "NODE_ENV",
+        "LOG_LEVEL"
+      ],
+      "databaseConfiguration": "PostgreSQL configured via environment variables with connection pooling (max 20 connections). Database migrations managed through dedicated migration service on startup.",
+      "featureFlags": [
+        "LINKEDIN_SCRAPING_ENABLED",
+        "CLAUDE_AI_ENABLED",
+        "LOCAL_AI_FALLBACK",
+        "BACKUP_AUTO_SYNC",
+        "EMAIL_NOTIFICATIONS"
+      ]
+    },
+    "healthChecks": [
+      {
+        "endpoint": "/health/ready",
+        "purpose": "readiness check",
+        "checks": [
+          "database",
+          "redis",
+          "external AI APIs"
+        ]
+      },
+      {
+        "endpoint": "/health/live",
+        "purpose": "liveness check",
+        "checks": [
+          "service responsiveness",
+          "memory usage"
+        ]
+      },
+      {
+        "endpoint": "/health/startup",
+        "purpose": "startup check",
+        "checks": [
+          "database migrations",
+          "initial data load",
+          "service dependencies"
+        ]
+      }
+    ],
+    "logging": {
+      "destination": "stdout with structured JSON format",
+      "retention": "30 days via Docker log rotation",
+      "keyEvents": [
+        {
+          "event": "job_scraping_started",
+          "level": "info",
+          "trigger": "when scraping job begins for a platform",
+          "fields": [
+            "platform",
+            "user_id",
+            "job_count_target",
+            "session_id"
+          ]
+        },
+        {
+          "event": "job_scraping_completed",
+          "level": "info",
+          "trigger": "when scraping completes successfully",
+          "fields": [
+            "platform",
+            "jobs_found",
+            "duration",
+            "success_rate"
+          ]
+        },
+        {
+          "event": "ai_matching_performed",
+          "level": "info",
+          "trigger": "when AI matching completes for a job",
+          "fields": [
+            "job_id",
+            "match_score",
+            "processing_time",
+            "ai_provider"
+          ]
+        },
+        {
+          "event": "content_generation_requested",
+          "level": "info",
+          "trigger": "when cover letter or CV tailoring is requested",
+          "fields": [
+            "job_id",
+            "content_type",
+            "template_used",
+            "ai_provider"
+          ]
+        },
+        {
+          "event": "authentication_failed",
+          "level": "warn",
+          "trigger": "when JWT validation fails or invalid credentials",
+          "fields": [
+            "ip_address",
+            "endpoint",
+            "failure_reason"
+          ]
+        },
+        {
+          "event": "rate_limit_exceeded",
+          "level": "warn",
+          "trigger": "when platform rate limits are hit",
+          "fields": [
+            "platform",
+            "limit_type",
+            "retry_after",
+            "request_count"
+          ]
+        },
+        {
+          "event": "system_error",
+          "level": "error",
+          "trigger": "when unhandled errors occur",
+          "fields": [
+            "service",
+            "error_type",
+            "stack_trace",
+            "request_id"
+          ]
+        }
+      ]
+    },
+    "metrics": [
+      {
+        "name": "job_scraping_duration_seconds",
+        "type": "histogram",
+        "description": "Time taken to complete job scraping per platform",
+        "alertThreshold": "> 900 seconds (15 minutes)"
+      },
+      {
+        "name": "ai_matching_processing_time_seconds",
+        "type": "histogram",
+        "description": "Time taken for AI matching per job",
+        "alertThreshold": "> 10 seconds"
+      },
+      {
+        "name": "content_generation_duration_seconds",
+        "type": "histogram",
+        "description": "Time taken to generate content (cover letters, CV)",
+        "alertThreshold": "> 90 seconds"
+      },
+      {
+        "name": "database_connection_pool_usage",
+        "type": "gauge",
+        "description": "Current database connection pool utilization",
+        "alertThreshold": "> 90%"
+      },
+      {
+        "name": "memory_usage_bytes",
+        "type": "gauge",
+        "description": "Current memory usage per service",
+        "alertThreshold": "> 80% of allocated limit"
+      },
+      {
+        "name": "api_requests_total",
+        "type": "counter",
+        "description": "Total API requests by endpoint and status",
+        "alertThreshold": "Error rate > 5%"
+      },
+      {
+        "name": "jobs_processed_total",
+        "type": "counter",
+        "description": "Total jobs processed successfully",
+        "alertThreshold": "No jobs processed in 24 hours"
+      }
+    ],
+    "tracing": {
+      "implementation": "OpenTelemetry with local Jaeger instance",
+      "traceContext": "Request IDs propagated through X-Request-ID header across all services with parent-child span relationships"
+    },
+    "alerting": {
+      "channels": [
+        "local desktop notifications",
+        "email notifications",
+        "log-based alerts"
+      ],
+      "criticalAlerts": [
+        "Database connection failures",
+        "Memory usage > 90% for more than 5 minutes",
+        "Job scraping failures for all platforms",
+        "AI service unavailable for > 10 minutes",
+        "Backup failures for 2 consecutive days"
+      ]
+    }
+  },
+  "architecturalDecisions": [
+    {
+      "id": "ADR-001",
+      "title": "Containerized Modular Monolith Architecture",
+      "status": "accepted",
+      "context": "Need to balance deployment simplicity for single-user setup with maintainability and component isolation. Must run locally with zero infrastructure costs.",
+      "optionsConsidered": [
+        {
+          "option": "Pure Microservices",
+          "pros": [
+            "Maximum modularity",
+            "Independent scaling",
+            "Technology diversity"
+          ],
+          "cons": [
+            "Complex orchestration",
+            "Network overhead",
+            "Operational complexity"
+          ]
+        },
+        {
+          "option": "Traditional Monolith",
+          "pros": [
+            "Simple deployment",
+            "No network calls",
+            "Easy debugging"
+          ],
+          "cons": [
+            "Tight coupling",
+            "Single technology stack",
+            "Difficult maintenance"
+          ]
+        },
+        {
+          "option": "Containerized Modular Monolith",
+          "pros": [
+            "Service isolation",
+            "Simple deployment",
+            "Docker Compose orchestration",
+            "Component boundaries"
+          ],
+          "cons": [
+            "Some operational overhead",
+            "Container resource usage"
+          ]
+        }
+      ],
+      "decision": "Implement containerized modular monolith with Docker Compose orchestration",
+      "rationale": "Provides the right balance of modularity and simplicity for single-user deployment. Enables service isolation without microservices complexity while maintaining zero infrastructure cost requirement.",
+      "consequences": [
+        "Each component runs in separate container",
+        "Internal service communication via Docker network",
+        "Single-command deployment",
+        "Easy local development"
+      ],
+      "relatedReqs": [
+        "CON-003",
+        "CON-005",
+        "REQ-001",
+        "REQ-055"
+      ],
+      "relatedDecisions": []
+    },
+    {
+      "id": "ADR-002",
+      "title": "PostgreSQL as Primary Database with JSONB Extensions",
+      "status": "accepted",
+      "context": "Need to store structured job data, user profiles, application tracking, and analytics data while maintaining ACID guarantees and supporting flexible schemas for varying job board data formats.",
+      "optionsConsidered": [
+        {
+          "option": "MongoDB + PostgreSQL",
+          "pros": [
+            "Specialized document storage",
+            "Native JSON handling",
+            "Flexible schemas"
+          ],
+          "cons": [
+            "Multiple database complexity",
+            "Increased memory usage",
+            "Operational overhead"
+          ]
+        },
+        {
+          "option": "Pure PostgreSQL with JSONB",
+          "pros": [
+            "Single database system",
+            "ACID guarantees",
+            "JSONB flexibility",
+            "Time-series support"
+          ],
+          "cons": [
+            "Less optimized for pure document storage",
+            "More complex JSON queries"
+          ]
+        },
+        {
+          "option": "SQLite",
+          "pros": [
+            "Zero configuration",
+            "File-based",
+            "Lightweight"
+          ],
+          "cons": [
+            "Limited concurrency",
+            "No network access",
+            "Scaling limitations"
+          ]
+        }
+      ],
+      "decision": "Use PostgreSQL 15 with JSONB extensions and time-series capabilities",
+      "rationale": "Provides ACID guarantees for critical data while offering flexible JSON storage for varying job data formats. Single database reduces operational complexity and memory usage within 8GB constraint.",
+      "consequences": [
+        "All data stored in single PostgreSQL instance",
+        "JSONB used for flexible job data schemas",
+        "Time-series extensions for analytics",
+        "Connection pooling required"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "REQ-009",
+        "REQ-010",
+        "REQ-024",
+        "REQ-025"
+      ],
+      "relatedDecisions": [
+        "ADR-001"
+      ]
+    },
+    {
+      "id": "ADR-003",
+      "title": "Local-First Data Architecture with Optional Cloud Backup",
+      "status": "accepted",
+      "context": "Must ensure zero infrastructure costs while maintaining GDPR compliance and user privacy. Need to provide data sovereignty while enabling optional backup capabilities.",
+      "optionsConsidered": [
+        {
+          "option": "Cloud-First with Local Cache",
+          "pros": [
+            "High availability",
+            "Automatic backups",
+            "Scalability"
+          ],
+          "cons": [
+            "Infrastructure costs",
+            "Privacy concerns",
+            "GDPR complexity"
+          ]
+        },
+        {
+          "option": "Pure Local Storage",
+          "pros": [
+            "Complete privacy",
+            "Zero costs",
+            "Full control"
+          ],
+          "cons": [
+            "No backup redundancy",
+            "Single point of failure",
+            "No remote access"
+          ]
+        },
+        {
+          "option": "Local-First with Optional Cloud Backup",
+          "pros": [
+            "Privacy by default",
+            "Zero infrastructure cost",
+            "Optional redundancy",
+            "User control"
+          ],
+          "cons": [
+            "Backup complexity",
+            "Potential data loss if no backup"
+          ]
+        }
+      ],
+      "decision": "Implement local-first data architecture with encrypted optional cloud backup",
+      "rationale": "Ensures zero infrastructure costs and complete privacy compliance while providing user-controlled backup options. Aligns with core product value proposition of privacy-first job searching.",
+      "consequences": [
+        "All data stored locally by default",
+        "Encrypted cloud backup optional",
+        "User controls data sovereignty",
+        "GDPR compliance simplified"
+      ],
+      "relatedReqs": [
+        "CON-003",
+        "CON-005",
+        "REQ-001",
+        "REQ-052",
+        "REQ-053"
+      ],
+      "relatedDecisions": [
+        "ADR-002"
+      ]
+    },
+    {
+      "id": "ADR-004",
+      "title": "Hybrid AI Strategy with Local-First Processing",
+      "status": "accepted",
+      "context": "Need AI capabilities for job matching and content generation while maintaining privacy and cost constraints. Must balance performance with privacy and budget limitations.",
+      "optionsConsidered": [
+        {
+          "option": "Cloud-Only AI (Claude/GPT)",
+          "pros": [
+            "High quality results",
+            "No local resource usage",
+            "Latest models"
+          ],
+          "cons": [
+            "Privacy concerns",
+            "API costs",
+            "External dependency"
+          ]
+        },
+        {
+          "option": "Local-Only AI (Ollama)",
+          "pros": [
+            "Complete privacy",
+            "No API costs",
+            "No external dependency"
+          ],
+          "cons": [
+            "High memory usage",
+            "Lower quality",
+            "Slower processing"
+          ]
+        },
+        {
+          "option": "Hybrid AI Strategy",
+          "pros": [
+            "Privacy for sensitive data",
+            "Quality when needed",
+            "Cost control",
+            "Fallback options"
+          ],
+          "cons": [
+            "Implementation complexity",
+            "Configuration management"
+          ]
+        }
+      ],
+      "decision": "Implement hybrid AI with local Ollama for matching and Claude API for content generation",
+      "rationale": "Keeps sensitive job matching data local while using high-quality cloud AI for content generation where privacy is less critical. Stays within $5/month budget while providing good user experience.",
+      "consequences": [
+        "Separate AI Matching and Content Generation services",
+        "Local Ollama deployment required",
+        "Claude API integration for content",
+        "AI budget monitoring needed"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-003",
+        "REQ-003",
+        "REQ-004",
+        "REQ-005",
+        "REQ-006"
+      ],
+      "relatedDecisions": [
+        "ADR-001",
+        "ADR-003"
+      ]
+    },
+    {
+      "id": "ADR-005",
+      "title": "Docker Compose for Single-Host Deployment",
+      "status": "accepted",
+      "context": "Need simple, reliable deployment mechanism for single-user setup that requires minimal operational knowledge while supporting the containerized architecture.",
+      "optionsConsidered": [
+        {
+          "option": "Kubernetes",
+          "pros": [
+            "Production-grade orchestration",
+            "Advanced scaling",
+            "Service mesh"
+          ],
+          "cons": [
+            "Operational complexity",
+            "Resource overhead",
+            "Overkill for single-user"
+          ]
+        },
+        {
+          "option": "Docker Swarm",
+          "pros": [
+            "Docker native",
+            "Simpler than K8s",
+            "Built-in networking"
+          ],
+          "cons": [
+            "Still complex for single-user",
+            "Limited ecosystem"
+          ]
+        },
+        {
+          "option": "Docker Compose",
+          "pros": [
+            "Simple configuration",
+            "Single-command deployment",
+            "Perfect for single-host",
+            "Easy development"
+          ],
+          "cons": [
+            "Limited scaling",
+            "Single-host only",
+            "No advanced orchestration"
+          ]
+        }
+      ],
+      "decision": "Use Docker Compose for all deployment scenarios",
+      "rationale": "Perfect fit for single-user deployment with minimal operational complexity. Provides container orchestration without the overhead of full container platforms.",
+      "consequences": [
+        "Single docker-compose.yml deployment",
+        "Environment-specific .env files",
+        "Simple service networking",
+        "Local development matches production"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-005",
+        "REQ-001",
+        "REQ-055"
+      ],
+      "relatedDecisions": [
+        "ADR-001"
+      ]
+    },
+    {
+      "id": "ADR-006",
+      "title": "JWT Authentication with Local Session Management",
+      "status": "accepted",
+      "context": "Need secure authentication for single-user deployment that supports service-to-service communication while maintaining simplicity and security boundaries.",
+      "optionsConsidered": [
+        {
+          "option": "Session-based Authentication",
+          "pros": [
+            "Simple implementation",
+            "Server-side control",
+            "Easy revocation"
+          ],
+          "cons": [
+            "Stateful",
+            "Scaling complexity",
+            "Cross-service challenges"
+          ]
+        },
+        {
+          "option": "OAuth2/OIDC",
+          "pros": [
+            "Industry standard",
+            "Federated identity",
+            "Advanced features"
+          ],
+          "cons": [
+            "Overkill for single-user",
+            "Complex setup",
+            "External dependencies"
+          ]
+        },
+        {
+          "option": "JWT with Local Sessions",
+          "pros": [
+            "Stateless tokens",
+            "Service-to-service auth",
+            "Local control",
+            "Simple for single-user"
+          ],
+          "cons": [
+            "Token management complexity",
+            "Revocation challenges"
+          ]
+        }
+      ],
+      "decision": "Implement JWT authentication with Redis-backed session management",
+      "rationale": "Provides stateless authentication suitable for service communication while maintaining local control. Redis sessions enable security features like token revocation and session management.",
+      "consequences": [
+        "JWT tokens for API authentication",
+        "Redis session storage",
+        "Service-to-service JWT validation",
+        "Local session management"
+      ],
+      "relatedReqs": [
+        "REQ-046",
+        "REQ-047",
+        "REQ-048"
+      ],
+      "relatedDecisions": [
+        "ADR-002",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "ADR-007",
+      "title": "Event-Driven Architecture with Redis Pub/Sub",
+      "status": "accepted",
+      "context": "Need loose coupling between services while providing real-time updates to users about job processing status, scraping progress, and system events.",
+      "optionsConsidered": [
+        {
+          "option": "Direct Service Calls",
+          "pros": [
+            "Simple implementation",
+            "Immediate responses",
+            "Easy debugging"
+          ],
+          "cons": [
+            "Tight coupling",
+            "No real-time updates",
+            "Synchronous processing"
+          ]
+        },
+        {
+          "option": "Message Queue (RabbitMQ)",
+          "pros": [
+            "Reliable messaging",
+            "Advanced routing",
+            "Persistence"
+          ],
+          "cons": [
+            "Additional infrastructure",
+            "Operational complexity",
+            "Memory overhead"
+          ]
+        },
+        {
+          "option": "Redis Pub/Sub",
+          "pros": [
+            "Leverages existing Redis",
+            "Real-time capabilities",
+            "Simple implementation",
+            "Low overhead"
+          ],
+          "cons": [
+            "No persistence",
+            "At-most-once delivery",
+            "Limited routing"
+          ]
+        }
+      ],
+      "decision": "Use Redis Pub/Sub for event-driven communication with WebSocket for real-time UI updates",
+      "rationale": "Leverages existing Redis infrastructure to provide loose coupling and real-time capabilities without additional operational overhead. Perfect for single-user real-time updates.",
+      "consequences": [
+        "Services publish events to Redis",
+        "WebSocket connections for real-time UI",
+        "Event-driven job processing",
+        "Loose service coupling"
+      ],
+      "relatedReqs": [
+        "REQ-015",
+        "REQ-016",
+        "REQ-017",
+        "REQ-031"
+      ],
+      "relatedDecisions": [
+        "ADR-002",
+        "ADR-006"
+      ]
+    },
+    {
+      "id": "ADR-008",
+      "title": "OpenTelemetry with Local Jaeger for Observability",
+      "status": "accepted",
+      "context": "Need comprehensive observability for debugging complex job processing workflows while maintaining zero infrastructure cost and local-only deployment.",
+      "optionsConsidered": [
+        {
+          "option": "Cloud Observability (DataDog/New Relic)",
+          "pros": [
+            "Full-featured",
+            "Advanced analytics",
+            "Alerting"
+          ],
+          "cons": [
+            "Monthly costs",
+            "Data privacy concerns",
+            "External dependency"
+          ]
+        },
+        {
+          "option": "Basic Logging Only",
+          "pros": [
+            "Simple",
+            "No additional infrastructure",
+            "Low overhead"
+          ],
+          "cons": [
+            "Limited debugging",
+            "No distributed tracing",
+            "Poor visibility"
+          ]
+        },
+        {
+          "option": "OpenTelemetry + Local Jaeger",
+          "pros": [
+            "Industry standard",
+            "Comprehensive tracing",
+            "Local deployment",
+            "Zero cost"
+          ],
+          "cons": [
+            "Setup complexity",
+            "Resource usage",
+            "Limited advanced features"
+          ]
+        }
+      ],
+      "decision": "Implement OpenTelemetry with local Jaeger instance for distributed tracing",
+      "rationale": "Provides comprehensive observability without external dependencies or costs. Essential for debugging complex job processing workflows across multiple services.",
+      "consequences": [
+        "OpenTelemetry instrumentation in all services",
+        "Local Jaeger deployment",
+        "Distributed trace correlation",
+        "Performance monitoring"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "REQ-001",
+        "REQ-034",
+        "REQ-035"
+      ],
+      "relatedDecisions": [
+        "ADR-001",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "ADR-009",
+      "title": "pnpm Workspaces for Monorepo",
+      "status": "accepted",
+      "context": "Need to manage multiple TypeScript packages and services in a monorepo structure while maintaining simplicity for single-user deployment and avoiding complex build orchestration tools.",
+      "optionsConsidered": [
+        {
+          "option": "npm Workspaces",
+          "pros": [
+            "Built into npm",
+            "Simple configuration",
+            "No additional tools"
+          ],
+          "cons": [
+            "Limited features",
+            "Slower installs",
+            "No advanced caching"
+          ]
+        },
+        {
+          "option": "pnpm Workspaces + Turborepo",
+          "pros": [
+            "Fast installs",
+            "Advanced caching",
+            "Build optimization"
+          ],
+          "cons": [
+            "Additional complexity",
+            "Learning curve",
+            "Overkill for single-user"
+          ]
+        },
+        {
+          "option": "pnpm Workspaces Only",
+          "pros": [
+            "Fast installs",
+            "Efficient disk usage",
+            "Good workspace support",
+            "Simple setup"
+          ],
+          "cons": [
+            "No build orchestration",
+            "Manual dependency management"
+          ]
+        }
+      ],
+      "decision": "Use pnpm workspaces without Turborepo for monorepo management",
+      "rationale": "Provides efficient package management and workspace support without the complexity of build orchestration tools. Perfect balance for single-user deployment while maintaining development efficiency.",
+      "consequences": [
+        "Single pnpm workspace root",
+        "Shared dependencies across packages",
+        "Fast, efficient installs",
+        "Simple build scripts"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "CON-005",
+        "REQ-001"
+      ],
+      "relatedDecisions": [
+        "ADR-001",
+        "ADR-005"
+      ]
+    },
+    {
+      "id": "ADR-010",
+      "title": "Memory Budget Allocation",
+      "status": "accepted",
+      "context": "Need to ensure the system operates within 8GB memory constraint while providing optimal performance for AI processing, job scraping, and data storage. Must prevent out-of-memory conditions.",
+      "optionsConsidered": [
+        {
+          "option": "Dynamic Memory Allocation",
+          "pros": [
+            "Flexible resource usage",
+            "Optimal utilization",
+            "Adaptive to workload"
+          ],
+          "cons": [
+            "Complex management",
+            "Potential conflicts",
+            "Hard to predict"
+          ]
+        },
+        {
+          "option": "Equal Memory Distribution",
+          "pros": [
+            "Simple allocation",
+            "Fair distribution",
+            "Easy to manage"
+          ],
+          "cons": [
+            "Inefficient usage",
+            "Doesn't match workload",
+            "Waste of resources"
+          ]
+        },
+        {
+          "option": "Fixed Budget with Monitoring",
+          "pros": [
+            "Predictable allocation",
+            "Prevents OOM",
+            "Clear boundaries",
+            "Monitoring triggers"
+          ],
+          "cons": [
+            "Less flexibility",
+            "May under-utilize"
+          ]
+        }
+      ],
+      "decision": "Implement fixed memory budget allocation with automated monitoring and Ollama model unloading",
+      "rationale": "Ensures predictable memory usage within 8GB constraint while allocating resources based on actual service needs. Ollama gets largest allocation as it's the most memory-intensive component.",
+      "consequences": [
+        "Fixed memory limits per service",
+        "Automated memory monitoring",
+        "Ollama model auto-unloading at 90% usage",
+        "Clear resource boundaries"
+      ],
+      "relatedReqs": [
+        "CON-001",
+        "REQ-001",
+        "REQ-034"
+      ],
+      "relatedDecisions": [
+        "ADR-004",
+        "ADR-008"
+      ]
+    }
+  ],
+  "generationMetadata": {
+    "comprehensiveness": "comprehensive",
+    "sectionsGenerated": [
+      "systemOverview",
+      "architecturePrinciples",
+      "components",
+      "integrationArchitecture",
+      "dataArchitecture",
+      "securityArchitecture",
+      "deploymentArchitecture",
+      "operationalConcerns",
+      "architecturalDecisions"
+    ],
+    "totalLlmCalls": 11,
+    "totalInputTokens": 134370,
+    "totalOutputTokens": 64672,
+    "generatedAt": "2026-02-08T15:06:59.796Z"
+  },
+  "createdAt": "2026-02-08T15:06:59.796Z",
+  "updatedAt": "2026-02-08T19:04:59.174Z",
+  "_changesSummary": "[overview] No changes required - the amendments target the components and integrationArchitecture sections which are not included in this chunk; [components] Restructured components to follow WESPA-style monorepo architecture with apps/ and packages/@jobsearch/ directories. Consolidated services into 4 main applications (api-server, job-crawler, web-ui, n8n-workflows) and 6 shared packages. Added packageDependencies section to integrationArchitecture defining internal dependency graph and workspace rules.; [data] No changes required - the amendments target components and integrationArchitecture sections which are not included in this chunk; [operations] Updated deployment architecture to reflect the WESPA-style monorepo structure with consolidated services (api-server, job-crawler, n8n-workflows, litellm, ollama) instead of individual microservices. Updated topology diagram and resource requirements accordingly."
+}

@@ -15,6 +15,7 @@ Modes:
 Routing decisions:
 - Codex: Design, debugging, code review, trade-off analysis
 - Gemini: Research, documentation, codebase analysis, multimodal
+- Perplexity: Only when explicitly mentioned (web research with citations)
 """
 
 from __future__ import annotations

@@ -38,7 +38,7 @@
     "OBJ-004: Maintain zero infrastructure cost with <$5/month AI API budget - Target: <$5/month"
   ],
   "constraints": [
-    "CON-001 (technical): Must run on 8GB RAM minimum - Impact: Limits LLM model size to 7B quantized",
+    "CON-001 (technical): Must run on 8GB RAM minimum with documented allocations: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API 256MB, LiteLLM 256MB, Web UI 128MB - Impact: Limits LLM model size to 7B quantized, requires memory monitoring at 80%/90% thresholds",
     "CON-002 (technical): LinkedIn aggressively blocks automated scrapers using fingerprinting and behavioral analysis - Impact: Requires stealth automation with human-like behavior patterns, session persistence, and conservative rate limits (20-40 jobs/day)",
     "CON-003 (budget): Zero infrastructure cost, $5/month AI budget - Impact: Must use free local LLMs for most tasks",
     "CON-004 (legal): Must respect job board Terms of Service - Impact: Implement rate limiting, respect robots.txt",
@@ -336,11 +336,11 @@
     {
       "id": "REQ-033",
       "title": "Docker Containerization",
-      "description": "System shall be deployable via Docker Compose with containers for: scraper API, PostgreSQL, Ollama, n8n, and web frontend. Single docker-compose up command to start.",
+      "description": "System shall be deployable via Docker Compose using pnpm workspaces monorepo architecture with apps/ directory (api-server, job-crawler, web-ui, n8n-workflows) and packages/@jobsearch/ directory (types, database, config, logger, ai-client, common). Containers include: api-server, job-crawler, web-ui, PostgreSQL, Redis, Ollama, LiteLLM, n8n. Single docker-compose up command to start.",
       "category": "non-functional",
       "domain": "Infrastructure",
       "priority": "must",
-      "rationale": "Docker ensures reproducible deployment across environments"
+      "rationale": "Docker with pnpm workspaces ensures reproducible deployment and clear package boundaries for future microservice extraction"
     },
     {
       "id": "REQ-034",
@@ -399,11 +399,11 @@
     {
       "id": "REQ-040",
       "title": "Usability: Single-User Setup",
-      "description": "System shall support single-user deployment with one-time profile setup, no authentication required for local access.",
+      "description": "System shall support single-user deployment with one-time profile setup. No user authentication required - local deployment trusts localhost connections. Internal service-to-service communication uses environment-based shared secrets, not JWT tokens.",
       "category": "non-functional",
       "domain": "Usability",
       "priority": "must",
-      "rationale": "Simple setup reduces friction for personal use"
+      "rationale": "Simple setup reduces friction for personal use; local-trust model appropriate for single-user deployment"
     },
     {
       "id": "REQ-041",
@@ -557,6 +557,33 @@
       "domain": "Disaster Recovery",
       "priority": "should",
       "rationale": "Automated retention prevents storage exhaustion while maintaining adequate recovery points"
+    },
+    {
+      "id": "REQ-058",
+      "title": "Memory Budget Documentation",
+      "description": "System shall document and enforce memory allocations for each containerized service within the 8GB total budget. Memory monitoring with 80% warning threshold and 90% critical threshold. At critical threshold, auto-unload Ollama model to free memory. Allocations: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API Server 256MB, LiteLLM 256MB, Web UI 128MB.",
+      "category": "non-functional",
+      "domain": "Infrastructure",
+      "priority": "must",
+      "rationale": "Documented memory budget ensures predictable resource usage and graceful degradation under memory pressure"
+    },
+    {
+      "id": "REQ-059",
+      "title": "LinkedIn Scraping Legal Disclaimer",
+      "description": "System shall display a legal disclaimer before enabling LinkedIn scraping feature. User must provide explicit consent acknowledging Terms of Service violation risks. LinkedIn scraping feature is opt-in only and disabled by default. Email parsing shall be prominently recommended as the zero-risk alternative for LinkedIn job discovery.",
+      "category": "non-functional",
+      "domain": "Legal",
+      "priority": "must",
+      "rationale": "Legal disclaimer and explicit consent protect users from uninformed ToS violations and reduce project liability"
+    },
+    {
+      "id": "REQ-060",
+      "title": "TypeScript Monorepo Architecture",
+      "description": "System shall use pnpm workspaces for monorepo package management (no Turborepo). Applications in apps/ directory: api-server, job-crawler, web-ui, n8n-workflows. Shared packages in packages/@jobsearch/: types, database, config, logger, ai-client, common. TypeScript strict mode with ESLint and Prettier enforcement. Clear package boundaries enable future microservice extraction.",
+      "category": "non-functional",
+      "domain": "Architecture",
+      "priority": "must",
+      "rationale": "Monorepo architecture provides code sharing, type safety, and clear boundaries for future microservice conversion"
     }
   ],
   "glossary": {

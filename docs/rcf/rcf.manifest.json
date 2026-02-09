@@ -13,7 +13,12 @@
           "path": "docs/rcf/user-stories/PRD-001-user-stories.json"
         }
       ],
-      "tad": [],
+      "tad": [
+        {
+          "id": "TAD-001",
+          "path": "docs/rcf/tad/TAD-001.json"
+        }
+      ],
       "bs": [],
       "fbs": [],
       "ts": [],
