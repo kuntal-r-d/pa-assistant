@@ -6,7 +6,7 @@
     {
       "id": "PRD-001",
       "name": "Zero-Cost Remote Job Search Automation System",
-      "path": "docs/rcf/prd/PRD-001.json",
+      "path": "docs/rcf/prds/PRD-001.json",
       "stories": [
         {
           "id": "STD-001",
