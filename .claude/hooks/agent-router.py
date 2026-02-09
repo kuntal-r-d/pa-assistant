@@ -3,11 +3,12 @@
 UserPromptSubmit hook: Route to appropriate agent based on user intent.
 
 Uses weighted scoring to determine confidence level for routing suggestions.
-Supports manual override patterns (!codex, !gemini, !direct).
+Supports manual override patterns (!codex, !gemini, !perplexity, !direct).
 
 Routing decisions:
 - Codex: Design, debugging, code review, trade-off analysis
 - Gemini: Research, documentation, codebase analysis, multimodal
+- Perplexity: Only when explicitly mentioned (web research with citations)
 """
 
 from __future__ import annotations
@@ -108,10 +109,16 @@ GEMINI_TRIGGERS = {
     "gemini": 4,
 }
 
+# Perplexity triggers - ONLY explicit mention (no automatic triggers)
+PERPLEXITY_TRIGGERS = {
+    "perplexity": 4,
+}
+
 # Override patterns (bypass scoring)
 OVERRIDE_PATTERNS = {
     r"^!codex\b": ("codex", "Manual override: !codex"),
     r"^!gemini\b": ("gemini", "Manual override: !gemini"),
+    r"^!perplexity\b": ("perplexity", "Manual override: !perplexity"),
     r"^!direct\b": (None, "Manual override: !direct (skip suggestion)"),
 }
 
@@ -161,8 +168,18 @@ def detect_agent(prompt: str) -> RoutingDecision:
     # Calculate scores for each agent
     codex_score, codex_triggers = calculate_score(prompt, CODEX_TRIGGERS)
     gemini_score, gemini_triggers = calculate_score(prompt, GEMINI_TRIGGERS)
+    perplexity_score, perplexity_triggers = calculate_score(prompt, PERPLEXITY_TRIGGERS)
 
-    # Determine winner
+    # Perplexity takes priority when explicitly mentioned (no other triggers)
+    if perplexity_score >= MIN_CONFIDENCE:
+        return RoutingDecision(
+            agent="perplexity",
+            confidence=perplexity_score,
+            triggers=perplexity_triggers,
+            reason=f"Matched {len(perplexity_triggers)} Perplexity trigger(s)"
+        )
+
+    # Determine winner between Codex and Gemini
     if codex_score > gemini_score and codex_score >= MIN_CONFIDENCE:
         return RoutingDecision(
             agent="codex",
@@ -231,13 +248,22 @@ def main():
                     f"Consider: `codex exec --model gpt-5.2-codex --sandbox read-only --full-auto \"...\"` "
                     f"Override with !direct to skip."
                 )
-            else:  # gemini
+            elif decision.agent == "gemini":
                 suggestion = (
                     f"[Agent Routing] {decision.reason} "
                     f"(confidence: {confidence_label}, {confidence_pct}). "
                     f"Triggers: {triggers_str}. "
                     f"This task may benefit from Gemini CLI's research capabilities. "
                     f"Consider: `gemini -p \"...\" 2>/dev/null` "
+                    f"Override with !direct to skip."
+                )
+            else:  # perplexity
+                suggestion = (
+                    f"[Agent Routing] {decision.reason} "
+                    f"(confidence: {confidence_label}, {confidence_pct}). "
+                    f"Triggers: {triggers_str}. "
+                    f"This task may benefit from Perplexity's web research with citations. "
+                    f"Consider: `mcp__MCP_DOCKER__perplexity_research` or `perplexity_ask` "
                     f"Override with !direct to skip."
                 )
 
