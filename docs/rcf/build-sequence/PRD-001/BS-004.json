@@ -1,0 +1,1095 @@
+{
+  "bsId": "BS-004",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 4 of 7)",
+  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "dependency-first",
+  "buildSequence": [
+    {
+      "id": "FBS-031",
+      "title": "Application Timeline Visualization",
+      "summary": "Implements horizontal timeline visualization for job applications showing stage progression, duration calculations, and comparison to averages. Provides visual representation of application status history with chronological stage transitions and performance indicators.",
+      "storyScope": [
+        {
+          "usId": "US-094",
+          "acIds": [
+            "AC-471",
+            "AC-472",
+            "AC-473",
+            "AC-474"
+          ]
+        },
+        {
+          "usId": "US-095",
+          "acIds": [
+            "AC-475",
+            "AC-476",
+            "AC-477",
+            "AC-478"
+          ]
+        },
+        {
+          "usId": "US-096",
+          "acIds": [
+            "AC-479",
+            "AC-480",
+            "AC-481",
+            "AC-482"
+          ]
+        },
+        {
+          "usId": "US-097",
+          "acIds": [
+            "AC-483",
+            "AC-484",
+            "AC-485"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028",
+        "FBS-029"
+      ],
+      "testableOutcomes": [
+        "User can view horizontal timeline showing all stages an application has progressed through in chronological order",
+        "Timeline displays current stage with visual highlighting distinct from completed stages",
+        "System calculates and displays duration for each completed stage in hours (<24h) or days (≥1 day) format",
+        "Current stage shows elapsed time since entering that stage with real-time updates",
+        "System calculates average durations across all applications and compares individual stages to averages",
+        "Stages significantly above average duration are visually indicated as slow-moving",
+        "Timeline loads within 2 seconds for applications with up to 10 stage transitions",
+        "Applications with no stage transitions display message indicating no timeline data available"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Tracking",
+            "Timeline Visualization"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Application database schema",
+            "Status tracking system"
+          ],
+          "schemas": [
+            "Application status transitions",
+            "Timeline visualization data"
+          ]
+        },
+        "deliverables": [
+          "Timeline visualization React component",
+          "Stage duration calculation service",
+          "Average duration comparison engine",
+          "Timeline data aggregation API",
+          "Timeline UI integration"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Application Tracking",
+      "implementationNotes": "Leverages existing application status tracking from FBS-028. Focus on efficient duration calculations and responsive timeline rendering for optimal user experience."
+    },
+    {
+      "id": "FBS-032",
+      "title": "Job Dashboard Foundation",
+      "summary": "Creates the core job dashboard with responsive card layout, match score display, technology requirements, salary information, and quick actions. Establishes the primary interface for job discovery and management with comprehensive job information presentation.",
+      "storyScope": [
+        {
+          "usId": "US-098",
+          "acIds": [
+            "AC-486",
+            "AC-487",
+            "AC-488",
+            "AC-489"
+          ]
+        },
+        {
+          "usId": "US-099",
+          "acIds": [
+            "AC-490",
+            "AC-491",
+            "AC-492",
+            "AC-493",
+            "AC-494"
+          ]
+        },
+        {
+          "usId": "US-100",
+          "acIds": [
+            "AC-495",
+            "AC-496",
+            "AC-497",
+            "AC-498",
+            "AC-499"
+          ]
+        },
+        {
+          "usId": "US-101",
+          "acIds": [
+            "AC-500",
+            "AC-501",
+            "AC-502",
+            "AC-503",
+            "AC-504"
+          ]
+        },
+        {
+          "usId": "US-102",
+          "acIds": [
+            "AC-505",
+            "AC-506",
+            "AC-507",
+            "AC-508",
+            "AC-509",
+            "AC-510"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-019",
+        "FBS-028",
+        "FBS-014"
+      ],
+      "testableOutcomes": [
+        "Dashboard displays jobs in responsive card grid layout with consistent spacing and proper alignment",
+        "Job cards prominently show job title, company name, and location with readable typography",
+        "Empty state displays appropriate message when no jobs are available",
+        "Match scores display as percentages with color coding: green (>80%), yellow (50-80%), red (<50%)",
+        "Technology tags show up to 5 technologies with '+X more' indicator and tooltip for additional technologies",
+        "Salary information displays formatted ranges ($X,XXX - $X,XXX) or exact amounts with currency and time period",
+        "Quick action buttons (Save, Apply, View Details) are accessible with hover tooltips and state management",
+        "Save action updates job to saved state and reflects change in button styling",
+        "Apply action redirects to application page or external URL as appropriate",
+        "View Details opens job details modal or navigates to detailed view"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Dashboard",
+            "Job Display",
+            "User Interface"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/types",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Match scoring system",
+            "Job filtering system",
+            "Application tracking"
+          ],
+          "schemas": [
+            "Job data schema",
+            "Match score schema",
+            "Application status schema"
+          ]
+        },
+        "deliverables": [
+          "Job dashboard main component",
+          "Job card component with all information display",
+          "Match score visualization component",
+          "Technology tags component with overflow handling",
+          "Salary display formatting utilities",
+          "Quick actions component with state management",
+          "Empty state component",
+          "Dashboard API integration layer"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Builds on existing match scoring (FBS-019) and job filtering (FBS-014) systems. Requires careful attention to responsive design and performance for large job datasets."
+    },
+    {
+      "id": "FBS-033",
+      "title": "Job Dashboard Sorting & Filtering",
+      "summary": "Implements comprehensive sorting and filtering capabilities for the job dashboard including match percentage, posting date, salary, location, technology, and company filters. Provides advanced search and filter management with real-time results updates.",
+      "storyScope": [
+        {
+          "usId": "US-103",
+          "acIds": [
+            "AC-511",
+            "AC-512",
+            "AC-513",
+            "AC-514",
+            "AC-515"
+          ]
+        },
+        {
+          "usId": "US-104",
+          "acIds": [
+            "AC-516",
+            "AC-517",
+            "AC-518",
+            "AC-519",
+            "AC-520"
+          ]
+        },
+        {
+          "usId": "US-105",
+          "acIds": [
+            "AC-521",
+            "AC-522",
+            "AC-523",
+            "AC-524",
+            "AC-525",
+            "AC-526"
+          ]
+        },
+        {
+          "usId": "US-106",
+          "acIds": [
+            "AC-527",
+            "AC-528",
+            "AC-529",
+            "AC-530",
+            "AC-531"
+          ]
+        },
+        {
+          "usId": "US-107",
+          "acIds": [
+            "AC-532",
+            "AC-533",
+            "AC-534",
+            "AC-535",
+            "AC-536"
+          ]
+        },
+        {
+          "usId": "US-108",
+          "acIds": [
+            "AC-537",
+            "AC-538",
+            "AC-539",
+            "AC-540",
+            "AC-541"
+          ]
+        },
+        {
+          "usId": "US-109",
+          "acIds": [
+            "AC-542",
+            "AC-543",
+            "AC-544",
+            "AC-545"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-032",
+        "FBS-015",
+        "FBS-014"
+      ],
+      "testableOutcomes": [
+        "Sort dropdown provides options for Match %, Date Posted, and Salary with high-to-low and low-to-high variants",
+        "Match percentage sorting displays highest scores first and places jobs without scores at end",
+        "Date sorting shows newest jobs first with relative posting dates (e.g., '2 days ago') and handles missing dates",
+        "Salary sorting uses midpoint of ranges for comparison and normalizes mixed currencies/time periods",
+        "Location filter displays available cities/regions with multi-select capability and remote work option",
+        "Location filter search provides autocomplete functionality with matching location suggestions",
+        "Technology filter allows multi-select with 'Match All' toggle and search with autocomplete",
+        "Selected technology requirements are highlighted on matching job cards",
+        "Salary range filter accepts min/max inputs and shows jobs with overlapping salary ranges",
+        "Company filter provides multi-select with search autocomplete and prominently displays company names",
+        "Active filters display as removable tags with clear indication of applied criteria",
+        "Filter and sort combinations maintain state when new jobs are loaded"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Filtering",
+            "Job Sorting",
+            "Search Interface"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database",
+            "@jobsearch/types"
+          ],
+          "existingModules": [
+            "Job filtering system",
+            "Filter preferences",
+            "Job dashboard foundation"
+          ],
+          "schemas": [
+            "Job search filters",
+            "Sort configurations",
+            "Filter preference storage"
+          ]
+        },
+        "deliverables": [
+          "Sort dropdown component with all sorting options",
+          "Advanced filter panel with all filter types",
+          "Location filter with autocomplete search",
+          "Technology filter with match-all toggle",
+          "Salary range filter component",
+          "Company filter with search capability",
+          "Active filter tags component",
+          "Filter state management service",
+          "Sort and filter API integration",
+          "Filter persistence service"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Complex interaction between multiple filter types and sorting options. Requires careful state management and performance optimization for real-time filtering. Integration with existing filter preferences system from FBS-015 is critical."
+    },
+    {
+      "id": "FBS-034",
+      "title": "Advanced Dashboard Filter Management",
+      "summary": "Implements comprehensive filter management system with active filter display, individual filter removal, and clear all functionality. Provides visual feedback for applied filters and handles empty states with helpful suggestions.",
+      "storyScope": [
+        {
+          "usId": "US-110",
+          "acIds": [
+            "AC-546",
+            "AC-547",
+            "AC-548",
+            "AC-549",
+            "AC-550",
+            "AC-551"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-033"
+      ],
+      "testableOutcomes": [
+        "User can apply multiple filters simultaneously and see jobs matching all active criteria",
+        "Dashboard displays active filter tags showing current selections with clear labels",
+        "User can click X on any filter tag to remove that specific filter and see results update immediately",
+        "User can click 'Clear All Filters' button to remove all filters and display all available jobs",
+        "System displays 'X jobs found' count that updates dynamically as filters are applied or removed",
+        "System shows 'No jobs found' message with filter adjustment suggestions when no jobs match current criteria"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Search and Filtering"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/types"
+          ],
+          "existingModules": [
+            "FBS-033 dashboard components"
+          ],
+          "schemas": [
+            "Job filtering schemas"
+          ]
+        },
+        "deliverables": [
+          "Active filter tags component",
+          "Filter removal handlers",
+          "Clear all filters functionality",
+          "Job count display component",
+          "Empty state with suggestions",
+          "Filter state management updates"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Extends existing dashboard filtering with enhanced UX. Focus on smooth state transitions and clear visual feedback for filter operations."
+    },
+    {
+      "id": "FBS-035",
+      "title": "Job Detail View System",
+      "summary": "Creates comprehensive job detail pages with full job information, requirements checklist with match status, AI-powered gap analysis, cover letter variants, and tailored CV preview. Includes responsive navigation and loading states.",
+      "storyScope": [
+        {
+          "usId": "US-111",
+          "acIds": [
+            "AC-552",
+            "AC-553",
+            "AC-554",
+            "AC-555",
+            "AC-556"
+          ]
+        },
+        {
+          "usId": "US-112",
+          "acIds": [
+            "AC-557",
+            "AC-558",
+            "AC-559",
+            "AC-560",
+            "AC-561",
+            "AC-562"
+          ]
+        },
+        {
+          "usId": "US-113",
+          "acIds": [
+            "AC-563",
+            "AC-564",
+            "AC-565",
+            "AC-566",
+            "AC-567"
+          ]
+        },
+        {
+          "usId": "US-114",
+          "acIds": [
+            "AC-568",
+            "AC-569",
+            "AC-570",
+            "AC-571",
+            "AC-572",
+            "AC-573"
+          ]
+        },
+        {
+          "usId": "US-115",
+          "acIds": [
+            "AC-574",
+            "AC-575",
+            "AC-576",
+            "AC-577",
+            "AC-578",
+            "AC-579"
+          ]
+        },
+        {
+          "usId": "US-116",
+          "acIds": [
+            "AC-580",
+            "AC-581",
+            "AC-582",
+            "AC-583",
+            "AC-584",
+            "AC-585"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-021",
+        "FBS-023",
+        "FBS-024",
+        "FBS-026",
+        "FBS-032"
+      ],
+      "testableOutcomes": [
+        "User can view complete job information including title, company, location, posting date, full description, salary, and employment type",
+        "User can see requirements checklist with green checkmarks for matched requirements and red X for missing requirements",
+        "System displays match percentage and specific profile text that matched each requirement",
+        "User can view prioritized gap analysis with suggestions, timelines, and alternative competencies for addressing missing qualifications",
+        "User can access at least 3 cover letter variants with different focus areas and copy/download functionality",
+        "User can preview tailored CV with reordered sections, highlighted keywords, and download capability",
+        "Job detail page provides tabbed navigation between sections and responsive layout for all screen sizes",
+        "System displays loading indicators during content generation and maintains navigation context"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Detail Views",
+            "AI-Powered Features"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/ai-client",
+            "@jobsearch/types"
+          ],
+          "existingModules": [
+            "Skill gap analysis",
+            "Cover letter generation",
+            "CV tailoring",
+            "Match scoring"
+          ],
+          "schemas": [
+            "Job detail schemas",
+            "User profile schemas"
+          ]
+        },
+        "deliverables": [
+          "Job detail page component",
+          "Requirements checklist component",
+          "Gap analysis display component",
+          "Cover letter variants viewer",
+          "Tailored CV preview component",
+          "Navigation and routing updates",
+          "Responsive layout components",
+          "Loading state management"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Complex integration of multiple AI-powered features. Requires careful state management for async operations and error handling for AI service failures."
+    },
+    {
+      "id": "FBS-036",
+      "title": "Application Kanban Board",
+      "summary": "Implements visual Kanban board for application tracking with drag-and-drop status updates, application count per column, detailed card information, and navigation to detailed views. Provides intuitive interface for managing job application pipeline.",
+      "storyScope": [
+        {
+          "usId": "US-117",
+          "acIds": [
+            "AC-586",
+            "AC-587",
+            "AC-588",
+            "AC-589"
+          ]
+        },
+        {
+          "usId": "US-118",
+          "acIds": [
+            "AC-590",
+            "AC-591",
+            "AC-592",
+            "AC-593"
+          ]
+        },
+        {
+          "usId": "US-119",
+          "acIds": [
+            "AC-594",
+            "AC-595",
+            "AC-596",
+            "AC-597",
+            "AC-598"
+          ]
+        },
+        {
+          "usId": "US-120",
+          "acIds": [
+            "AC-599",
+            "AC-600",
+            "AC-601",
+            "AC-602"
+          ]
+        },
+        {
+          "usId": "US-121",
+          "acIds": [
+            "AC-603",
+            "AC-604",
+            "AC-605",
+            "AC-606"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028",
+        "FBS-029"
+      ],
+      "testableOutcomes": [
+        "User can view Kanban board with columns for Applied, Under Review, Interview Scheduled, Rejected, and Offer statuses",
+        "Each column header displays accurate count of applications that updates immediately when cards are moved",
+        "User can drag and drop application cards between columns with visual feedback and status updates persisted to database",
+        "Application cards display company name, job title, and application date with consistent formatting and text truncation",
+        "User can click on cards to navigate to detailed application view and return to board maintaining state",
+        "Board provides responsive layout adapting to different screen sizes",
+        "System handles drag-and-drop errors gracefully with card returning to original position and error messaging"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Tracking",
+            "User Interface Design"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database",
+            "@jobsearch/types"
+          ],
+          "existingModules": [
+            "Application tracking foundation",
+            "Application notes system"
+          ],
+          "schemas": [
+            "Application schemas",
+            "Status tracking schemas"
+          ]
+        },
+        "deliverables": [
+          "Kanban board main component",
+          "Draggable application card component",
+          "Status column components with counts",
+          "Drag-and-drop handlers and validation",
+          "Application status update API integration",
+          "Responsive board layout",
+          "Error handling and visual feedback",
+          "Navigation integration with detailed views"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Requires robust drag-and-drop implementation with proper state management. Consider using react-beautiful-dnd or similar library. Handle network failures gracefully during status updates."
+    },
+    {
+      "id": "FBS-037",
+      "title": "Analytics Dashboard System",
+      "summary": "Delivers a comprehensive analytics dashboard with five key visualization components: application funnel chart, conversion rate tracking, job source performance comparison, match score distribution analysis, and weekly activity trends. Includes responsive design, filtering capabilities, and PDF export functionality.",
+      "storyScope": [
+        {
+          "usId": "US-122",
+          "acIds": [
+            "AC-607",
+            "AC-608",
+            "AC-609",
+            "AC-610",
+            "AC-611"
+          ]
+        },
+        {
+          "usId": "US-123",
+          "acIds": [
+            "AC-612",
+            "AC-613",
+            "AC-614",
+            "AC-615"
+          ]
+        },
+        {
+          "usId": "US-124",
+          "acIds": [
+            "AC-616",
+            "AC-617",
+            "AC-618",
+            "AC-619",
+            "AC-620"
+          ]
+        },
+        {
+          "usId": "US-125",
+          "acIds": [
+            "AC-621",
+            "AC-622",
+            "AC-623",
+            "AC-624",
+            "AC-625"
+          ]
+        },
+        {
+          "usId": "US-126",
+          "acIds": [
+            "AC-626",
+            "AC-627",
+            "AC-628",
+            "AC-629",
+            "AC-630",
+            "AC-631"
+          ]
+        },
+        {
+          "usId": "US-127",
+          "acIds": [
+            "AC-632",
+            "AC-633",
+            "AC-634",
+            "AC-635",
+            "AC-636",
+            "AC-637"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028",
+        "FBS-031",
+        "FBS-019"
+      ],
+      "testableOutcomes": [
+        "User can view funnel chart displaying Applied, Screened, Interviewed, Offered, Rejected stages with accurate counts and percentages",
+        "User can see conversion rates for Applied→Screened, Screened→Interviewed, Interviewed→Offered transitions with warning indicators for below-benchmark rates",
+        "User can view source performance comparison table ranking job sources by effectiveness score with response and success rates",
+        "User can see match score histogram showing frequency distribution across 0-20, 21-40, 41-60, 61-80, 81-100 ranges",
+        "User can view weekly activity trends chart showing applications, interviews, and responses for last 12 weeks with variance indicators",
+        "User can apply date range filters and see all five analytics widgets update consistently to selected period",
+        "User can export PDF report containing all analytics charts and key insights with professional formatting",
+        "Dashboard displays responsive layout on mobile devices with vertically stacked widgets and touch interactions"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Analytics and Reporting"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Application tracking",
+            "Match scoring",
+            "Job dashboard"
+          ],
+          "schemas": [
+            "Application",
+            "Job",
+            "User"
+          ]
+        },
+        "deliverables": [
+          "Analytics dashboard main component",
+          "Application funnel chart component",
+          "Conversion rate tracking component",
+          "Job source performance component",
+          "Match score distribution component",
+          "Weekly trends chart component",
+          "Analytics data aggregation service",
+          "PDF export service",
+          "Analytics API endpoints",
+          "Responsive layout components"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Complex data visualization requiring multiple chart libraries and statistical calculations. PDF export needs careful formatting. Mobile responsiveness critical for chart readability."
+    },
+    {
+      "id": "FBS-038",
+      "title": "Daily Job Digest Email System",
+      "summary": "Delivers automated daily email digest system that sends users the top 10 new high-match job opportunities (≥70% match score) at 9:00 AM in their timezone. Includes job filtering, ranking, email formatting, and delivery tracking with engagement metrics.",
+      "storyScope": [
+        {
+          "usId": "US-128",
+          "acIds": [
+            "AC-638",
+            "AC-639",
+            "AC-640",
+            "AC-641",
+            "AC-642"
+          ]
+        },
+        {
+          "usId": "US-129",
+          "acIds": [
+            "AC-643",
+            "AC-644",
+            "AC-645"
+          ]
+        },
+        {
+          "usId": "US-130",
+          "acIds": [
+            "AC-646",
+            "AC-647",
+            "AC-648",
+            "AC-649"
+          ]
+        },
+        {
+          "usId": "US-131",
+          "acIds": [
+            "AC-650",
+            "AC-651",
+            "AC-652",
+            "AC-653",
+            "AC-654"
+          ]
+        },
+        {
+          "usId": "US-132",
+          "acIds": [
+            "AC-655",
+            "AC-656",
+            "AC-657",
+            "AC-658"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-019",
+        "FBS-032",
+        "FBS-006"
+      ],
+      "testableOutcomes": [
+        "System sends daily digest email at 9:00 AM user timezone containing up to 10 jobs with match scores ≥70%",
+        "System includes only top 10 highest-scoring jobs when more than 10 high-match jobs are available",
+        "System sends no email when no new jobs have match scores ≥70%",
+        "Email displays job titles as clickable links, company names, match percentages, and dashboard link",
+        "System excludes jobs that were included in previous digests from current digest consideration",
+        "System logs delivery timestamp and recipient for each sent digest email",
+        "System tracks click events when users click job links or dashboard links in digest emails",
+        "Daily digest scheduler triggers at 9:00 AM in each user's timezone with retry logic on failures"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Email Notifications",
+            "Job Matching"
+          ],
+          "tadSections": [
+            "api-server",
+            "n8n-workflows",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Match scoring",
+            "Job filtering",
+            "User management"
+          ],
+          "schemas": [
+            "User",
+            "Job",
+            "EmailLog"
+          ]
+        },
+        "deliverables": [
+          "Daily digest scheduler service",
+          "Job filtering and ranking engine",
+          "Email template system",
+          "Email delivery service with tracking",
+          "Timezone handling utilities",
+          "Digest generation orchestrator",
+          "Click tracking middleware",
+          "Email analytics API endpoints",
+          "Digest configuration management"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Notifications & Reporting",
+      "implementationNotes": "Timezone handling complexity across multiple users. Email delivery reliability critical. Need robust duplicate prevention and engagement tracking. Consider email provider rate limits."
+    },
+    {
+      "id": "FBS-039",
+      "title": "Weekly Analytics Email Reports",
+      "summary": "Delivers automated weekly email reports containing comprehensive job search analytics including jobs discovered, applications submitted, interviews scheduled, conversion rates, and trending technologies. Includes user preference configuration and customizable delivery scheduling.",
+      "storyScope": [
+        {
+          "usId": "US-133",
+          "acIds": [
+            "AC-659",
+            "AC-660",
+            "AC-661",
+            "AC-662",
+            "AC-663",
+            "AC-664",
+            "AC-665",
+            "AC-666"
+          ]
+        },
+        {
+          "usId": "US-134",
+          "acIds": [
+            "AC-667",
+            "AC-668",
+            "AC-669",
+            "AC-670",
+            "AC-671"
+          ]
+        },
+        {
+          "usId": "US-135",
+          "acIds": [
+            "AC-672",
+            "AC-673",
+            "AC-674",
+            "AC-675",
+            "AC-676"
+          ]
+        },
+        {
+          "usId": "US-136",
+          "acIds": [
+            "AC-677",
+            "AC-678",
+            "AC-679",
+            "AC-680",
+            "AC-681",
+            "AC-682"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-037",
+        "FBS-038",
+        "FBS-028"
+      ],
+      "testableOutcomes": [
+        "System sends weekly report email on Sunday at 9:00 AM user timezone with subject 'Weekly Job Search Report - [Week of Date]'",
+        "Report includes total jobs discovered, applications submitted, and interviews scheduled for the week",
+        "Report calculates and displays application-to-interview conversion rate as percentage with trend indicators",
+        "Report identifies and lists top 5 trending technologies based on job posting frequency",
+        "System displays jobs-viewed-to-applications-submitted ratio and applications-to-interviews ratio",
+        "Report compares current week conversion rates to previous week with up/down trend arrows",
+        "System extracts technology keywords from job descriptions and ranks by appearance frequency",
+        "User can configure preferred delivery day, time slot (6 AM, 9 AM, 12 PM, 6 PM), and email format (HTML/plain text)",
+        "User can enable/disable specific report sections (jobs discovered, applications, interviews, trends)",
+        "System sends report with zero values and encouraging message when no activity occurred during week"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Email Notifications",
+            "Analytics and Reporting"
+          ],
+          "tadSections": [
+            "api-server",
+            "n8n-workflows",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Analytics dashboard",
+            "Email system",
+            "User preferences"
+          ],
+          "schemas": [
+            "User",
+            "Job",
+            "Application",
+            "UserPreferences"
+          ]
+        },
+        "deliverables": [
+          "Weekly report scheduler service",
+          "Analytics data aggregation engine",
+          "Technology trend analysis service",
+          "Conversion rate calculation utilities",
+          "Report template system (HTML/plain text)",
+          "User preference management API",
+          "Report configuration interface",
+          "Weekly report generation orchestrator",
+          "Email delivery service integration",
+          "Report analytics tracking system"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Notifications & Reporting",
+      "implementationNotes": "Builds on existing analytics foundation from FBS-037. Technology extraction needs robust keyword parsing. User preference system requires careful validation to prevent empty reports."
+    },
+    {
+      "id": "FBS-040",
+      "title": "Daily Scraping Workflow Automation",
+      "summary": "Implements n8n-based daily job scraping automation with 60-minute execution limits, automatic retry logic, and zero-jobs alerting. Provides reliable, scheduled job discovery with comprehensive error handling and monitoring.",
+      "storyScope": [
+        {
+          "usId": "US-137",
+          "acIds": [
+            "AC-683",
+            "AC-684",
+            "AC-685",
+            "AC-686"
+          ]
+        },
+        {
+          "usId": "US-138",
+          "acIds": [
+            "AC-687",
+            "AC-688",
+            "AC-689",
+            "AC-690"
+          ]
+        },
+        {
+          "usId": "US-139",
+          "acIds": [
+            "AC-691",
+            "AC-692",
+            "AC-693",
+            "AC-694",
+            "AC-695"
+          ]
+        },
+        {
+          "usId": "US-140",
+          "acIds": [
+            "AC-696",
+            "AC-697",
+            "AC-698",
+            "AC-699"
+          ]
+        },
+        {
+          "usId": "US-141",
+          "acIds": [
+            "AC-700",
+            "AC-701",
+            "AC-702",
+            "AC-703"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-008",
+        "FBS-003",
+        "FBS-005"
+      ],
+      "testableOutcomes": [
+        "System automatically triggers scraping workflow at exactly 8:00 AM daily with execution starting within 1 minute",
+        "Workflow processes all configured job boards (RemoteOK, WeWorkRemotely, Himalayas, Indeed) in defined sequence",
+        "System terminates workflow gracefully when execution exceeds 60 minutes and saves partial results",
+        "System automatically retries failed workflows with 5-minute initial delay and exponential backoff for up to 3 attempts",
+        "System sends email alert when workflow completes with zero jobs scraped, including execution details",
+        "n8n dashboard displays workflow execution status, logs, and results for monitoring and debugging"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery",
+            "System Architecture"
+          ],
+          "tadSections": [
+            "n8n-workflows",
+            "job-crawler",
+            "api-server"
+          ],
+          "existingModules": [
+            "@jobsearch/logger",
+            "@jobsearch/config"
+          ],
+          "schemas": [
+            "Job",
+            "ScrapingSession",
+            "Platform"
+          ]
+        },
+        "deliverables": [
+          "n8n workflow definition for daily scraping",
+          "Workflow timeout and termination handler",
+          "Retry logic with exponential backoff",
+          "Zero-jobs alert email service",
+          "Workflow monitoring and logging integration",
+          "n8n webhook endpoints for status updates"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Requires n8n workflow configuration, email service integration, and robust error handling for various failure scenarios. Must coordinate with existing scraping infrastructure and maintain state across retries."
+    }
+  ],
+  "createdAt": "2026-02-09T11:24:34.997Z",
+  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "partInfo": {
+    "partNumber": 4,
+    "totalParts": 7,
+    "fbsRange": {
+      "start": "FBS-031",
+      "end": "FBS-040"
+    },
+    "globalFbsCount": 68
+  }
+}

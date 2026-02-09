@@ -1,0 +1,926 @@
+{
+  "bsId": "BS-007",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 7 of 7)",
+  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "dependency-first",
+  "buildSequence": [
+    {
+      "id": "FBS-061",
+      "title": "Docker Backup & Restore Scripts",
+      "summary": "Implements comprehensive backup-docker.sh and restore-docker.sh scripts with progress indicators, error handling, and POSIX compliance. Scripts handle complete Docker environment backup including containers, volumes, images, and compose files with automatic container lifecycle management.",
+      "storyScope": [
+        {
+          "usId": "US-258",
+          "acIds": [
+            "AC-1215",
+            "AC-1216",
+            "AC-1217",
+            "AC-1218",
+            "AC-1219",
+            "AC-1220",
+            "AC-1221",
+            "AC-1222"
+          ]
+        },
+        {
+          "usId": "US-259",
+          "acIds": [
+            "AC-1223",
+            "AC-1224",
+            "AC-1225",
+            "AC-1226",
+            "AC-1227",
+            "AC-1228",
+            "AC-1229",
+            "AC-1230"
+          ]
+        },
+        {
+          "usId": "US-260",
+          "acIds": [
+            "AC-1231",
+            "AC-1232",
+            "AC-1233",
+            "AC-1234",
+            "AC-1235"
+          ]
+        },
+        {
+          "usId": "US-261",
+          "acIds": [
+            "AC-1236",
+            "AC-1237",
+            "AC-1238",
+            "AC-1239",
+            "AC-1240",
+            "AC-1241"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-059"
+      ],
+      "testableOutcomes": [
+        "backup-docker.sh creates timestamped backup directory with format 'backup-YYYY-MM-DD-HH-MM-SS' when executed",
+        "backup-docker.sh stops all running containers gracefully before backup and restarts them after completion",
+        "backup-docker.sh backs up all named volumes (postgres_data, backup_data, linkedin_sessions, user_uploads) to timestamped directory",
+        "backup-docker.sh exports all Docker images as tar files in the backup directory",
+        "backup-docker.sh displays progress indicators showing current operation and completion percentage during execution",
+        "restore-docker.sh validates backup directory contains all required files before proceeding with restoration",
+        "restore-docker.sh imports all image tar files and restores volume data to original locations",
+        "restore-docker.sh displays progress indicators and starts containers that were running at backup time",
+        "Both scripts use only POSIX shell commands and Docker CLI without external dependencies",
+        "Scripts display clear error messages and exit with appropriate status codes on failure conditions",
+        "Scripts exit with status code 0 and display success messages on successful completion"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "backup-strategy",
+            "disaster-recovery"
+          ],
+          "tadSections": [
+            "docker-architecture",
+            "volume-management"
+          ],
+          "existingModules": [
+            "docker-compose.yml"
+          ],
+          "schemas": []
+        },
+        "deliverables": [
+          "backup-docker.sh script with progress indicators",
+          "restore-docker.sh script with validation",
+          "Error handling and logging utilities",
+          "Container lifecycle management functions",
+          "Volume backup and restore utilities",
+          "Image export and import handlers",
+          "Progress indicator display functions",
+          "Comprehensive test suite for both scripts"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Scripts must handle Docker daemon connectivity, disk space validation, and graceful error recovery. Progress indicators should use standard shell techniques without external dependencies. Container state tracking is critical for proper restoration."
+    },
+    {
+      "id": "FBS-062",
+      "title": "Backup Integrity & Validation",
+      "summary": "Implements comprehensive backup integrity verification including SHA-256 checksum validation, tar.gz structural integrity checks, manifest generation with file metadata, and optional test restore verification. Provides systematic validation workflow to ensure backup reliability.",
+      "storyScope": [
+        {
+          "usId": "US-262",
+          "acIds": [
+            "AC-1242",
+            "AC-1243",
+            "AC-1244",
+            "AC-1245",
+            "AC-1246"
+          ]
+        },
+        {
+          "usId": "US-263",
+          "acIds": [
+            "AC-1247",
+            "AC-1248",
+            "AC-1249",
+            "AC-1250",
+            "AC-1251"
+          ]
+        },
+        {
+          "usId": "US-264",
+          "acIds": [
+            "AC-1252",
+            "AC-1253",
+            "AC-1254",
+            "AC-1255",
+            "AC-1256"
+          ]
+        },
+        {
+          "usId": "US-265",
+          "acIds": [
+            "AC-1257",
+            "AC-1258",
+            "AC-1259",
+            "AC-1260",
+            "AC-1261",
+            "AC-1262"
+          ]
+        },
+        {
+          "usId": "US-266",
+          "acIds": [
+            "AC-1263",
+            "AC-1264",
+            "AC-1265",
+            "AC-1266",
+            "AC-1267"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-061"
+      ],
+      "testableOutcomes": [
+        "System calculates and stores SHA-256 checksum for backup archives after creation",
+        "System recalculates checksums and compares with stored values during verification",
+        "System logs success messages with archive path and checksum value when verification passes",
+        "System logs errors and marks backups as corrupted when checksum verification fails",
+        "System validates tar.gz archive structure using tar test flag without extraction",
+        "System detects and reports specific corruption errors in damaged archives",
+        "System generates JSON manifest file with total file count, archive size, and individual file metadata",
+        "System verifies actual archive contents match manifest entries during validation",
+        "System performs optional test restore to temporary location with automatic cleanup",
+        "System executes comprehensive verification workflow with checksum, archive, and manifest validation in sequence",
+        "System halts verification workflow and reports specific failure point when any step fails",
+        "System marks backup as verified and generates comprehensive verification report on successful completion"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "backup-validation",
+            "data-integrity"
+          ],
+          "tadSections": [
+            "backup-architecture",
+            "validation-workflows"
+          ],
+          "existingModules": [
+            "backup-docker.sh"
+          ],
+          "schemas": [
+            "backup-manifest-schema"
+          ]
+        },
+        "deliverables": [
+          "SHA-256 checksum validation service",
+          "tar.gz structural integrity validator",
+          "Backup manifest generation engine",
+          "Test restore verification system",
+          "Comprehensive verification workflow orchestrator",
+          "Backup integrity API endpoints",
+          "Validation reporting utilities",
+          "Error handling and logging for all validation operations"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Validation must handle large archives efficiently without excessive memory usage. Test restore requires careful temporary directory management and cleanup. Workflow orchestration needs proper error propagation and rollback capabilities."
+    },
+    {
+      "id": "FBS-063",
+      "title": "Pre-uninstall Backup Verification",
+      "summary": "Implements interactive pre-uninstall backup verification checklist with real-time backup status checking, volume backup verification, external storage confirmation, and explicit user confirmation workflow. Ensures comprehensive data protection before system uninstallation.",
+      "storyScope": [
+        {
+          "usId": "US-267",
+          "acIds": [
+            "AC-1268",
+            "AC-1269",
+            "AC-1270",
+            "AC-1271"
+          ]
+        },
+        {
+          "usId": "US-268",
+          "acIds": [
+            "AC-1272",
+            "AC-1273",
+            "AC-1274",
+            "AC-1275",
+            "AC-1276"
+          ]
+        },
+        {
+          "usId": "US-269",
+          "acIds": [
+            "AC-1277",
+            "AC-1278",
+            "AC-1279",
+            "AC-1280"
+          ]
+        },
+        {
+          "usId": "US-270",
+          "acIds": [
+            "AC-1281",
+            "AC-1282",
+            "AC-1283",
+            "AC-1284",
+            "AC-1285",
+            "AC-1286"
+          ]
+        },
+        {
+          "usId": "US-271",
+          "acIds": [
+            "AC-1287",
+            "AC-1288",
+            "AC-1289",
+            "AC-1290",
+            "AC-1291",
+            "AC-1292"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-061",
+        "FBS-062"
+      ],
+      "testableOutcomes": [
+        "Pre-uninstall checklist displays interactive checkboxes for each verification item when loaded",
+        "Proceed button remains disabled when all checklist items are not checked",
+        "Proceed button becomes enabled when all checklist items are checked",
+        "System verifies latest backup exists and was created within last 24 hours",
+        "System displays green checkmark with timestamp for recent backups (<24h)",
+        "System shows warning icon with age information for backups older than 24 hours",
+        "System shows error icon with 'No backup found' message when no backup exists",
+        "External storage checkbox displays with help text explaining importance of external backup copy",
+        "System displays warning about external backup requirement when checkbox is unchecked",
+        "System lists all system volumes by name and path with backup status indicators",
+        "System shows green checkmark for backed up volumes and red X for non-backed up volumes",
+        "System displays last backup timestamp and volume size comparison for each volume",
+        "Final confirmation checkbox requires 'I understand this will permanently remove all system data' acknowledgment",
+        "System displays final warning dialog requiring additional confirmation when proceed button is clicked",
+        "System returns to checklist without proceeding when user cancels final warning dialog"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 6,
+        "contextRequirements": {
+          "prdSections": [
+            "uninstall-process",
+            "data-protection"
+          ],
+          "tadSections": [
+            "backup-verification",
+            "user-interface"
+          ],
+          "existingModules": [
+            "backup-docker.sh",
+            "web-ui"
+          ],
+          "schemas": [
+            "backup-status-schema"
+          ]
+        },
+        "deliverables": [
+          "Pre-uninstall checklist React component",
+          "Backup status verification service",
+          "Volume backup status checker",
+          "External storage confirmation interface",
+          "Final confirmation dialog component",
+          "Checklist progress tracking utilities",
+          "Real-time backup status API endpoints",
+          "Interactive checkbox and button state management"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "UI must provide clear visual feedback for all verification states. Real-time backup checking should handle various backup states gracefully. Confirmation workflow needs multiple safety checks to prevent accidental data loss."
+    },
+    {
+      "id": "FBS-064",
+      "title": "Disaster Recovery Documentation",
+      "summary": "Generates comprehensive disaster recovery documentation including backup file structure, step-by-step recovery instructions, troubleshooting guides, and recovery time estimates. Ensures documentation is accessible during disaster scenarios and maintains version control.",
+      "storyScope": [
+        {
+          "usId": "US-272",
+          "acIds": [
+            "AC-1293",
+            "AC-1294",
+            "AC-1295",
+            "AC-1296",
+            "AC-1297"
+          ]
+        },
+        {
+          "usId": "US-273",
+          "acIds": [
+            "AC-1298",
+            "AC-1299",
+            "AC-1300",
+            "AC-1301",
+            "AC-1302",
+            "AC-1303"
+          ]
+        },
+        {
+          "usId": "US-274",
+          "acIds": [
+            "AC-1304",
+            "AC-1305",
+            "AC-1306",
+            "AC-1307",
+            "AC-1308",
+            "AC-1309"
+          ]
+        },
+        {
+          "usId": "US-275",
+          "acIds": [
+            "AC-1310",
+            "AC-1311",
+            "AC-1312",
+            "AC-1313",
+            "AC-1314",
+            "AC-1315"
+          ]
+        },
+        {
+          "usId": "US-276",
+          "acIds": [
+            "AC-1316",
+            "AC-1317",
+            "AC-1318",
+            "AC-1319"
+          ]
+        },
+        {
+          "usId": "US-277",
+          "acIds": [
+            "AC-1320",
+            "AC-1321",
+            "AC-1322",
+            "AC-1323"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-057",
+        "FBS-058",
+        "FBS-060",
+        "FBS-061",
+        "FBS-062"
+      ],
+      "testableOutcomes": [
+        "MANIFEST.md file is automatically generated in backup directory after backup completion with complete directory tree structure",
+        "MANIFEST.md contains file size, creation timestamp, and file type for each backup component entry",
+        "RESTORE.md file is created with sequential recovery steps including exact commands and expected output examples",
+        "Recovery instructions are ordered by dependency requirements with infrastructure first, then data, then services",
+        "Troubleshooting section includes common error scenarios with error messages, root causes, and solution steps",
+        "Recovery time estimation table shows estimated times for database, application services, and configuration restoration",
+        "Documentation files are stored in plain text/markdown format alongside backup data for offline accessibility",
+        "Documentation is automatically regenerated with version numbers and timestamps when system configuration changes"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Data Management",
+            "Backup and Recovery"
+          ],
+          "tadSections": [
+            "Backup System",
+            "Documentation Generation"
+          ],
+          "existingModules": [
+            "backup services",
+            "file system utilities"
+          ],
+          "schemas": [
+            "backup metadata",
+            "documentation templates"
+          ]
+        },
+        "deliverables": [
+          "Documentation generation service",
+          "MANIFEST.md template engine",
+          "RESTORE.md template engine",
+          "Troubleshooting guide generator",
+          "Recovery time calculator",
+          "Documentation versioning system",
+          "Offline accessibility validator",
+          "Documentation update orchestrator"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Focus on template-based documentation generation that automatically reflects current system state. Ensure documentation remains accessible during disaster scenarios by storing in multiple locations with backup data."
+    },
+    {
+      "id": "FBS-065",
+      "title": "Cloud Backup Sync System",
+      "summary": "Implements automated cloud backup synchronization using rclone with support for Google Drive and other cloud providers. Manages 90-day retention, monitors sync status, and provides cloud backup restoration capabilities with encryption support.",
+      "storyScope": [
+        {
+          "usId": "US-243",
+          "acIds": [
+            "AC-1143",
+            "AC-1144",
+            "AC-1145",
+            "AC-1146"
+          ]
+        },
+        {
+          "usId": "US-244",
+          "acIds": [
+            "AC-1147",
+            "AC-1148",
+            "AC-1149",
+            "AC-1150",
+            "AC-1151"
+          ]
+        },
+        {
+          "usId": "US-245",
+          "acIds": [
+            "AC-1152",
+            "AC-1153",
+            "AC-1154",
+            "AC-1155",
+            "AC-1156"
+          ]
+        },
+        {
+          "usId": "US-246",
+          "acIds": [
+            "AC-1157",
+            "AC-1158",
+            "AC-1159",
+            "AC-1160",
+            "AC-1161"
+          ]
+        },
+        {
+          "usId": "US-247",
+          "acIds": [
+            "AC-1162",
+            "AC-1163",
+            "AC-1164",
+            "AC-1165",
+            "AC-1166"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-057",
+        "FBS-060",
+        "FBS-062"
+      ],
+      "testableOutcomes": [
+        "rclone configuration is created with proper authentication credentials when Google Drive is specified as cloud provider",
+        "System validates cloud connectivity and reports success or failure when testing connection",
+        "Encrypted backup files are automatically uploaded to cloud storage after successful daily backup completion",
+        "Cloud sync retries up to 3 times with exponential backoff when rclone returns error",
+        "System identifies and deletes backup files older than 90 days from cloud storage during daily retention check",
+        "System displays last successful sync timestamp, file size, and duration when viewing sync status",
+        "System flags sync as unhealthy and logs warning when 24 hours pass without successful sync",
+        "System downloads encrypted backup from cloud storage and restores database when restore operation is initiated",
+        "System reports current cloud storage usage and estimated days until quota exceeded"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Cloud Integration",
+            "Data Management",
+            "Security"
+          ],
+          "tadSections": [
+            "Cloud Storage",
+            "Encryption",
+            "Backup System"
+          ],
+          "existingModules": [
+            "backup services",
+            "encryption utilities",
+            "configuration management"
+          ],
+          "schemas": [
+            "cloud provider config",
+            "sync status tracking"
+          ]
+        },
+        "deliverables": [
+          "Cloud provider configuration service",
+          "rclone integration wrapper",
+          "Automatic sync orchestrator",
+          "90-day retention manager",
+          "Cloud sync status monitor",
+          "Cloud backup restoration service",
+          "Encryption/decryption handlers",
+          "Storage quota monitoring",
+          "Sync health checker"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Requires careful handling of cloud provider authentication and encryption keys. Implement robust error handling for network failures and API rate limits. Consider implementing progressive sync for large backup files."
+    },
+    {
+      "id": "FBS-066",
+      "title": "n8n Automated Backup Workflow",
+      "summary": "Creates comprehensive n8n workflow for automated daily Docker backups at 2:00 AM including volume and image backup, Google Drive sync via rclone, email notifications, and automatic cleanup of old backups with 7 local and 5 cloud retention limits.",
+      "storyScope": [
+        {
+          "usId": "US-278",
+          "acIds": [
+            "AC-1324",
+            "AC-1325",
+            "AC-1326",
+            "AC-1327"
+          ]
+        },
+        {
+          "usId": "US-279",
+          "acIds": [
+            "AC-1328",
+            "AC-1329",
+            "AC-1330",
+            "AC-1331",
+            "AC-1332"
+          ]
+        },
+        {
+          "usId": "US-280",
+          "acIds": [
+            "AC-1333",
+            "AC-1334",
+            "AC-1335",
+            "AC-1336",
+            "AC-1337"
+          ]
+        },
+        {
+          "usId": "US-281",
+          "acIds": [
+            "AC-1338",
+            "AC-1339",
+            "AC-1340",
+            "AC-1341",
+            "AC-1342"
+          ]
+        },
+        {
+          "usId": "US-282",
+          "acIds": [
+            "AC-1343",
+            "AC-1344",
+            "AC-1345",
+            "AC-1346",
+            "AC-1347",
+            "AC-1348"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-060",
+        "FBS-061",
+        "FBS-065"
+      ],
+      "testableOutcomes": [
+        "n8n workflow executes automatically at 2:00 AM daily with workflow logs recording start time, end time, and execution status",
+        "Workflow shows daily recurrence pattern at 2:00 AM when checking workflow schedule configuration",
+        "All named and anonymous Docker volumes are included in backup when workflow runs",
+        "All locally built and tagged custom Docker images are backed up during workflow execution",
+        "rclone uploads all new backup files to configured Google Drive location when sync process runs",
+        "rclone skips upload to avoid duplicates when backup file already exists in Google Drive",
+        "Success notification email is sent with backup summary details when backup workflow completes successfully",
+        "Failure notification email is sent with error details and timestamp when backup workflow encounters error",
+        "Only 7 most recent local backups are retained when more than 7 local backup files exist",
+        "Only 5 most recent cloud backups are retained when more than 5 cloud backup files exist in Google Drive"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Workflow Automation",
+            "Data Management",
+            "Notification System"
+          ],
+          "tadSections": [
+            "n8n Workflows",
+            "Docker Management",
+            "Email System"
+          ],
+          "existingModules": [
+            "n8n-workflows",
+            "backup scripts",
+            "email service"
+          ],
+          "schemas": [
+            "workflow definitions",
+            "backup metadata",
+            "notification templates"
+          ]
+        },
+        "deliverables": [
+          "n8n daily backup workflow definition",
+          "Docker volume backup nodes",
+          "Docker image backup nodes",
+          "rclone sync integration nodes",
+          "Email notification nodes",
+          "Backup cleanup orchestrator",
+          "Error handling and retry logic",
+          "Workflow monitoring utilities",
+          "Schedule configuration templates"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Requires integration with existing Docker backup scripts and cloud sync system. Implement comprehensive error handling for each workflow step and ensure proper cleanup even when individual steps fail. Consider workflow timeout handling for large backup operations."
+    },
+    {
+      "id": "FBS-067",
+      "title": "Backup Notification & Reporting System",
+      "summary": "Implements comprehensive email notification system for backup operations including success/failure notifications, cloud sync status updates, and weekly health reports. Provides configurable notification settings and SMTP integration for reliable delivery.",
+      "storyScope": [
+        {
+          "usId": "US-283",
+          "acIds": [
+            "AC-1349",
+            "AC-1350",
+            "AC-1351",
+            "AC-1352",
+            "AC-1353",
+            "AC-1354",
+            "AC-1355"
+          ]
+        },
+        {
+          "usId": "US-284",
+          "acIds": [
+            "AC-1356",
+            "AC-1357",
+            "AC-1358",
+            "AC-1359",
+            "AC-1360",
+            "AC-1361",
+            "AC-1362"
+          ]
+        },
+        {
+          "usId": "US-285",
+          "acIds": [
+            "AC-1363",
+            "AC-1364",
+            "AC-1365",
+            "AC-1366",
+            "AC-1367",
+            "AC-1368",
+            "AC-1369"
+          ]
+        },
+        {
+          "usId": "US-286",
+          "acIds": [
+            "AC-1370",
+            "AC-1371",
+            "AC-1372",
+            "AC-1373",
+            "AC-1374",
+            "AC-1375",
+            "AC-1376",
+            "AC-1377"
+          ]
+        },
+        {
+          "usId": "US-287",
+          "acIds": [
+            "AC-1378",
+            "AC-1379",
+            "AC-1380",
+            "AC-1381",
+            "AC-1382",
+            "AC-1383"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-057",
+        "FBS-060",
+        "FBS-065",
+        "FBS-066"
+      ],
+      "testableOutcomes": [
+        "System sends email notification with completion timestamp, volume count, image count, backup size, and duration when backup completes successfully",
+        "System sends immediate email notification with failure timestamp, error message, and partial completion details when backup operation fails",
+        "System sends cloud sync notification with file count, data size, and provider details when cloud synchronization completes",
+        "System generates weekly backup health report email with success/failure counts, storage trends, performance metrics, and optimization recommendations",
+        "Administrator can configure email recipients, notification types, weekly report schedule, and SMTP settings through configuration interface",
+        "System validates email addresses and SMTP connectivity before saving notification configuration",
+        "System groups multiple backup failures within short time window into single email to prevent notification spam",
+        "System skips cloud sync notifications when cloud sync is disabled in configuration"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "backup-management",
+            "notification-system"
+          ],
+          "tadSections": [
+            "api-server",
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "backup services",
+            "email utilities",
+            "configuration management"
+          ],
+          "schemas": [
+            "notification_config",
+            "backup_events",
+            "email_templates"
+          ]
+        },
+        "deliverables": [
+          "Email notification service with template system",
+          "SMTP configuration and validation module",
+          "Backup event listener and notification trigger",
+          "Weekly report generator with metrics aggregation",
+          "Notification configuration API endpoints",
+          "Email template components for all notification types",
+          "Notification settings UI components",
+          "Error handling and retry logic for email delivery"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Requires SMTP server configuration and email template design. Consider using nodemailer for email delivery with retry logic. Weekly reports need aggregated metrics from backup history. Email grouping logic prevents spam from multiple failures."
+    },
+    {
+      "id": "FBS-068",
+      "title": "Backup Retention Policy Management",
+      "summary": "Implements automated backup retention management with configurable policies for local (7-day) and cloud (90-day) storage. Provides automatic cleanup triggers, manual backup protection, and policy validation to optimize storage usage while maintaining recovery capabilities.",
+      "storyScope": [
+        {
+          "usId": "US-288",
+          "acIds": [
+            "AC-1384",
+            "AC-1385",
+            "AC-1386",
+            "AC-1387"
+          ]
+        },
+        {
+          "usId": "US-289",
+          "acIds": [
+            "AC-1388",
+            "AC-1389",
+            "AC-1390",
+            "AC-1391"
+          ]
+        },
+        {
+          "usId": "US-290",
+          "acIds": [
+            "AC-1392",
+            "AC-1393",
+            "AC-1394",
+            "AC-1395"
+          ]
+        },
+        {
+          "usId": "US-291",
+          "acIds": [
+            "AC-1396",
+            "AC-1397",
+            "AC-1398",
+            "AC-1399"
+          ]
+        },
+        {
+          "usId": "US-292",
+          "acIds": [
+            "AC-1400",
+            "AC-1401",
+            "AC-1402",
+            "AC-1403"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-057",
+        "FBS-060",
+        "FBS-065",
+        "FBS-066"
+      ],
+      "testableOutcomes": [
+        "System automatically deletes local backups older than 7 days when retention cleanup runs while preserving backups within 7 days",
+        "System automatically deletes cloud backups older than 90 days when retention cleanup runs while preserving backups within 90 days",
+        "System triggers local retention cleanup automatically after successful local backup completion",
+        "System triggers cloud retention cleanup automatically after successful cloud backup completion",
+        "System skips retention cleanup when backup operations fail or are interrupted",
+        "System preserves manual backups regardless of age when retention cleanup runs for both local and cloud storage",
+        "System marks backups as manual when created with manual flag and exempts them from all future cleanup operations",
+        "System loads default retention policies of 7 days local and 90 days cloud on startup",
+        "System validates retention period values and rejects invalid configuration with appropriate error messages",
+        "System applies updated retention policies to all subsequent cleanup operations when configuration changes",
+        "System returns active local and cloud retention periods with last update timestamps when configuration is queried"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "backup-management",
+            "data-retention"
+          ],
+          "tadSections": [
+            "api-server",
+            "@jobsearch/config",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "backup services",
+            "configuration management",
+            "database utilities"
+          ],
+          "schemas": [
+            "backup_metadata",
+            "retention_policies",
+            "backup_events"
+          ]
+        },
+        "deliverables": [
+          "Retention policy configuration module",
+          "Local backup cleanup service with age-based deletion",
+          "Cloud backup cleanup service with API integration",
+          "Manual backup protection and flagging system",
+          "Automatic cleanup trigger orchestrator",
+          "Retention policy validation utilities",
+          "Cleanup scheduling and execution engine",
+          "Error handling and logging for cleanup operations"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Data Management & Backup",
+      "implementationNotes": "Critical to implement proper date/time handling for retention calculations using UTC for cloud and configured timezone for local. Manual backup protection requires persistent flagging in metadata. Cleanup operations need robust error handling to prevent data loss from failed deletions."
+    }
+  ],
+  "createdAt": "2026-02-09T11:24:34.997Z",
+  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "partInfo": {
+    "partNumber": 7,
+    "totalParts": 7,
+    "fbsRange": {
+      "start": "FBS-061",
+      "end": "FBS-068"
+    },
+    "globalFbsCount": 68
+  }
+}

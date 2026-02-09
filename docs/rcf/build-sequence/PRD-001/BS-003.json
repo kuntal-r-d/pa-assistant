@@ -1,0 +1,1123 @@
+{
+  "bsId": "BS-003",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 3 of 7)",
+  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "dependency-first",
+  "buildSequence": [
+    {
+      "id": "FBS-021",
+      "title": "Skill Gap Analysis System",
+      "summary": "Implements comprehensive skill gap analysis with fuzzy matching for skill synonyms, confidence scoring for matches, and skill categorization. Provides detailed breakdown of matched, missing, and extra skills with intelligent grouping and sorting capabilities.",
+      "storyScope": [
+        {
+          "usId": "US-049",
+          "acIds": [
+            "AC-253",
+            "AC-254",
+            "AC-255",
+            "AC-256",
+            "AC-257",
+            "AC-258"
+          ]
+        },
+        {
+          "usId": "US-050",
+          "acIds": [
+            "AC-259",
+            "AC-260",
+            "AC-261",
+            "AC-262",
+            "AC-263",
+            "AC-264"
+          ]
+        },
+        {
+          "usId": "US-051",
+          "acIds": [
+            "AC-265",
+            "AC-266",
+            "AC-267",
+            "AC-268",
+            "AC-269"
+          ]
+        },
+        {
+          "usId": "US-052",
+          "acIds": [
+            "AC-270",
+            "AC-271",
+            "AC-272",
+            "AC-273",
+            "AC-274",
+            "AC-275"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-017",
+        "FBS-018"
+      ],
+      "testableOutcomes": [
+        "System displays three distinct skill categories: matched skills, missing skills, and extra skills",
+        "Skills that appear in both CV and job requirements are categorized as matched skills",
+        "Skills required by job but not in CV are categorized as missing skills",
+        "Skills in CV but not required by job are categorized as extra skills",
+        "Each skill category displays count of skills in format 'Category Name (X)'",
+        "Skills within each category are sorted alphabetically for consistent presentation",
+        "System recognizes 'JS' and 'JavaScript' as matching skills using fuzzy matching",
+        "System recognizes 'Machine Learning' and 'ML' as matching skills using fuzzy matching",
+        "System recognizes 'React.js' and 'ReactJS' as matching skills using fuzzy matching",
+        "System recognizes 'Node' and 'Node.js' as matching skills using fuzzy matching",
+        "Fuzzy matched skills display both CV term and job term (e.g., 'JavaScript (JS in CV)')",
+        "System achieves at least 90% accuracy for standard technology term fuzzy matching",
+        "Exact skill matches display 100% confidence score",
+        "Fuzzy skill matches display confidence scores between 70-99% based on similarity",
+        "Matched skills are sorted by confidence score in descending order within categories",
+        "Skills with confidence below 70% are excluded from matched skills section",
+        "Each matched skill displays confidence level as percentage or visual indicator",
+        "Technical skills are grouped under 'Technical Skills' category",
+        "Soft skills are grouped under 'Soft Skills' category",
+        "Certifications are grouped under 'Certifications' category",
+        "Each skill category shows separate counts for matched, missing, and extra skills",
+        "Skills that don't fit standard categories are placed in 'Other Skills' category"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Skill Analysis",
+            "Fuzzy Matching",
+            "Skill Categorization"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "@jobsearch/types",
+            "web-ui"
+          ],
+          "existingModules": [
+            "CV extraction",
+            "Job data processing",
+            "Skill extraction"
+          ],
+          "schemas": [
+            "Skill analysis schema",
+            "Skill category schema",
+            "Confidence score schema"
+          ]
+        },
+        "deliverables": [
+          "Skill gap analysis engine with three-category classification",
+          "Fuzzy matching service with synonym recognition",
+          "Skill confidence scoring algorithm",
+          "Skill categorization service with predefined categories",
+          "Skill synonym dictionary and mapping system",
+          "Skill gap analysis UI components",
+          "Confidence indicator visualization",
+          "Skill category display components",
+          "API endpoints for skill analysis",
+          "Comprehensive test suite for fuzzy matching accuracy"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Filtering & Matching",
+      "implementationNotes": "Large scope due to complex fuzzy matching algorithms and skill categorization logic. Requires building comprehensive skill synonym dictionary and implementing confidence scoring. Critical for user experience as it directly impacts job application decisions."
+    },
+    {
+      "id": "FBS-022",
+      "title": "Skill Analysis Export & History",
+      "summary": "Implements skill gap analysis export to PDF, shareable link generation, and historical tracking. Users can export analysis reports, share them via time-limited links, and view their skill development progress over time.",
+      "storyScope": [
+        {
+          "usId": "US-053",
+          "acIds": [
+            "AC-276",
+            "AC-277",
+            "AC-278",
+            "AC-279",
+            "AC-280"
+          ]
+        },
+        {
+          "usId": "US-054",
+          "acIds": [
+            "AC-281",
+            "AC-282",
+            "AC-283",
+            "AC-284",
+            "AC-285"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-021"
+      ],
+      "testableOutcomes": [
+        "User can export skill gap analysis as PDF containing all matched, missing, and extra skills with confidence scores",
+        "Exported PDF includes job title, company name, analysis date, and user's name for reference",
+        "User can generate shareable link that remains valid for exactly 30 days",
+        "Anonymous users can view shared skill gap analysis without system registration",
+        "User can view chronological list of all previous skill gap analyses",
+        "System displays skills that moved from 'missing' to 'matched' status over time",
+        "System highlights most frequently missing skills across multiple job applications",
+        "System provides skill development recommendations based on recurring gaps",
+        "Updated CV skills are reflected in subsequent analysis matching calculations"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Skill Gap Analysis",
+            "User Profile Management"
+          ],
+          "tadSections": [
+            "api-server",
+            "web-ui",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "skill gap analysis engine",
+            "user profile service"
+          ],
+          "schemas": [
+            "skill analysis schema",
+            "user profile schema"
+          ]
+        },
+        "deliverables": [
+          "PDF export service with skill analysis formatting",
+          "Shareable link generation and validation API",
+          "Historical analysis tracking database schema",
+          "Skill development trend analyzer",
+          "Export and history UI components",
+          "Link sharing and access control middleware"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Job Filtering & Matching",
+      "implementationNotes": "Requires PDF generation library integration and time-limited link storage mechanism. Historical tracking needs efficient database queries for trend analysis."
+    },
+    {
+      "id": "FBS-023",
+      "title": "AI-Powered Gap Analysis with Ollama",
+      "summary": "Integrates local Ollama LLM service to generate comprehensive gap analysis reports with strengths, missing skills, and improvement suggestions. Provides AI-powered insights while maintaining data privacy through local processing.",
+      "storyScope": [
+        {
+          "usId": "US-055",
+          "acIds": [
+            "AC-286",
+            "AC-287",
+            "AC-288",
+            "AC-289",
+            "AC-290",
+            "AC-291",
+            "AC-292"
+          ]
+        },
+        {
+          "usId": "US-056",
+          "acIds": [
+            "AC-293",
+            "AC-294",
+            "AC-295",
+            "AC-296"
+          ]
+        },
+        {
+          "usId": "US-057",
+          "acIds": [
+            "AC-297",
+            "AC-298",
+            "AC-299",
+            "AC-300",
+            "AC-301"
+          ]
+        },
+        {
+          "usId": "US-058",
+          "acIds": [
+            "AC-302",
+            "AC-303",
+            "AC-304",
+            "AC-305",
+            "AC-306",
+            "AC-307"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-021",
+        "FBS-018"
+      ],
+      "testableOutcomes": [
+        "System successfully calls Ollama LLM API to generate gap analysis from user profile and job posting",
+        "Generated analysis contains exactly 3-5 strength points highlighting matching qualifications",
+        "Generated analysis contains exactly 3-5 missing skills or gaps from job requirements",
+        "Generated analysis contains exactly 3-5 actionable improvement suggestions",
+        "Generated analysis includes overall assessment summary of candidate fit",
+        "System returns appropriate error message when user profile data is invalid or empty",
+        "System returns appropriate error message when job posting data is invalid or empty",
+        "System establishes successful connection to local Ollama API endpoint on startup",
+        "System handles Ollama connection failures gracefully with fallback messages",
+        "System times out after configurable duration and returns error when Ollama API is unresponsive",
+        "System confirms LLM model availability and readiness during connection validation",
+        "Strengths section displays as clearly labeled bullet-pointed items",
+        "Missing skills section displays as clearly labeled bullet-pointed items",
+        "Improvement suggestions section displays as clearly labeled actionable recommendations",
+        "Overall assessment appears as properly formatted summary paragraph",
+        "System validates LLM response contains 3-5 distinct points in each required section",
+        "System requests regeneration or provides error message when LLM response is incomplete",
+        "System handles malformed LLM responses gracefully and logs parsing errors"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "AI Integration",
+            "Gap Analysis",
+            "LLM Configuration"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "api-server",
+            "web-ui"
+          ],
+          "existingModules": [
+            "skill gap analysis engine",
+            "user profile service",
+            "job data service"
+          ],
+          "schemas": [
+            "gap analysis schema",
+            "LLM response schema"
+          ]
+        },
+        "deliverables": [
+          "Ollama LLM integration service with connection management",
+          "Gap analysis prompt engineering and template system",
+          "LLM response validation and quality checking service",
+          "Error handling and retry logic for LLM operations",
+          "Gap analysis report formatting and display components",
+          "Configuration management for Ollama endpoint and model settings"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "AI Content Generation",
+      "implementationNotes": "High risk due to LLM integration complexity and response quality variability. Requires robust prompt engineering, response validation, and fallback mechanisms for LLM failures."
+    },
+    {
+      "id": "FBS-024",
+      "title": "Cover Letter Generation System",
+      "summary": "Implements AI-powered cover letter generation with three distinct variants (Conservative, Aggressive, Story-driven) using local Ollama LLM. Generates all variants simultaneously while maintaining data privacy and ensuring content quality validation.",
+      "storyScope": [
+        {
+          "usId": "US-059",
+          "acIds": [
+            "AC-308",
+            "AC-309",
+            "AC-310",
+            "AC-311",
+            "AC-312"
+          ]
+        },
+        {
+          "usId": "US-060",
+          "acIds": [
+            "AC-313",
+            "AC-314",
+            "AC-315",
+            "AC-316",
+            "AC-317"
+          ]
+        },
+        {
+          "usId": "US-061",
+          "acIds": [
+            "AC-318",
+            "AC-319",
+            "AC-320",
+            "AC-321",
+            "AC-322"
+          ]
+        },
+        {
+          "usId": "US-062",
+          "acIds": [
+            "AC-323",
+            "AC-324",
+            "AC-325",
+            "AC-326"
+          ]
+        },
+        {
+          "usId": "US-063",
+          "acIds": [
+            "AC-327",
+            "AC-328",
+            "AC-329",
+            "AC-330",
+            "AC-331"
+          ]
+        },
+        {
+          "usId": "US-064",
+          "acIds": [
+            "AC-332",
+            "AC-333",
+            "AC-334",
+            "AC-335",
+            "AC-336"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-023",
+        "FBS-018"
+      ],
+      "testableOutcomes": [
+        "System generates conservative cover letter using formal business language between 300-400 words",
+        "Conservative variant follows traditional business letter structure with formal salutation and closing",
+        "Conservative variant emphasizes professional achievements without bold claims using respectful tone",
+        "System generates aggressive cover letter using bold, confident language between 300-400 words",
+        "Aggressive variant includes strong action verbs and assertive capability statements",
+        "Aggressive variant emphasizes unique value propositions and competitive advantages",
+        "System generates story-driven cover letter using narrative storytelling techniques between 300-400 words",
+        "Story-driven variant includes specific anecdotes or examples from user experience",
+        "Story-driven variant connects personal stories to company mission, values, or culture",
+        "System generates exactly 3 distinct variants when cover letter generation is requested",
+        "Each variant is clearly labeled as Conservative, Aggressive, or Story-driven",
+        "All three variants are returned in structured format for comparison",
+        "System returns available variants with error details when any variant fails to generate",
+        "System connects to local Ollama API endpoint when cover letter generation is requested",
+        "System returns appropriate error message when Ollama service is unavailable",
+        "No user data is transmitted to external services during cover letter generation",
+        "System validates Ollama response format and content quality",
+        "System implements retry logic with exponential backoff for Ollama timeout or errors",
+        "System verifies word count is between 300-400 words for each variant",
+        "System checks for proper grammar and sentence structure in generated content",
+        "System ensures content relevance to the job posting",
+        "System verifies each variant maintains distinct style characteristics",
+        "System triggers regeneration with improved prompts when content fails validation"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "AI Integration",
+            "Cover Letter Generation",
+            "Content Validation"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "api-server",
+            "web-ui"
+          ],
+          "existingModules": [
+            "Ollama integration service",
+            "user profile service",
+            "job data service"
+          ],
+          "schemas": [
+            "cover letter schema",
+            "generation request schema",
+            "validation schema"
+          ]
+        },
+        "deliverables": [
+          "Cover letter generation service with three variant templates",
+          "Prompt engineering system for each cover letter style",
+          "Content quality validation and grammar checking service",
+          "Parallel generation orchestrator for all three variants",
+          "Cover letter comparison and selection UI components",
+          "Generation progress tracking and error handling system"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "AI Content Generation",
+      "implementationNotes": "High risk due to complex prompt engineering for three distinct styles and quality validation requirements. Requires sophisticated content analysis to ensure style consistency and professional quality across all variants."
+    },
+    {
+      "id": "FBS-025",
+      "title": "Cover Letter Polishing with Claude",
+      "summary": "Implements AI-powered cover letter polishing using Claude API with automatic polishing for high-match jobs and manual polishing on demand. Provides quality improvements for grammar, clarity, and tone while maintaining user control over the feature.",
+      "storyScope": [
+        {
+          "usId": "US-065",
+          "acIds": [
+            "AC-337",
+            "AC-338",
+            "AC-339",
+            "AC-340"
+          ]
+        },
+        {
+          "usId": "US-066",
+          "acIds": [
+            "AC-341",
+            "AC-342",
+            "AC-343",
+            "AC-344",
+            "AC-345"
+          ]
+        },
+        {
+          "usId": "US-067",
+          "acIds": [
+            "AC-346",
+            "AC-347",
+            "AC-348",
+            "AC-349",
+            "AC-350"
+          ]
+        },
+        {
+          "usId": "US-068",
+          "acIds": [
+            "AC-351",
+            "AC-352",
+            "AC-353",
+            "AC-354",
+            "AC-355"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-024",
+        "FBS-019"
+      ],
+      "testableOutcomes": [
+        "System automatically sends cover letter to Claude API for polishing when job match score is 85% or higher",
+        "System does not automatically polish cover letters when job match score is below 85%",
+        "User can click 'Polish Cover Letter' button to manually request polishing for any job application",
+        "System displays both original and polished versions side-by-side for user comparison after manual polish request",
+        "User can select 'Use Polished Version' to replace original with polished content",
+        "User can configure automatic polishing threshold between 80% and 95% in user settings",
+        "System shows 'Polishing cover letter...' loading indicator during polishing operations",
+        "System shows 'Cover letter polished' success message when polishing completes successfully",
+        "System preserves original cover letter and logs error when Claude API is unavailable",
+        "Polished cover letters have corrected grammar and punctuation compared to originals",
+        "Polished cover letters maintain appropriate length without becoming significantly longer or shorter"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "AI Integration",
+            "Cover Letter Generation"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "api-server",
+            "web-ui"
+          ],
+          "existingModules": [
+            "Cover letter generation service",
+            "Match scoring service"
+          ],
+          "schemas": [
+            "User preferences",
+            "Cover letter data",
+            "AI usage tracking"
+          ]
+        },
+        "deliverables": [
+          "Claude API integration service with polishing prompts",
+          "Automatic polishing trigger based on match scores",
+          "Manual polish request API endpoints",
+          "Polish configuration management service",
+          "Cover letter comparison UI components",
+          "Polish status tracking and error handling",
+          "User settings for polish configuration",
+          "Loading and success indicators for polish operations"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "AI Content Generation",
+      "implementationNotes": "Requires careful prompt engineering for consistent polishing quality. Must handle Claude API rate limits and failures gracefully. Polish comparison UI needs responsive design for side-by-side viewing."
+    },
+    {
+      "id": "FBS-026",
+      "title": "CV Tailoring System",
+      "summary": "Implements AI-powered CV tailoring that reorders bullet points by job relevance, adds Key Skills Match sections, and highlights matching technologies. Creates job-specific CV versions while preserving original formatting and providing detailed modification metadata.",
+      "storyScope": [
+        {
+          "usId": "US-069",
+          "acIds": [
+            "AC-356",
+            "AC-357",
+            "AC-358",
+            "AC-359",
+            "AC-360"
+          ]
+        },
+        {
+          "usId": "US-070",
+          "acIds": [
+            "AC-361",
+            "AC-362",
+            "AC-363",
+            "AC-364",
+            "AC-365",
+            "AC-366"
+          ]
+        },
+        {
+          "usId": "US-071",
+          "acIds": [
+            "AC-367",
+            "AC-368",
+            "AC-369",
+            "AC-370",
+            "AC-371"
+          ]
+        },
+        {
+          "usId": "US-072",
+          "acIds": [
+            "AC-372",
+            "AC-373",
+            "AC-374",
+            "AC-375",
+            "AC-376"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-017",
+        "FBS-021"
+      ],
+      "testableOutcomes": [
+        "System reorders CV bullet points with highest relevance score first within each role section",
+        "System preserves original bullet point order when relevance scores are equal",
+        "System assigns higher relevance scores to bullet points containing job posting keywords",
+        "System adds 'Key Skills Match' section after summary when matching skills exist between CV and job posting",
+        "System includes only skills present in both CV and job posting in Key Skills Match section",
+        "System orders matching skills by frequency of mention in job posting",
+        "System recognizes skill variations like 'JavaScript' vs 'JS' and consolidates under job posting's preferred term",
+        "System limits Key Skills Match section to top 10 most relevant skills when more than 10 matches exist",
+        "System highlights matching technologies with bold formatting throughout all CV sections",
+        "System highlights all variations of same technology consistently (React.js, ReactJS as React)",
+        "System performs case-insensitive technology matching while preserving original casing",
+        "System avoids false positive matches for partial words (Java not matching JavaScript)",
+        "System applies all three modifications (reordered bullets, Key Skills Match, highlighted technologies) in single output",
+        "System preserves professional formatting including fonts, spacing, and margins in tailored CV",
+        "System provides metadata showing count of modifications made during tailoring process",
+        "System creates tailored CV as separate document while preserving original CV"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "CV Processing",
+            "AI Integration",
+            "Job Matching"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "api-server",
+            "web-ui"
+          ],
+          "existingModules": [
+            "CV extraction service",
+            "Skill analysis engine",
+            "Job data processing"
+          ],
+          "schemas": [
+            "CV data structure",
+            "Job posting schema",
+            "Skill matching data"
+          ]
+        },
+        "deliverables": [
+          "Bullet point relevance scoring algorithm",
+          "CV section reordering service",
+          "Key Skills Match section generator",
+          "Technology highlighting engine with variation recognition",
+          "Skill frequency analysis service",
+          "CV formatting preservation utilities",
+          "Tailored CV generation orchestrator",
+          "Modification metadata tracking system",
+          "CV tailoring API endpoints",
+          "Error handling for invalid CV formats and unparseable job postings"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "AI Content Generation",
+      "implementationNotes": "Complex text processing requiring accurate skill/technology recognition and semantic similarity scoring. Must preserve document formatting while making content modifications. Requires robust error handling for various CV formats."
+    },
+    {
+      "id": "FBS-027",
+      "title": "AI Usage Tracking & Budget Management",
+      "summary": "Implements comprehensive AI usage tracking and cost management across Ollama and Claude providers. Provides budget configuration, real-time alerts, automatic provider switching, and detailed analytics to help users monitor and control AI-related expenses.",
+      "storyScope": [
+        {
+          "usId": "US-073",
+          "acIds": [
+            "AC-377",
+            "AC-378",
+            "AC-379",
+            "AC-380"
+          ]
+        },
+        {
+          "usId": "US-074",
+          "acIds": [
+            "AC-381",
+            "AC-382",
+            "AC-383",
+            "AC-384"
+          ]
+        },
+        {
+          "usId": "US-075",
+          "acIds": [
+            "AC-385",
+            "AC-386",
+            "AC-387",
+            "AC-388"
+          ]
+        },
+        {
+          "usId": "US-076",
+          "acIds": [
+            "AC-389",
+            "AC-390",
+            "AC-391",
+            "AC-392"
+          ]
+        },
+        {
+          "usId": "US-077",
+          "acIds": [
+            "AC-393",
+            "AC-394",
+            "AC-395",
+            "AC-396"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-025",
+        "FBS-026"
+      ],
+      "testableOutcomes": [
+        "System logs Ollama usage with timestamp, operation type, and token count marked as zero cost",
+        "System logs Claude usage with timestamp, operation type, token count, and calculated cost based on current pricing",
+        "System returns total Ollama operations, total Claude operations, current month Claude cost, and remaining budget when usage statistics are requested",
+        "System records each AI operation separately with accurate provider attribution during multiple operations in a session",
+        "System sets default monthly Claude budget to $10 when no budget is explicitly configured",
+        "System immediately applies new budget limit for current month calculations when administrator updates monthly budget",
+        "System accepts positive decimal budget values and rejects negative or zero values during configuration validation",
+        "System resets Claude usage cost counter to zero at start of new calendar month while preserving configured budget limit",
+        "System displays warning message when Claude usage reaches 75% of monthly budget",
+        "System displays urgent warning when Claude usage reaches 90% of monthly budget",
+        "System includes current usage amount, budget limit, remaining budget, and estimated operations remaining in budget warning messages",
+        "System shows only one alert per threshold to avoid spam when multiple operations cross budget thresholds quickly",
+        "System routes all AI requests to Ollama when current month Claude usage equals or exceeds monthly budget",
+        "System displays notification that Claude is temporarily unavailable due to budget limits when budget is exceeded and Ollama-only mode is active",
+        "System automatically restores Claude availability for new requests at start of new calendar month when usage counter resets",
+        "System returns appropriate error message when both Ollama is unavailable and budget is exceeded",
+        "System displays daily breakdown of Ollama vs Claude usage for current month in analytics dashboard",
+        "System shows usage trends by operation type in analytics when viewing historical usage data",
+        "System displays current month spend, remaining budget, and projected month-end cost based on current usage patterns",
+        "System shows all monetary values in USD with 2 decimal places precision in cost information displays"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "AI Integration",
+            "Budget Management",
+            "Usage Analytics"
+          ],
+          "tadSections": [
+            "@jobsearch/ai-client",
+            "@jobsearch/database",
+            "api-server",
+            "web-ui"
+          ],
+          "existingModules": [
+            "AI client wrapper",
+            "Configuration management",
+            "User management"
+          ],
+          "schemas": [
+            "AI usage tracking",
+            "Budget configuration",
+            "User preferences"
+          ]
+        },
+        "deliverables": [
+          "AI usage tracking service with provider attribution",
+          "Cost calculation engine with current Claude pricing",
+          "Budget configuration management API",
+          "Monthly usage reset scheduler",
+          "Budget threshold monitoring and alerting system",
+          "Automatic provider switching logic",
+          "Usage analytics dashboard components",
+          "Budget status and warning UI components",
+          "Historical usage data aggregation service",
+          "Cost projection algorithm based on usage patterns"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "AI Content Generation",
+      "implementationNotes": "Requires accurate cost calculation based on current Claude pricing tiers. Must handle month boundaries correctly for usage resets. Analytics dashboard needs efficient data aggregation for historical trends. Provider switching logic must be fail-safe to prevent service disruption."
+    },
+    {
+      "id": "FBS-028",
+      "title": "Application Tracking Foundation",
+      "summary": "Implements core job application tracking with status lifecycle management, automatic initial status assignment, and status transition validation. Provides the foundational database schema and API endpoints for tracking applications through the hiring process from 'Saved' to final outcomes.",
+      "storyScope": [
+        {
+          "usId": "US-078",
+          "acIds": [
+            "AC-397",
+            "AC-398",
+            "AC-399"
+          ]
+        },
+        {
+          "usId": "US-079",
+          "acIds": [
+            "AC-400",
+            "AC-401",
+            "AC-402",
+            "AC-403",
+            "AC-404"
+          ]
+        },
+        {
+          "usId": "US-080",
+          "acIds": [
+            "AC-405",
+            "AC-406",
+            "AC-407",
+            "AC-408",
+            "AC-409"
+          ]
+        },
+        {
+          "usId": "US-081",
+          "acIds": [
+            "AC-410",
+            "AC-411",
+            "AC-412",
+            "AC-413",
+            "AC-414"
+          ]
+        },
+        {
+          "usId": "US-082",
+          "acIds": [
+            "AC-415",
+            "AC-416",
+            "AC-417",
+            "AC-418"
+          ]
+        },
+        {
+          "usId": "US-083",
+          "acIds": [
+            "AC-419",
+            "AC-420",
+            "AC-421",
+            "AC-422"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-001",
+        "FBS-014"
+      ],
+      "testableOutcomes": [
+        "New job application automatically receives 'Saved' status with creation timestamp when created",
+        "User can update application status from 'Saved' to 'Reviewing' and system records timestamp",
+        "User can update application status from 'Applied' to 'Interviewing' and system records timestamp",
+        "System prevents backward status transitions and displays error message when attempted",
+        "System allows status change to 'Rejected' from any current status and records timestamp",
+        "Application details page displays complete chronological status history with timestamps",
+        "Status transition validation rejects invalid changes with clear error messages",
+        "Application list view shows current status for each application"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Tracking",
+            "Status Management"
+          ],
+          "tadSections": [
+            "@jobsearch/database",
+            "@jobsearch/types",
+            "api-server"
+          ],
+          "existingModules": [
+            "Job filtering system",
+            "Database schemas"
+          ],
+          "schemas": [
+            "Job schema",
+            "User schema"
+          ]
+        },
+        "deliverables": [
+          "Application database schema with status tracking",
+          "Status transition validation service",
+          "Application CRUD API endpoints",
+          "Status history tracking system",
+          "Application status management UI components",
+          "Status transition validation middleware"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Application Tracking",
+      "implementationNotes": "Requires careful design of status enum and transition rules. Status history should be implemented as separate table for audit trail. Consider using state machine pattern for status transitions."
+    },
+    {
+      "id": "FBS-029",
+      "title": "Application Notes & Rich Text",
+      "summary": "Delivers comprehensive note-taking capabilities for job applications with rich text formatting, auto-save functionality, and timestamp tracking. Enables users to capture and organize application context with professional formatting options including lists, headings, and text emphasis.",
+      "storyScope": [
+        {
+          "usId": "US-084",
+          "acIds": [
+            "AC-423",
+            "AC-424",
+            "AC-425",
+            "AC-426"
+          ]
+        },
+        {
+          "usId": "US-085",
+          "acIds": [
+            "AC-427",
+            "AC-428",
+            "AC-429",
+            "AC-430",
+            "AC-431",
+            "AC-432"
+          ]
+        },
+        {
+          "usId": "US-086",
+          "acIds": [
+            "AC-433",
+            "AC-434",
+            "AC-435",
+            "AC-436",
+            "AC-437"
+          ]
+        },
+        {
+          "usId": "US-087",
+          "acIds": [
+            "AC-438",
+            "AC-439",
+            "AC-440",
+            "AC-441",
+            "AC-442"
+          ]
+        },
+        {
+          "usId": "US-088",
+          "acIds": [
+            "AC-443",
+            "AC-444",
+            "AC-445",
+            "AC-446"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028"
+      ],
+      "testableOutcomes": [
+        "User can enter unlimited text in application notes field and text is persisted",
+        "User can apply bold formatting to selected text and formatting appears correctly",
+        "User can create bulleted and numbered lists with proper formatting",
+        "User can apply heading formatting and text displays with appropriate styling",
+        "Notes auto-save after 2 seconds of typing inactivity with save indicator",
+        "Auto-save displays error indicator with retry option when save fails",
+        "User can edit existing notes and changes are preserved with formatting intact",
+        "Notes section displays creation timestamp and last modified timestamp in local timezone",
+        "Rich text formatting is preserved when notes are saved and reloaded",
+        "Unsaved changes are preserved when navigating away and returning to application"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Notes",
+            "Rich Text Editor"
+          ],
+          "tadSections": [
+            "web-ui",
+            "@jobsearch/database",
+            "api-server"
+          ],
+          "existingModules": [
+            "Application tracking system",
+            "Auto-save utilities"
+          ],
+          "schemas": [
+            "Application schema"
+          ]
+        },
+        "deliverables": [
+          "Rich text editor component with formatting toolbar",
+          "Auto-save service with debouncing and error handling",
+          "Notes database schema with timestamp tracking",
+          "Notes API endpoints for CRUD operations",
+          "Offline note editing with sync capabilities",
+          "Note formatting preservation utilities",
+          "Save status indicators and error handling UI"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Application Tracking",
+      "implementationNotes": "Consider using established rich text editor like Quill.js or TipTap. Auto-save should use debouncing to prevent excessive API calls. Rich text content should be stored as structured JSON or HTML with sanitization."
+    },
+    {
+      "id": "FBS-030",
+      "title": "Follow-up Reminder System",
+      "summary": "Implements automated email reminder system for job application follow-ups with 7-day automatic scheduling, snooze functionality, and intelligent cancellation based on status changes. Provides comprehensive reminder management interface for users to control their follow-up strategy.",
+      "storyScope": [
+        {
+          "usId": "US-089",
+          "acIds": [
+            "AC-447",
+            "AC-448",
+            "AC-449",
+            "AC-450",
+            "AC-451"
+          ]
+        },
+        {
+          "usId": "US-090",
+          "acIds": [
+            "AC-452",
+            "AC-453",
+            "AC-454",
+            "AC-455",
+            "AC-456",
+            "AC-457"
+          ]
+        },
+        {
+          "usId": "US-091",
+          "acIds": [
+            "AC-458",
+            "AC-459",
+            "AC-460",
+            "AC-461"
+          ]
+        },
+        {
+          "usId": "US-092",
+          "acIds": [
+            "AC-462",
+            "AC-463",
+            "AC-464",
+            "AC-465",
+            "AC-466"
+          ]
+        },
+        {
+          "usId": "US-093",
+          "acIds": [
+            "AC-467",
+            "AC-468",
+            "AC-469",
+            "AC-470"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028",
+        "FBS-008"
+      ],
+      "testableOutcomes": [
+        "System automatically schedules email reminder 7 days after application status changes to 'Applied'",
+        "Daily reminder job sends exactly one reminder email per application reaching 7-day threshold",
+        "User receives email with snooze options for 3, 7, or 14 days when reminder is triggered",
+        "System schedules next reminder for selected snooze duration when user chooses snooze option",
+        "User can permanently dismiss reminders and no future reminders are scheduled for that application",
+        "System automatically cancels pending reminders when application status changes to 'Interviewing' or 'Rejected'",
+        "Reminder management page displays all applications with active reminders and next reminder dates",
+        "Snoozed reminders show snooze duration and next reminder date in management interface",
+        "Email service failures trigger retry mechanism for reminder delivery",
+        "Applications with dismissed reminders appear in reminder history section"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Follow-up Reminders",
+            "Email Notifications"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "n8n-workflows",
+            "@jobsearch/database",
+            "api-server"
+          ],
+          "existingModules": [
+            "Automated job scraping scheduler",
+            "Application status system"
+          ],
+          "schemas": [
+            "Application schema",
+            "User schema"
+          ]
+        },
+        "deliverables": [
+          "Reminder scheduling service with cron job integration",
+          "Email reminder template system",
+          "Reminder database schema with snooze and dismissal tracking",
+          "Reminder management API endpoints",
+          "Email delivery service with retry logic",
+          "Reminder management UI components",
+          "Status change event handlers for reminder cancellation",
+          "Daily reminder processing job"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Application Tracking",
+      "implementationNotes": "Requires robust email delivery system with retry logic. Consider using job queue for reminder processing. Email templates should include unsubscribe links. Reminder scheduling must handle timezone differences properly."
+    }
+  ],
+  "createdAt": "2026-02-09T11:24:34.997Z",
+  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "partInfo": {
+    "partNumber": 3,
+    "totalParts": 7,
+    "fbsRange": {
+      "start": "FBS-021",
+      "end": "FBS-030"
+    },
+    "globalFbsCount": 68
+  }
+}

@@ -1,0 +1,954 @@
+{
+  "bsId": "BS-001",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 1 of 7)",
+  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "dependency-first",
+  "buildSequence": [
+    {
+      "id": "FBS-001",
+      "title": "Core Infrastructure Foundation",
+      "summary": "Establishes the foundational monorepo structure with pnpm workspaces, TypeScript configuration, and core shared packages. Creates the essential directory structure and build system that enables all other development work.",
+      "storyScope": [
+        {
+          "usId": "US-302",
+          "acIds": [
+            "AC-1451",
+            "AC-1452",
+            "AC-1453"
+          ]
+        },
+        {
+          "usId": "US-303",
+          "acIds": [
+            "AC-1454",
+            "AC-1455",
+            "AC-1456"
+          ]
+        },
+        {
+          "usId": "US-304",
+          "acIds": [
+            "AC-1457",
+            "AC-1458",
+            "AC-1459"
+          ]
+        },
+        {
+          "usId": "US-305",
+          "acIds": [
+            "AC-1460",
+            "AC-1461",
+            "AC-1462"
+          ]
+        }
+      ],
+      "dependencies": [],
+      "testableOutcomes": [
+        "pnpm-workspace.yaml exists with apps/* and packages/* patterns configured",
+        "All workspace dependencies resolve and link correctly when running pnpm install",
+        "All applications and packages are detected as workspaces with pnpm ls",
+        "Directory structure includes apps/api-server, apps/job-crawler, apps/web-ui, apps/n8n-workflows",
+        "Each application has package.json with unique name and workspace dependencies",
+        "TypeScript compilation succeeds from any app directory with pnpm build",
+        "Packages directory contains @jobsearch/types, @jobsearch/database, @jobsearch/config, @jobsearch/logger, @jobsearch/ai-client, @jobsearch/common",
+        "Each shared package has scoped @jobsearch/[name] in package.json with proper exports",
+        "TypeScript resolves shared package imports without compilation errors",
+        "Root tsconfig.json has strict mode enabled with all strict flags true",
+        "TypeScript compilation fails with descriptive errors for type violations",
+        "Applications inherit strict mode consistently through shared tsconfig"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "System Architecture",
+            "Technology Stack"
+          ],
+          "tadSections": [
+            "Monorepo Structure",
+            "Package Architecture",
+            "TypeScript Configuration"
+          ],
+          "existingModules": [],
+          "schemas": []
+        },
+        "deliverables": [
+          "pnpm-workspace.yaml",
+          "Root package.json with workspace configuration",
+          "Root tsconfig.json with strict mode",
+          "Apps directory structure with all applications",
+          "Packages directory structure with all shared packages",
+          "Individual package.json files for each app and package",
+          "TypeScript configuration files for each workspace"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "System Infrastructure",
+      "implementationNotes": "This is the foundational FBS that all other work depends on. Must establish proper workspace boundaries to enable future microservice extraction. TypeScript strict mode enforcement is critical for code quality."
+    },
+    {
+      "id": "FBS-002",
+      "title": "Monorepo Architecture & Code Quality",
+      "summary": "Implements comprehensive code quality tooling with ESLint and Prettier enforcement across the workspace. Establishes clear package boundaries and dependency management patterns to support future microservice extraction.",
+      "storyScope": [
+        {
+          "usId": "US-306",
+          "acIds": [
+            "AC-1463",
+            "AC-1464",
+            "AC-1465"
+          ]
+        },
+        {
+          "usId": "US-307",
+          "acIds": [
+            "AC-1466",
+            "AC-1467",
+            "AC-1468"
+          ]
+        },
+        {
+          "usId": "US-308",
+          "acIds": [
+            "AC-1469",
+            "AC-1470",
+            "AC-1471",
+            "AC-1472"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-001"
+      ],
+      "testableOutcomes": [
+        "ESLint configuration applies TypeScript-aware rules consistently across all packages",
+        "ESLint violations are reported with file locations and rule descriptions when running pnpm lint",
+        "All workspace packages validate successfully with pnpm lint --recursive",
+        "Prettier applies consistent formatting rules to any file",
+        "All files are formatted according to configuration when running pnpm format",
+        "No formatting violations detected when running prettier --check",
+        "Each shared package exposes only public interfaces through index.ts files",
+        "Applications import only from shared packages, never from other applications",
+        "No circular dependencies exist between packages in dependency analysis",
+        "Shared packages do not import from each other's internal modules"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Code Quality Standards",
+            "Development Workflow"
+          ],
+          "tadSections": [
+            "ESLint Configuration",
+            "Prettier Setup",
+            "Package Boundaries"
+          ],
+          "existingModules": [
+            "All workspace packages from FBS-001"
+          ],
+          "schemas": []
+        },
+        "deliverables": [
+          "Root .eslintrc.js with TypeScript configuration",
+          "Root .prettierrc configuration file",
+          "Package-specific ESLint configurations",
+          "Index.ts files for all shared packages with proper exports",
+          "Package.json scripts for lint and format commands",
+          "Pre-commit hooks configuration",
+          "Dependency analysis tooling setup"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Package boundary enforcement is critical for future microservice extraction. ESLint rules must prevent cross-application imports while allowing shared package usage."
+    },
+    {
+      "id": "FBS-003",
+      "title": "Container Infrastructure & Environment",
+      "summary": "Creates complete Docker containerization with docker-compose orchestration for all services. Implements secure environment variable management and health monitoring across the entire system stack.",
+      "storyScope": [
+        {
+          "usId": "US-174",
+          "acIds": [
+            "AC-848",
+            "AC-849",
+            "AC-850",
+            "AC-851"
+          ]
+        },
+        {
+          "usId": "US-175",
+          "acIds": [
+            "AC-852",
+            "AC-853",
+            "AC-854",
+            "AC-855"
+          ]
+        },
+        {
+          "usId": "US-176",
+          "acIds": [
+            "AC-856",
+            "AC-857",
+            "AC-858",
+            "AC-859"
+          ]
+        },
+        {
+          "usId": "US-177",
+          "acIds": [
+            "AC-860",
+            "AC-861",
+            "AC-862",
+            "AC-863"
+          ]
+        },
+        {
+          "usId": "US-195",
+          "acIds": [
+            "AC-929",
+            "AC-930",
+            "AC-931",
+            "AC-932"
+          ]
+        },
+        {
+          "usId": "US-196",
+          "acIds": [
+            "AC-933",
+            "AC-934",
+            "AC-935",
+            "AC-936"
+          ]
+        },
+        {
+          "usId": "US-197",
+          "acIds": [
+            "AC-937",
+            "AC-938",
+            "AC-939",
+            "AC-940"
+          ]
+        },
+        {
+          "usId": "US-156",
+          "acIds": [
+            "AC-766",
+            "AC-767",
+            "AC-768",
+            "AC-769",
+            "AC-770"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-001",
+        "FBS-002"
+      ],
+      "testableOutcomes": [
+        "All containers start successfully with single 'docker-compose up' command",
+        "Docker-compose.yml defines all required services with proper networking and dependencies",
+        "All application services respond with healthy status at health endpoints",
+        "Web-ui can communicate with api-server and display application interface",
+        "Api-server container builds using pnpm workspace commands with all @jobsearch/* packages",
+        "Job-crawler container builds using pnpm workspace commands with all @jobsearch/* packages",
+        "Web-ui container builds using pnpm workspace commands with all @jobsearch/* packages",
+        "Shared packages are accessible to all applications in containers",
+        "Api-server waits for PostgreSQL and Redis readiness before starting",
+        "Job-crawler waits for api-server and database services before starting",
+        "Web-ui reaches api-server through internal Docker networking",
+        "N8n service communicates with api-server and accesses workflow definitions",
+        "PostgreSQL container creates database with proper volume persistence",
+        "Redis container provides caching services to application containers",
+        "Ollama container provides local LLM services to ai-client package",
+        "LiteLLM container provides unified API access to AI services",
+        "No API keys are hardcoded in any source files",
+        "System throws clear errors when environment variables are missing",
+        "API keys are accessible only through secure environment variable patterns",
+        "No API key values appear in application logs",
+        ".env.example file exists in root directory",
+        ".env.example contains placeholder entries for all required API keys",
+        "Each API key entry includes documentation comment explaining purpose",
+        ".env.example format allows direct value replacement to create .env",
+        "System validates ANTHROPIC_API_KEY is present and non-empty at startup",
+        "System validates email service API keys are present and non-empty at startup",
+        "Application exits with specific error message when required keys are missing",
+        "System provides actionable error messages for malformed API keys",
+        "Scraper API health endpoint returns 200 status with health response",
+        "Database health check returns successful connection status",
+        "Ollama health check returns status of available AI models",
+        "N8n health check returns current state of automation workflows",
+        "Unavailable services return appropriate error codes and descriptive messages"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Deployment Architecture",
+            "Security Requirements",
+            "System Monitoring"
+          ],
+          "tadSections": [
+            "Docker Configuration",
+            "Environment Management",
+            "Health Monitoring",
+            "Service Dependencies"
+          ],
+          "existingModules": [
+            "All applications and packages from FBS-001 and FBS-002"
+          ],
+          "schemas": [
+            "Environment variable schema",
+            "Health check response schemas"
+          ]
+        },
+        "deliverables": [
+          "docker-compose.yml with all service definitions",
+          "Dockerfile for each application (api-server, job-crawler, web-ui)",
+          ".env.example with documented API key placeholders",
+          "Environment validation modules for each application",
+          "Health check endpoints for all services",
+          "Docker networking configuration",
+          "Volume configurations for data persistence",
+          "Service dependency and startup ordering configuration"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Container orchestration must handle complex service dependencies and startup ordering. Environment variable security is critical - no keys should ever be logged or exposed. Health monitoring must provide actionable feedback for system operators."
+    },
+    {
+      "id": "FBS-004",
+      "title": "Authentication & Security Foundation",
+      "summary": "Implements localhost-only authentication bypass for single-user deployments and environment-based service-to-service authentication. Establishes security middleware and validation for personal use deployment scenarios.",
+      "storyScope": [
+        {
+          "usId": "US-199",
+          "acIds": [
+            "AC-945",
+            "AC-946",
+            "AC-947",
+            "AC-948"
+          ]
+        },
+        {
+          "usId": "US-200",
+          "acIds": [
+            "AC-949",
+            "AC-950",
+            "AC-951",
+            "AC-952"
+          ]
+        },
+        {
+          "usId": "US-201",
+          "acIds": [
+            "AC-953",
+            "AC-954",
+            "AC-955",
+            "AC-956"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-001",
+        "FBS-002",
+        "FBS-003"
+      ],
+      "testableOutcomes": [
+        "User can access web interface from localhost without authentication prompts",
+        "System rejects non-localhost connections with appropriate error messages",
+        "Services authenticate successfully using shared secrets from environment variables",
+        "System fails to start with clear error messages when authentication environment variables are missing",
+        "System status page displays confirmation of single-user localhost-only mode",
+        "Multiple concurrent localhost sessions are permitted without conflicts"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Security Model",
+            "Deployment Architecture"
+          ],
+          "tadSections": [
+            "api-server",
+            "@jobsearch/config"
+          ],
+          "existingModules": [
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "Environment configuration schema"
+          ]
+        },
+        "deliverables": [
+          "Authentication middleware for api-server",
+          "Localhost detection utility",
+          "Service-to-service authentication module",
+          "Environment validation for auth secrets",
+          "Security configuration in @jobsearch/config",
+          "Single-user mode validation endpoint"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Security & Deployment",
+      "implementationNotes": "Focus on localhost IP detection (127.0.0.1, ::1) and environment-based shared secrets. Implement fail-safe defaults that require explicit configuration for production use."
+    },
+    {
+      "id": "FBS-005",
+      "title": "Health Monitoring & Logging System",
+      "summary": "Implements comprehensive health check endpoints for all services and establishes structured JSON logging infrastructure. Provides monitoring capabilities for PostgreSQL, Ollama, n8n, and scraper services with detailed status reporting.",
+      "storyScope": [
+        {
+          "usId": "US-157",
+          "acIds": [
+            "AC-771",
+            "AC-772",
+            "AC-773",
+            "AC-774"
+          ]
+        },
+        {
+          "usId": "US-158",
+          "acIds": [
+            "AC-775",
+            "AC-776",
+            "AC-777",
+            "AC-778",
+            "AC-779"
+          ]
+        },
+        {
+          "usId": "US-159",
+          "acIds": [
+            "AC-780",
+            "AC-781",
+            "AC-782",
+            "AC-783",
+            "AC-784"
+          ]
+        },
+        {
+          "usId": "US-160",
+          "acIds": [
+            "AC-785",
+            "AC-786",
+            "AC-787",
+            "AC-788",
+            "AC-789"
+          ]
+        },
+        {
+          "usId": "US-161",
+          "acIds": [
+            "AC-790",
+            "AC-791",
+            "AC-792",
+            "AC-793",
+            "AC-794",
+            "AC-795"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-001",
+        "FBS-002",
+        "FBS-003"
+      ],
+      "testableOutcomes": [
+        "GET /health returns 200 status with JSON response containing service status and timestamp",
+        "Health endpoint returns 503 status when dependencies are unavailable",
+        "PostgreSQL health check successfully establishes connection and validates authentication",
+        "Database health check returns failure status with connection error details when PostgreSQL is unreachable",
+        "Ollama health check returns successful status and lists available models when service is running",
+        "n8n health check returns workflow count and status of running workflows",
+        "Application errors generate JSON log entries with timestamp, service, severity, message, and context fields",
+        "Multiple simultaneous errors create separate JSON log entries"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 6,
+        "contextRequirements": {
+          "prdSections": [
+            "System Architecture",
+            "Monitoring Requirements"
+          ],
+          "tadSections": [
+            "api-server",
+            "job-crawler",
+            "@jobsearch/database",
+            "@jobsearch/ai-client",
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "@jobsearch/database",
+            "@jobsearch/ai-client",
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "Health check response schema",
+            "Log entry schema"
+          ]
+        },
+        "deliverables": [
+          "Health check endpoints for all services",
+          "PostgreSQL connection health validator",
+          "Ollama service health checker",
+          "n8n workflow status monitor",
+          "Structured JSON logging configuration",
+          "Health check middleware and routing",
+          "Service dependency health aggregator"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Leverage existing @jobsearch/logger for structured logging. Implement health checks as middleware that can be easily added to any service. Use connection pooling for database health checks to avoid resource exhaustion."
+    },
+    {
+      "id": "FBS-006",
+      "title": "Log Management & Retention",
+      "summary": "Implements automated daily log rotation and 30-day retention policy with centralized log access for debugging. Provides efficient log management to balance debugging capabilities with storage optimization.",
+      "storyScope": [
+        {
+          "usId": "US-162",
+          "acIds": [
+            "AC-796",
+            "AC-797",
+            "AC-798",
+            "AC-799"
+          ]
+        },
+        {
+          "usId": "US-163",
+          "acIds": [
+            "AC-800",
+            "AC-801",
+            "AC-802",
+            "AC-803"
+          ]
+        },
+        {
+          "usId": "US-164",
+          "acIds": [
+            "AC-804",
+            "AC-805",
+            "AC-806",
+            "AC-807"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-005"
+      ],
+      "testableOutcomes": [
+        "New log file is created automatically at midnight UTC with current date",
+        "Previous day's log file is archived with YYYY-MM-DD date suffix after rotation",
+        "Log files older than 30 days are automatically deleted by retention policy",
+        "Log files exactly 30 days old are preserved until they exceed the retention period",
+        "Centralized log query returns errors from all services in chronological order",
+        "Log filtering by service name displays only errors from specified service",
+        "Log filtering by severity level shows only matching severity errors",
+        "Context-based log search returns relevant error logs containing specified context"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Logging Strategy",
+            "Storage Management"
+          ],
+          "tadSections": [
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "Log rotation configuration schema"
+          ]
+        },
+        "deliverables": [
+          "Daily log rotation scheduler",
+          "30-day retention policy implementation",
+          "Centralized log aggregation service",
+          "Log filtering and search utilities",
+          "Log rotation failure alerting",
+          "Log management configuration module"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "System Infrastructure",
+      "implementationNotes": "Use cron-like scheduling for log rotation. Implement file system watchers for rotation failure detection. Consider using log streaming for centralized access rather than file-based aggregation for better performance."
+    },
+    {
+      "id": "FBS-007",
+      "title": "Basic Job Scraping Infrastructure",
+      "summary": "Establishes core scraping infrastructure with multi-platform support, circuit breakers, and exponential backoff retry mechanisms. Provides the foundation for reliable job data collection from RemoteOK, WeWorkRemotely, Himalayas, and Indeed platforms.",
+      "storyScope": [
+        {
+          "usId": "US-001",
+          "acIds": [
+            "AC-001",
+            "AC-002",
+            "AC-003"
+          ]
+        },
+        {
+          "usId": "US-003",
+          "acIds": [
+            "AC-008",
+            "AC-009",
+            "AC-010",
+            "AC-011",
+            "AC-012"
+          ]
+        },
+        {
+          "usId": "US-004",
+          "acIds": [
+            "AC-013",
+            "AC-014",
+            "AC-015",
+            "AC-016",
+            "AC-017"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-006"
+      ],
+      "testableOutcomes": [
+        "System returns all four platforms (RemoteOK, WeWorkRemotely, Himalayas, Indeed) as active when querying configured scraping sources",
+        "Platform validation confirms each source has valid base URL, API endpoints, and scraping parameters defined",
+        "Circuit breaker opens and stops requests when platform returns 429 status and threshold is reached",
+        "Circuit breaker transitions to half-open state after configured timeout period expires",
+        "Failed requests retry with exponential backoff delays starting at 1 second and doubling each attempt",
+        "Maximum retry count is respected and requests are marked as failed when exceeded",
+        "Successful retry after backoff resets the backoff counter for future requests"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery & Scraping"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "@jobsearch/config",
+            "@jobsearch/logger"
+          ],
+          "schemas": [
+            "Platform configuration schema",
+            "Circuit breaker state schema"
+          ]
+        },
+        "deliverables": [
+          "Platform configuration module with all four job platforms",
+          "Circuit breaker implementation with state management",
+          "Exponential backoff retry mechanism",
+          "Platform validation utilities",
+          "Base scraper class with error handling",
+          "Platform-specific scraper implementations"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Scraping",
+      "implementationNotes": "Focus on robust error handling and state management for circuit breakers. Implement configurable thresholds and timeouts. Ensure platform configurations are easily extensible for future job sources."
+    },
+    {
+      "id": "FBS-008",
+      "title": "Automated Job Scraping Execution",
+      "summary": "Implements daily automated job scraping scheduler with comprehensive logging and monitoring. Orchestrates scraping operations across all configured platforms with proper error handling and execution tracking.",
+      "storyScope": [
+        {
+          "usId": "US-002",
+          "acIds": [
+            "AC-004",
+            "AC-005",
+            "AC-006",
+            "AC-007"
+          ]
+        },
+        {
+          "usId": "US-006",
+          "acIds": [
+            "AC-024",
+            "AC-025",
+            "AC-026",
+            "AC-027",
+            "AC-028",
+            "AC-029"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-007"
+      ],
+      "testableOutcomes": [
+        "Scraping process initiates automatically at configured daily schedule time for all platforms",
+        "Execution log shows completion timestamp and job count retrieved for each platform after successful run",
+        "New scraping cycle begins automatically 24 hours after the last run completion",
+        "All four platforms are processed in the same execution cycle during daily runs",
+        "Operation logs record start time, platform, and operation type when scraping begins",
+        "Completion logs record end time, success/failure status, and job count when operations finish",
+        "Error logs capture error type, affected platform, and detailed error messages when failures occur",
+        "Circuit breaker state changes are logged with platform, previous state, new state, and trigger reason",
+        "Daily metrics aggregation shows total jobs found, success rate per platform, and average response times"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery & Scraping"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "@jobsearch/logger"
+          ],
+          "existingModules": [
+            "@jobsearch/logger",
+            "FBS-007 scraping infrastructure"
+          ],
+          "schemas": [
+            "Execution log schema",
+            "Metrics aggregation schema"
+          ]
+        },
+        "deliverables": [
+          "Daily scheduler implementation with cron-like functionality",
+          "Scraping orchestrator that coordinates all platforms",
+          "Comprehensive logging middleware for all scraping operations",
+          "Metrics collection and aggregation system",
+          "Execution status tracking and reporting",
+          "Error handling and recovery mechanisms"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Scraping",
+      "implementationNotes": "Ensure scheduler is resilient to system restarts and handles timezone considerations. Implement proper cleanup for failed executions and consider implementing manual trigger capabilities for debugging."
+    },
+    {
+      "id": "FBS-009",
+      "title": "Job Data Extraction & Processing",
+      "summary": "Implements job listing data extraction and normalization across all platforms into a standardized schema. Handles platform-specific field mapping, duplicate detection, and ensures consistent data quality for downstream processing.",
+      "storyScope": [
+        {
+          "usId": "US-005",
+          "acIds": [
+            "AC-018",
+            "AC-019",
+            "AC-020",
+            "AC-021",
+            "AC-022",
+            "AC-023"
+          ]
+        },
+        {
+          "usId": "US-007",
+          "acIds": [
+            "AC-030",
+            "AC-031",
+            "AC-032",
+            "AC-033",
+            "AC-034",
+            "AC-035"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-008"
+      ],
+      "testableOutcomes": [
+        "Job listings from any platform are extracted with title, company, location, salary, description, and posting date in standardized format",
+        "RemoteOK platform-specific fields are successfully mapped to standard job schema",
+        "WeWorkRemotely platform-specific fields are successfully mapped to standard job schema",
+        "Himalayas platform-specific fields are successfully mapped to standard job schema",
+        "Indeed platform-specific fields are successfully mapped to standard job schema",
+        "Duplicate listings across platforms are identified by title and company combination",
+        "System extracts and stores job title as string field when present in listing",
+        "System extracts and stores company name as string field when present in listing",
+        "System extracts and stores location as structured field with city, state, and country components",
+        "System marks job title field as null and logs warning when missing from listing",
+        "System marks company name field as null and logs warning when missing from listing",
+        "Remote location indicators are correctly identified and stored as 'Remote' with geographic scope"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery & Scraping"
+          ],
+          "tadSections": [
+            "@jobsearch/types",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "@jobsearch/types",
+            "@jobsearch/database",
+            "FBS-007 scraping infrastructure"
+          ],
+          "schemas": [
+            "Standardized job schema",
+            "Platform-specific mapping schemas",
+            "Location normalization schema"
+          ]
+        },
+        "deliverables": [
+          "Standardized job data schema definition",
+          "Platform-specific data extractors for each job source",
+          "Data normalization and transformation utilities",
+          "Duplicate detection algorithm implementation",
+          "Location parsing and standardization module",
+          "Data validation and quality assurance checks",
+          "Field mapping configurations for all platforms"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Scraping",
+      "implementationNotes": "Pay special attention to handling inconsistent data formats across platforms. Implement robust location parsing for various formats including remote work indicators. Consider implementing data quality scoring for extracted listings."
+    },
+    {
+      "id": "FBS-010",
+      "title": "Advanced Job Data Extraction",
+      "summary": "Implements comprehensive job data extraction including salary parsing, job descriptions, technology detection, and posting date extraction. Provides robust field extraction with HTML processing, normalization, and validation for all job listing components.",
+      "storyScope": [
+        {
+          "usId": "US-008",
+          "acIds": [
+            "AC-036",
+            "AC-037",
+            "AC-038",
+            "AC-039",
+            "AC-040",
+            "AC-041"
+          ]
+        },
+        {
+          "usId": "US-009",
+          "acIds": [
+            "AC-042",
+            "AC-043",
+            "AC-044",
+            "AC-045",
+            "AC-046"
+          ]
+        },
+        {
+          "usId": "US-010",
+          "acIds": [
+            "AC-047",
+            "AC-048",
+            "AC-049",
+            "AC-050",
+            "AC-051",
+            "AC-052",
+            "AC-053"
+          ]
+        },
+        {
+          "usId": "US-011",
+          "acIds": [
+            "AC-054",
+            "AC-055",
+            "AC-056",
+            "AC-057",
+            "AC-058",
+            "AC-059"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-009"
+      ],
+      "testableOutcomes": [
+        "System extracts salary range with minimum and maximum values plus currency from job listings containing salary ranges",
+        "System extracts single salary values with currency and marks compensation type as exact when job listing contains single salary",
+        "System extracts hourly rates and marks compensation type as hourly when job listing specifies hourly compensation",
+        "System stores null salary fields and continues processing when job listing contains no salary information",
+        "System extracts full job description text while preserving formatting from job listings with descriptions",
+        "System converts HTML-formatted descriptions to clean text format while preserving structure",
+        "System identifies and separates responsibilities, requirements, and benefits sections in multi-section job descriptions",
+        "System extracts and categorizes programming languages, frameworks, databases, and cloud platforms from job descriptions",
+        "System normalizes technology names to standard formats regardless of case variations in job descriptions",
+        "System extracts years of experience requirements for different technologies from job descriptions",
+        "System extracts and stores posting dates in ISO 8601 format from job listings",
+        "System converts relative date formats to absolute dates during extraction",
+        "System extracts and validates application URLs from job listings",
+        "System extracts contact emails and application instructions when provided"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery & Scraping",
+            "Data Processing"
+          ],
+          "tadSections": [
+            "job-crawler",
+            "@jobsearch/types",
+            "@jobsearch/database"
+          ],
+          "existingModules": [
+            "Platform-specific scraper implementations",
+            "Standardized job data schema"
+          ],
+          "schemas": [
+            "Job data schema",
+            "Platform configurations"
+          ]
+        },
+        "deliverables": [
+          "Salary extraction module with currency parsing",
+          "Job description processor with HTML conversion",
+          "Technology and skills extraction engine",
+          "Date parsing and normalization utilities",
+          "Application information extractor",
+          "Field validation and quality checks",
+          "Platform-specific extraction adapters"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Scraping",
+      "implementationNotes": "Requires sophisticated text processing for technology extraction and robust parsing for various date and salary formats. Consider using NLP libraries for skill extraction and regex patterns for structured data parsing."
+    }
+  ],
+  "createdAt": "2026-02-09T11:24:34.997Z",
+  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "partInfo": {
+    "partNumber": 1,
+    "totalParts": 7,
+    "fbsRange": {
+      "start": "FBS-001",
+      "end": "FBS-010"
+    },
+    "globalFbsCount": 68
+  }
+}
