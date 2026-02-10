@@ -1,9 +1,9 @@
 {
   "prdId": "PRD-001",
   "productName": "Core Job Assistant MVP",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "status": "draft",
-  "executiveSummary": "Core MVP of an intelligent, locally-hosted job search assistant covering essential job input methods, profile management, AI-powered matching, content generation, and application tracking. Provides foundation for job search automation with privacy-first architecture and zero infrastructure cost. LinkedIn integration covered in PRD-002, backup/operations in PRD-003.",
+  "executiveSummary": "Core MVP of an intelligent, locally-hosted job search assistant covering essential job input methods, profile management, AI-powered matching, content generation, and application tracking. Features event-driven automation using Trigger Gateway and job queues with loosely-coupled plugin architecture. Provides foundation for job search automation with privacy-first architecture and zero infrastructure cost. LinkedIn integration covered in PRD-002, backup/operations in PRD-003.",
   "problemStatement": "Remote job seekers waste 15-20 hours/week manually searching across fragmented platforms, resulting in 80% of relevant jobs being missed, 2-5% response rates from generic applications, and 30% of applications lost due to poor tracking. Existing solutions either lack intelligent matching or cost $136/month. This core MVP addresses the fundamental job input, matching, content generation, and tracking needs while maintaining zero infrastructure cost.",
   "targetUsers": [
     "Remote job seekers (software developers, tech professionals)",
@@ -20,7 +20,11 @@
     "Application lifecycle tracking with Kanban board",
     "In-app notification system",
     "Docker-based local deployment",
-    "Error handling with circuit breakers and retry logic"
+    "Error handling with circuit breakers and retry logic",
+    "Plugin-based adapter architecture",
+    "Trigger Gateway API",
+    "Telegram Bot",
+    "Event-driven communication via BullMQ"
   ],
   "outOfScope": [
     "LinkedIn integration and stealth scraping (covered in PRD-002)",
@@ -32,7 +36,9 @@
     "Multi-user support or team features",
     "Mobile application",
     "Chrome browser extension",
-    "Recruiter marketplace or job board creation"
+    "Recruiter marketplace or job board creation",
+    "n8n or external workflow tools (architecture supports future integration)",
+    "Discord and WhatsApp bots (architecture supports future addition)"
   ],
   "objectives": [
     "OBJ-001: Reduce job search time from 15 hours/week to 3 hours/week (80% reduction) - Target: ≤3 hours/week",
@@ -41,7 +47,7 @@
     "OBJ-004: Maintain zero infrastructure cost with <$5/month AI API budget - Target: <$5/month"
   ],
   "constraints": [
-    "CON-001 (technical): Must run on 8GB RAM minimum with documented allocations: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API 256MB, LiteLLM 256MB, Web UI 128MB - Impact: Limits LLM model size to 7B quantized, requires memory monitoring at 80%/90% thresholds",
+    "CON-001 (technical): Must run on 8GB RAM minimum with documented allocations: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, Redis 384MB, API Server + Trigger Gateway 384MB, LiteLLM 256MB, Web UI 128MB, Telegram Bot 50MB. Total ~7.75GB with 440MB headroom - Impact: Limits LLM model size to 7B quantized, requires memory monitoring at 80%/90% thresholds",
     "CON-002 (budget): Zero infrastructure cost, $5/month AI budget - Impact: Must use free local LLMs for most tasks",
     "CON-003 (legal): Must respect job board Terms of Service - Impact: Implement rate limiting, respect robots.txt",
     "CON-004 (privacy): All user data must stay local - Impact: No cloud storage; local PostgreSQL only"
@@ -211,12 +217,12 @@
     },
     {
       "id": "REQ-019",
-      "title": "Daily Automated Scraping",
-      "description": "System shall execute automated scraping workflow daily at 8:00 AM via n8n, completing within 60 minutes, with automatic retry on failure and email alert if zero jobs scraped.",
+      "title": "Configurable Automated Scraping",
+      "description": "System shall support configurable scraping schedules via node-cron (default daily 8AM) AND on-demand triggering via Trigger Gateway API. Triggers from Web UI, Telegram Bot, webhooks, or any HTTP client. Complete within 60 minutes, auto-retry on failure, notify via configured channels if zero jobs scraped.",
       "category": "functional",
       "domain": "Automation",
       "priority": "must",
-      "rationale": "Scheduled automation ensures consistent job discovery"
+      "rationale": "Flexible automation ensures consistent job discovery with on-demand capability"
     },
     {
       "id": "REQ-020",
@@ -248,7 +254,7 @@
     {
       "id": "REQ-023",
       "title": "Docker Containerization",
-      "description": "System shall be deployable via Docker Compose using pnpm workspaces monorepo architecture with apps/ directory (api-server, job-crawler, web-ui, n8n-workflows) and packages/@jobsearch/ directory (types, database, config, logger, ai-client, common). Containers include: api-server, job-crawler, web-ui, PostgreSQL, Redis, Ollama, LiteLLM, n8n. Single docker-compose up command to start.",
+      "description": "System shall be deployable via Docker Compose using pnpm workspaces monorepo architecture with apps/ directory (api-server, job-crawler, web-ui, trigger-gateway, bot-telegram) and packages/@jobsearch/ directory (types, database, config, logger, ai-client, common, queue, plugin-registry). Containers include: api-server, job-crawler, web-ui, trigger-gateway, bot-telegram, PostgreSQL, Redis, Ollama, LiteLLM. Single docker-compose up command to start.",
       "category": "non-functional",
       "domain": "Infrastructure",
       "priority": "must",
@@ -284,7 +290,7 @@
     {
       "id": "REQ-027",
       "title": "TypeScript Monorepo Architecture",
-      "description": "System shall use pnpm workspaces for monorepo package management (no Turborepo). Applications in apps/ directory: api-server, job-crawler, web-ui, n8n-workflows. Shared packages in packages/@jobsearch/: types, database, config, logger, ai-client, common. TypeScript strict mode with ESLint and Prettier enforcement. Clear package boundaries enable future microservice extraction.",
+      "description": "System shall use pnpm workspaces for monorepo package management. Applications in apps/ directory: api-server, job-crawler, web-ui, trigger-gateway, bot-telegram. Shared packages in packages/@jobsearch/: types, database, config, logger, ai-client, common, queue, plugin-registry. TypeScript strict mode with ESLint and Prettier enforcement. All external integrations implemented as pluggable adapters following Ports and Adapters pattern for loose coupling.",
       "category": "non-functional",
       "domain": "Architecture",
       "priority": "must",
@@ -361,21 +367,70 @@
       "domain": "User Interface",
       "priority": "must",
       "rationale": "In-app notifications keep users informed of important events without relying on external email systems"
+    },
+    {
+      "id": "REQ-036",
+      "title": "Trigger Gateway API",
+      "description": "System shall provide centralized REST API endpoints for all automatable actions (scraping, matching, content generation, status updates, reminders). All trigger sources (Web UI, Telegram Bot, webhooks, HTTP clients) call same endpoints. Authentication via API key or localhost trust. Enables future n8n/Zapier integration without code changes.",
+      "category": "functional",
+      "domain": "Architecture",
+      "priority": "must",
+      "rationale": "Loose coupling between triggers and business logic enables flexible automation and future integrations"
+    },
+    {
+      "id": "REQ-037",
+      "title": "Telegram Bot Remote Control",
+      "description": "System shall provide Telegram Bot with commands: /scrape (trigger job scraping), /status (application pipeline status), /matches (high-match jobs), /remind (follow-up reminders), /stats (system statistics). Pluggable architecture via bot-core package for future Discord/WhatsApp bots.",
+      "category": "functional",
+      "domain": "Automation",
+      "priority": "must",
+      "rationale": "Remote triggering enables job search management at user convenience from mobile device"
+    },
+    {
+      "id": "REQ-038",
+      "title": "Plugin Registry and Adapter Pattern",
+      "description": "System shall implement Ports and Adapters pattern with plugin categories: scrapers (job platforms), ai-providers (Ollama, Claude, OpenAI), notifiers (email, Telegram, Discord), proposal-engines (cover letter generators). Config-driven plugin registration with enable/disable/swap capabilities without code changes.",
+      "category": "functional",
+      "domain": "Architecture",
+      "priority": "must",
+      "rationale": "Plugin architecture enables component replacement and extension without affecting core business logic"
+    },
+    {
+      "id": "REQ-039",
+      "title": "Event-Driven Internal Communication",
+      "description": "System shall use event-driven architecture with events: job-discovered, job-matched, job-applied, scrape-completed, scrape-failed, content-generated, reminder-due. Redis-backed BullMQ queues with decoupled producers and consumers for independent component operation.",
+      "category": "functional",
+      "domain": "Architecture",
+      "priority": "must",
+      "rationale": "Event-driven architecture enables loose coupling and independent scaling of system components"
+    },
+    {
+      "id": "REQ-040",
+      "title": "BullMQ Job Queue System",
+      "description": "System shall implement BullMQ job queues: scraping-queue, matching-queue, content-queue, notification-queue. Support priority levels, retry with exponential backoff, dead letter queues, and rate limiting. Provide queue dashboard in Web UI for monitoring and management.",
+      "category": "functional",
+      "domain": "System Reliability",
+      "priority": "must",
+      "rationale": "Reliable async processing with monitoring ensures system stability without external workflow dependencies"
     }
   ],
   "glossary": {
     "TF-IDF": "Term Frequency-Inverse Document Frequency - a text similarity algorithm",
     "Ollama": "Open-source local LLM runtime for running models like Mistral and Llama",
-    "n8n": "Open-source workflow automation tool similar to Zapier",
     "Circuit Breaker": "Design pattern that prevents cascading failures by stopping requests to failing services",
     "ATS": "Applicant Tracking System - software used by companies to manage job applications",
     "Kanban": "Visual project management method using cards and columns",
     "NLP": "Natural Language Processing - AI technique for understanding and processing human language",
-    "Rich Text Editor": "Text editing interface that allows formatting (bold, italic, lists) beyond plain text"
+    "Rich Text Editor": "Text editing interface that allows formatting (bold, italic, lists) beyond plain text",
+    "Trigger Gateway": "Centralized API service that provides unified endpoints for triggering system actions from any source",
+    "BullMQ": "Redis-based job queue system for reliable async processing with retry logic and monitoring",
+    "Ports and Adapters": "Architectural pattern that isolates core business logic from external dependencies through interfaces",
+    "Plugin Registry": "System for dynamically loading and managing pluggable components without code changes",
+    "Event-Driven Architecture": "Design pattern where components communicate through events rather than direct calls"
   },
   "createdAt": "2026-02-08T09:00:00Z",
-  "updatedAt": "2026-02-10T05:29:16.550Z",
-  "_changesSummary": "Major restructuring to Core Job Assistant MVP: Updated title and scope, removed 39 requirements (moved to PRD-002 and PRD-003), renumbered remaining 27 requirements, added 8 new core requirements for manual job input, CV variants, match customization, content editing, and notifications",
+  "updatedAt": "2026-02-10T16:32:03.149Z",
+  "_changesSummary": "Architectural refactoring to remove n8n dependency: Updated memory allocations, replaced n8n with event-driven automation using Trigger Gateway and BullMQ, added 5 new requirements for loosely-coupled plugin architecture, Telegram Bot, and job queue system",
   "_removed": [
     "REQ-012",
     "REQ-016",
