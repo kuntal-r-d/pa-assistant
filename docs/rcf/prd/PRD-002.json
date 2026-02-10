@@ -1,0 +1,576 @@
+{
+  "prdId": "PRD-002",
+  "productName": "LinkedIn Integration & Advanced Features",
+  "version": "1.0.0",
+  "status": "draft",
+  "executiveSummary": "The LinkedIn Integration & Advanced Features product extends the Core Job Assistant MVP (PRD-001) with specialized LinkedIn job scraping capabilities and advanced user features. LinkedIn represents the primary job source for remote workers, but accessing this data requires sophisticated stealth techniques to avoid detection by LinkedIn's anti-scraping systems. This product implements browser fingerprint injection, human-like behavior simulation, session management, and real-time detection monitoring to safely extract job listings while providing fallback methods when scraping becomes too risky. The LinkedIn integration is inherently high-risk due to the platform's aggressive anti-bot measures, requiring constant adaptation and monitoring to maintain functionality. Beyond LinkedIn integration, this product introduces power-user features including comprehensive analytics dashboards, automated email reporting, and enhanced application tracking capabilities. Users gain visibility into their job search performance through detailed statistics, success rate analysis, and trend visualization. The analytics system generates daily job digests and weekly performance summaries delivered via email, helping users optimize their job search strategy. Advanced UI features like application notes, timeline visualization, and cover letter refinement tools provide a more sophisticated user experience for serious job seekers. Performance optimization ensures the system meets strict latency requirements across all features, from job scraping completion times to dashboard responsiveness. Health monitoring and centralized error logging provide operational visibility, while comprehensive documentation covers memory budgeting and legal considerations around LinkedIn data extraction.",
+  "problemStatement": "Remote job seekers heavily rely on LinkedIn for job opportunities, but the platform's anti-scraping measures make automated job collection extremely challenging and risky. Additionally, power users need advanced analytics, reporting, and tracking capabilities beyond basic job application management to optimize their job search effectiveness and maintain competitive advantage in the remote job market.",
+  "targetUsers": [
+    "Remote job seekers who use LinkedIn as primary job source",
+    "Power users who want analytics and reporting capabilities",
+    "Users who need performance guarantees and reliability"
+  ],
+  "inScope": [
+    "LinkedIn job scraping with stealth techniques and anti-detection measures",
+    "Alternative LinkedIn job input methods for high-risk scenarios",
+    "Advanced analytics dashboard with performance metrics and trend analysis",
+    "Automated email reporting system for job digests and analytics summaries",
+    "Enhanced application tracking with notes and timeline visualization",
+    "Cover letter polish and refinement capabilities",
+    "Performance optimization with strict latency requirements",
+    "Health monitoring and operational visibility features"
+  ],
+  "outOfScope": [
+    "Core job scraping from non-LinkedIn platforms",
+    "Basic CV management and job matching functionality",
+    "Core cover letter and CV generation features",
+    "Basic application tracking capabilities",
+    "Backup and disaster recovery systems",
+    "Cloud synchronization features",
+    "Multi-user support and account management",
+    "Integration with job boards other than LinkedIn"
+  ],
+  "objectives": [
+    "Successfully scrape LinkedIn jobs with <5% detection rate while maintaining data quality",
+    "Achieve <30 second average scraping completion time per job batch",
+    "Provide analytics dashboard with <2 second load time for all visualizations",
+    "Deliver 95% uptime for LinkedIn integration services",
+    "Generate actionable insights through weekly analytics reports with >80% user engagement",
+    "Maintain application timeline accuracy with 100% data consistency",
+    "Achieve <500ms response time for all advanced UI features"
+  ],
+  "constraints": [
+    "LinkedIn's Terms of Service and anti-scraping measures create ongoing legal and technical risks",
+    "Browser stealth techniques require constant updates as detection methods evolve",
+    "LinkedIn rate limiting requires careful request throttling and session management",
+    "Memory and CPU constraints limit concurrent scraping operations",
+    "Email delivery rates depend on third-party email service reliability",
+    "Analytics data storage grows significantly with user activity tracking",
+    "Performance requirements must be met across varying network conditions"
+  ],
+  "glossary": {
+    "Stealth Scraping": "Web scraping techniques designed to avoid detection by anti-bot systems through browser fingerprint manipulation and human-like behavior simulation",
+    "Browser Fingerprinting": "The process of collecting device and browser characteristics to create a unique identifier, which must be spoofed to avoid detection",
+    "Session Management": "Maintaining and rotating browser sessions to distribute requests and avoid triggering rate limits or detection algorithms",
+    "Detection Monitoring": "Real-time analysis of scraping responses to identify when anti-bot measures have been triggered",
+    "Application Timeline": "Chronological visualization of all activities and status changes for each job application",
+    "Job Digest": "Automated email summary of new job opportunities matching user criteria",
+    "Analytics Dashboard": "Interactive interface displaying job search performance metrics, trends, and insights",
+    "Memory Budget": "Allocated system resources for data processing and storage operations",
+    "Health Check Endpoint": "API endpoint that returns system status and operational metrics for monitoring purposes"
+  },
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "title": "Stealth Browser Anti-Detection System",
+      "description": "The system must implement comprehensive browser fingerprint spoofing and anti-detection measures to avoid LinkedIn's automated scraping detection systems. This includes spoofing user agent strings, screen resolution, timezone, language settings, WebGL renderer information, canvas fingerprints, and other browser characteristics that LinkedIn uses for bot detection. The system must rotate these fingerprints across sessions and maintain consistency within each session to simulate legitimate user behavior.",
+      "category": "technical",
+      "domain": "LinkedIn Integration",
+      "priority": "must",
+      "rationale": "LinkedIn employs sophisticated anti-bot detection systems that can identify and block automated scraping attempts, making stealth techniques essential for maintaining access to job data and achieving the target <5% detection rate.",
+      "tags": [
+        "stealth",
+        "anti-detection",
+        "browser-fingerprinting",
+        "linkedin",
+        "scraping",
+        "mvp"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Test by running scraping operations and monitoring for detection indicators such as CAPTCHAs, rate limiting responses, or blocked requests. Verify fingerprint randomization through browser analysis tools."
+    },
+    {
+      "id": "REQ-002",
+      "title": "Session Rotation and Cookie Management",
+      "description": "The system must automatically rotate browser sessions and manage cookies to distribute scraping requests across multiple authenticated contexts. Sessions must be created, maintained, and rotated on a configurable schedule to avoid pattern detection, with each session maintaining its own cookie store and authentication state. The system must support concurrent session pools and gracefully handle session expiration or invalidation.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "must",
+      "rationale": "Session rotation is critical for avoiding LinkedIn's anti-bot detection systems that track request patterns from individual browser sessions, enabling sustained scraping operations while maintaining anonymity.",
+      "tags": [
+        "stealth-scraping",
+        "session-management",
+        "anti-detection",
+        "cookies",
+        "linkedin"
+      ],
+      "dependsOn": [
+        "REQ-001"
+      ],
+      "testabilityNotes": "Verify sessions rotate on schedule, each maintains separate cookie stores, and scraping continues seamlessly across session changes"
+    },
+    {
+      "id": "REQ-003",
+      "title": "Human-Like Behavior Pattern Simulation",
+      "description": "The system must simulate realistic human browsing patterns including randomized delays between actions (2-8 seconds), natural scrolling behaviors with variable speeds and pause points, realistic mouse movement trajectories, and human-like typing patterns with variable keystroke timing. All timing and movement parameters must be configurable and use realistic probability distributions to avoid predictable patterns.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "must",
+      "rationale": "Human behavior simulation is essential for bypassing LinkedIn's behavioral analysis systems that detect automated scraping through timing patterns, mouse movements, and interaction sequences.",
+      "tags": [
+        "stealth-scraping",
+        "behavior-simulation",
+        "anti-detection",
+        "timing",
+        "mouse-movement",
+        "linkedin"
+      ],
+      "dependsOn": [
+        "REQ-001"
+      ],
+      "testabilityNotes": "Verify randomized timing falls within configured ranges, scrolling patterns vary naturally, and mouse movements follow realistic trajectories"
+    },
+    {
+      "id": "REQ-004",
+      "title": "LinkedIn Scraping Detection Monitoring",
+      "description": "The system must continuously monitor scraping operations for detection indicators including CAPTCHA challenges, rate limiting responses, account suspension warnings, and unusual response patterns. When detection is identified, the system must immediately pause scraping operations, log detailed detection events, and trigger configurable alerts to administrators. The system must also track detection rates over time and provide recommendations for stealth parameter adjustments.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "should",
+      "rationale": "Real-time detection monitoring enables rapid response to anti-bot measures, minimizing account risk and maintaining the <5% detection rate objective while providing data for continuous improvement of stealth techniques.",
+      "tags": [
+        "detection-monitoring",
+        "anti-bot",
+        "alerts",
+        "rate-limiting",
+        "captcha",
+        "linkedin"
+      ],
+      "dependsOn": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003"
+      ],
+      "testabilityNotes": "Test with known detection scenarios like CAPTCHAs and rate limits to verify alerts trigger and scraping pauses appropriately"
+    },
+    {
+      "id": "REQ-005",
+      "title": "LinkedIn Job Alert Email Parser",
+      "description": "The system must parse incoming LinkedIn job alert emails to extract job listings, company information, posting dates, and application URLs. The parser must handle multiple LinkedIn email formats, extract structured job data including title, company, location, and description, and automatically import valid job postings into the user's job pipeline. The system must validate extracted data quality and handle parsing errors gracefully.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "should",
+      "rationale": "Email parsing provides a risk-free alternative to direct scraping when LinkedIn detection rates are high, ensuring continuous job discovery while maintaining compliance with anti-scraping measures.",
+      "tags": [
+        "email-parsing",
+        "job-alerts",
+        "data-extraction",
+        "alternative-input",
+        "linkedin"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Test with various LinkedIn email formats and verify accurate extraction of job data fields and proper error handling for malformed emails"
+    },
+    {
+      "id": "REQ-006",
+      "title": "Manual LinkedIn URL Import",
+      "description": "The system must provide a user interface for manually importing LinkedIn job URLs, automatically extracting job details from the provided URLs, and adding the jobs to the user's pipeline. The system must validate URL format, handle private or expired job postings gracefully, and provide clear feedback on import success or failure. Users must be able to import single URLs or batch import multiple URLs at once.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "should",
+      "rationale": "Manual URL import serves as a fallback method when automated scraping is too risky, allowing users to continue building their job pipeline while maintaining control over which specific opportunities to pursue.",
+      "tags": [
+        "manual-import",
+        "url-processing",
+        "user-interface",
+        "alternative-input",
+        "batch-import",
+        "linkedin"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify URL validation works correctly, job data extraction succeeds for valid URLs, and error handling provides clear feedback for invalid or inaccessible URLs"
+    },
+    {
+      "id": "REQ-007",
+      "title": "Analytics Dashboard with Performance Metrics",
+      "description": "The system must provide an interactive analytics dashboard displaying application statistics, success rates, response times, interview conversion rates, and trend analysis over configurable time periods. The dashboard must include visualizations such as charts, graphs, and progress indicators, support real-time data updates, and allow users to filter and drill down into specific metrics. All dashboard components must load within the 2-second performance target.",
+      "category": "functional",
+      "domain": "Analytics & Reporting",
+      "priority": "must",
+      "rationale": "The analytics dashboard provides users with actionable insights to optimize their job search strategy and track progress toward their career goals, directly supporting the objective of generating insights with >80% user engagement.",
+      "tags": [
+        "analytics",
+        "dashboard",
+        "metrics",
+        "visualization",
+        "performance-tracking",
+        "user-interface"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify all metrics display accurately, visualizations render within performance targets, and filtering/drill-down functionality works correctly across different data sets"
+    },
+    {
+      "id": "REQ-008",
+      "title": "Daily Job Digest Email Automation",
+      "description": "The system must automatically generate and send daily email digests containing new job opportunities that match user criteria, application status updates, and key metrics from the previous day. Emails must be personalized based on user preferences, include actionable job recommendations, and provide direct links to apply or save jobs. Users must be able to configure digest frequency, content preferences, and opt-out options.",
+      "category": "functional",
+      "domain": "Analytics & Reporting",
+      "priority": "should",
+      "rationale": "Daily job digests keep users engaged with fresh opportunities and progress updates, supporting the >80% user engagement objective while providing convenient access to relevant job matches without requiring daily platform visits.",
+      "tags": [
+        "email-automation",
+        "job-digest",
+        "personalization",
+        "notifications",
+        "user-preferences"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Verify emails generate with correct job matches, personalization works properly, and user preference settings control digest content and frequency"
+    },
+    {
+      "id": "REQ-009",
+      "title": "Weekly Analytics Summary Reports",
+      "description": "The system must generate comprehensive weekly email reports containing job search performance analysis, trend identification, success rate comparisons, and actionable recommendations for improving application effectiveness. Reports must include visual charts, comparative metrics against previous periods, and personalized insights based on user activity patterns. The system must track report engagement metrics and optimize content based on user interactions.",
+      "category": "functional",
+      "domain": "Analytics & Reporting",
+      "priority": "should",
+      "rationale": "Weekly analytics reports provide deeper insights and strategic guidance for job search optimization, supporting the >80% user engagement objective by delivering high-value content that helps users improve their job search effectiveness.",
+      "tags": [
+        "analytics-reports",
+        "email-automation",
+        "insights",
+        "recommendations",
+        "engagement-tracking"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Verify reports contain accurate analytics data, visual elements render correctly in email clients, and engagement tracking captures user interactions properly"
+    },
+    {
+      "id": "REQ-010",
+      "title": "Application Notes and Conversation Tracking",
+      "description": "The system must allow users to add rich text notes, attach files, and track conversations for each job application throughout the entire application lifecycle. Notes must support formatting, tagging, and search functionality, while conversation tracking must capture email exchanges, interview details, follow-up actions, and contact information. All data must be timestamped and maintain complete audit trails for reference.",
+      "category": "functional",
+      "domain": "Application Management",
+      "priority": "must",
+      "rationale": "Comprehensive note-taking and conversation tracking enables users to maintain detailed application context, improving follow-up effectiveness and providing valuable reference material for interview preparation and relationship management.",
+      "tags": [
+        "notes",
+        "conversation-tracking",
+        "rich-text",
+        "file-attachments",
+        "search",
+        "audit-trail"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify rich text formatting works correctly, file attachments save and retrieve properly, search functionality returns relevant results, and timestamps are accurate"
+    },
+    {
+      "id": "REQ-011",
+      "title": "Application Timeline Visualization",
+      "description": "The system must display a chronological timeline visualization showing all events and status changes for each job application, including application submission, recruiter contact, interview scheduling, follow-ups, and final outcomes. The timeline must be interactive, allowing users to add events, view detailed information, and track progress visually. Timeline events must be color-coded by status and include relevant metadata such as dates, contacts, and action items.",
+      "category": "functional",
+      "domain": "Application Management",
+      "priority": "should",
+      "rationale": "Visual timeline representation helps users track application progress, identify bottlenecks in their process, and maintain awareness of pending actions, ultimately improving application management efficiency and follow-up consistency.",
+      "tags": [
+        "timeline",
+        "visualization",
+        "application-tracking",
+        "interactive",
+        "status-tracking",
+        "user-interface"
+      ],
+      "dependsOn": [
+        "REQ-010"
+      ],
+      "testabilityNotes": "Verify timeline displays events chronologically, interactive features work properly, color coding reflects correct statuses, and timeline updates when new events are added"
+    },
+    {
+      "id": "REQ-012",
+      "title": "AI-Powered Cover Letter Refinement",
+      "description": "The system must provide AI-assisted cover letter analysis and refinement suggestions, including grammar corrections, tone improvements, keyword optimization for job descriptions, and personalization recommendations. Users must be able to upload or paste cover letter text, receive specific improvement suggestions with explanations, and apply changes through an interactive editing interface with real-time feedback.",
+      "category": "functional",
+      "domain": "Application Management",
+      "priority": "should",
+      "rationale": "Cover letters significantly impact application success rates, and AI-powered refinement helps users create more compelling, tailored applications that stand out to employers and improve their chances of securing interviews.",
+      "tags": [
+        "ai",
+        "cover-letter",
+        "editing",
+        "user-facing",
+        "text-analysis"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Can be tested by submitting various cover letter samples and verifying that relevant, actionable suggestions are provided with clear explanations"
+    },
+    {
+      "id": "REQ-013",
+      "title": "Scraping Completion Time Performance Target",
+      "description": "The system must complete LinkedIn job scraping operations within an average of 30 seconds per job batch, measured from initiation to data persistence. This includes time for stealth browser initialization, session setup, page navigation, data extraction, and processing. Performance must be maintained across batches of 10-50 job listings under normal network conditions and LinkedIn response times.",
+      "category": "non-functional",
+      "domain": "Performance",
+      "priority": "must",
+      "rationale": "Fast scraping completion times are critical for user satisfaction and competitive advantage, enabling users to access fresh job opportunities quickly before other candidates. This performance target ensures the LinkedIn integration remains practical for daily job search workflows.",
+      "tags": [
+        "performance",
+        "scraping",
+        "linkedin",
+        "timing",
+        "user-experience"
+      ],
+      "dependsOn": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003"
+      ],
+      "testabilityNotes": "Measure completion time across multiple batch sizes and network conditions, with 95th percentile not exceeding 45 seconds"
+    },
+    {
+      "id": "REQ-014",
+      "title": "Dashboard Load Time Performance Target",
+      "description": "The system must load the analytics dashboard and all visualizations within 2 seconds from user navigation or refresh, including chart rendering, data aggregation, and interactive element initialization. This applies to dashboards containing up to 6 months of historical data and up to 500 job applications across all supported chart types and filters.",
+      "category": "non-functional",
+      "domain": "Performance",
+      "priority": "must",
+      "rationale": "Rapid dashboard loading ensures users can quickly access their job search analytics without frustration, encouraging regular engagement with performance insights that drive better job search outcomes. Slow dashboards reduce user adoption of analytics features.",
+      "tags": [
+        "performance",
+        "dashboard",
+        "analytics",
+        "load-time",
+        "visualization"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Test with varying data volumes and measure Time to Interactive (TTI) across different browser and network conditions"
+    },
+    {
+      "id": "REQ-015",
+      "title": "Health Check API Endpoints",
+      "description": "The system must provide RESTful health check endpoints that return comprehensive system status information including service availability, database connectivity, external API status, memory usage, and operational metrics. The endpoints must respond within 500ms and return standardized health status codes (healthy, degraded, unhealthy) with detailed component-level status information in JSON format. Critical services like LinkedIn scraping, email delivery, and database operations must be individually monitored.",
+      "category": "technical",
+      "domain": "Monitoring",
+      "priority": "must",
+      "rationale": "Health check endpoints are essential for monitoring system reliability, enabling automated alerting, and supporting the 95% uptime requirement by providing early detection of service degradation or failures.",
+      "tags": [
+        "monitoring",
+        "health-check",
+        "api",
+        "reliability",
+        "uptime",
+        "observability"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify endpoints return correct status codes and response times under normal and degraded conditions. Test that component failures are accurately reflected in health status."
+    },
+    {
+      "id": "REQ-016",
+      "title": "Centralized Error Logging and Monitoring",
+      "description": "The system must implement structured error logging with centralized collection and monitoring capabilities that capture all application errors, warnings, and critical events with contextual information including timestamps, user sessions, request IDs, and stack traces. The logging system must support log aggregation, real-time alerting for critical errors, and provide searchable interfaces for troubleshooting. Log retention must be maintained for at least 30 days with automatic archival of older logs.",
+      "category": "technical",
+      "domain": "Monitoring",
+      "priority": "should",
+      "rationale": "Centralized error logging provides operational visibility essential for maintaining system reliability, debugging issues quickly, and supporting the uptime and performance targets through proactive issue identification.",
+      "tags": [
+        "logging",
+        "monitoring",
+        "error-handling",
+        "observability",
+        "troubleshooting",
+        "alerting"
+      ],
+      "dependsOn": [
+        "REQ-015"
+      ],
+      "testabilityNotes": "Generate test errors and verify they appear in centralized logs with proper structure and context. Test alert triggering for critical error conditions."
+    },
+    {
+      "id": "REQ-017",
+      "title": "LinkedIn Service Uptime Reliability Target",
+      "description": "The system must maintain 95% uptime for all LinkedIn integration services including scraping operations, session management, and detection monitoring, measured over rolling 30-day periods. Planned maintenance windows are excluded from uptime calculations. The system must automatically recover from transient failures and provide graceful degradation when LinkedIn services are temporarily unavailable.",
+      "category": "non-functional",
+      "domain": "Performance",
+      "priority": "must",
+      "rationale": "High uptime reliability ensures users can depend on the LinkedIn integration for their job search activities without unexpected interruptions. Consistent availability builds user trust and prevents job seekers from missing time-sensitive opportunities due to service outages.",
+      "tags": [
+        "reliability",
+        "uptime",
+        "linkedin",
+        "availability",
+        "monitoring"
+      ],
+      "dependsOn": [
+        "REQ-001",
+        "REQ-015"
+      ],
+      "testabilityNotes": "Monitor service availability through health check endpoints and track recovery times from failures"
+    },
+    {
+      "id": "REQ-018",
+      "title": "Memory Budget Documentation",
+      "description": "The system must maintain comprehensive documentation of memory usage requirements and resource allocation for each system component including LinkedIn scraping operations, analytics data processing, browser sessions, cached data, and background tasks. Documentation must specify memory limits, peak usage scenarios, cleanup procedures, and monitoring thresholds for each component. The documentation must be updated whenever significant changes are made to system architecture or data processing workflows.",
+      "category": "technical",
+      "domain": "Documentation",
+      "priority": "should",
+      "rationale": "Memory budget documentation is crucial for capacity planning, preventing resource exhaustion during peak operations, and ensuring system stability as analytics data storage grows significantly with user activity tracking.",
+      "tags": [
+        "documentation",
+        "memory-management",
+        "resource-planning",
+        "capacity",
+        "performance"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify documentation accuracy by comparing documented memory budgets with actual usage during load testing. Ensure documentation is updated with system changes."
+    },
+    {
+      "id": "REQ-019",
+      "title": "LinkedIn Terms of Service Legal Disclaimer",
+      "description": "The system must display a prominent legal disclaimer informing users about potential risks of LinkedIn scraping activities, including account suspension, legal implications, and Terms of Service violations. The disclaimer must be shown before users enable LinkedIn integration features, require explicit acknowledgment through checkbox confirmation, and remain accessible through a dedicated legal information section with clear language about user responsibility and liability.",
+      "category": "functional",
+      "domain": "Legal Compliance",
+      "priority": "must",
+      "rationale": "LinkedIn's Terms of Service explicitly prohibit automated data collection, making it essential to inform users of legal risks and ensure they understand their responsibility when choosing to use scraping features.",
+      "tags": [
+        "legal",
+        "disclaimer",
+        "linkedin",
+        "terms-of-service",
+        "user-consent",
+        "compliance"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify disclaimer appears before LinkedIn features are accessible, requires user acknowledgment, and contains all required legal language"
+    },
+    {
+      "id": "REQ-020",
+      "title": "LinkedIn Rate Limiting Compliance",
+      "description": "The system must implement intelligent request throttling and rate limiting mechanisms to comply with LinkedIn's usage restrictions and avoid triggering anti-abuse measures. This includes implementing exponential backoff for failed requests, distributing requests across time windows, respecting HTTP 429 responses, and maintaining request queues with priority handling. The system must monitor request frequency and automatically adjust throttling parameters based on response patterns and detected rate limiting signals.",
+      "category": "technical",
+      "domain": "LinkedIn Integration",
+      "priority": "must",
+      "rationale": "Compliance with LinkedIn's rate limiting is essential for maintaining access to the platform and avoiding account suspension, which would compromise the core job scraping functionality and user value proposition.",
+      "tags": [
+        "rate-limiting",
+        "throttling",
+        "linkedin",
+        "compliance",
+        "anti-abuse",
+        "request-management"
+      ],
+      "dependsOn": [
+        "REQ-002",
+        "REQ-003"
+      ],
+      "testabilityNotes": "Test by monitoring request patterns and verifying throttling behavior when rate limits are approached. Simulate rate limiting responses to ensure proper backoff handling."
+    },
+    {
+      "id": "REQ-021",
+      "title": "Data Quality Validation for Scraped Jobs",
+      "description": "The system must validate all scraped LinkedIn job data for completeness, accuracy, and format consistency before storage, including verification of required fields (title, company, location, description), duplicate detection across multiple scraping sessions, data sanitization to remove malformed content, and rejection of jobs with insufficient or corrupted information. Validation results must be logged with specific error details and retry mechanisms for failed validations.",
+      "category": "functional",
+      "domain": "LinkedIn Integration",
+      "priority": "should",
+      "rationale": "High-quality job data is essential for user trust and decision-making, and validation prevents corrupted or incomplete job listings from cluttering the user interface and degrading the job search experience.",
+      "tags": [
+        "data-quality",
+        "validation",
+        "linkedin",
+        "scraping",
+        "data-integrity",
+        "error-handling"
+      ],
+      "dependsOn": [
+        "REQ-001"
+      ],
+      "testabilityNotes": "Test with various scraped data samples including incomplete, malformed, and duplicate job listings to verify validation rules are properly applied"
+    },
+    {
+      "id": "REQ-022",
+      "title": "Email Service Integration for Reports",
+      "description": "The system must integrate with a reliable third-party email service provider (such as SendGrid, Amazon SES, or Mailgun) to handle automated delivery of daily job digests and weekly analytics reports. The integration must support email templating, batch sending, delivery tracking, bounce handling, and unsubscribe management. The system must maintain delivery logs and provide retry mechanisms for failed deliveries with exponential backoff to ensure high delivery rates.",
+      "category": "technical",
+      "domain": "Analytics & Reporting",
+      "priority": "must",
+      "rationale": "Professional email service integration is necessary to ensure reliable delivery of automated reports, maintain sender reputation, and provide the user engagement required for the >80% weekly analytics report engagement target.",
+      "tags": [
+        "email",
+        "integration",
+        "reporting",
+        "delivery",
+        "automation",
+        "third-party"
+      ],
+      "dependsOn": [
+        "REQ-008",
+        "REQ-009"
+      ],
+      "testabilityNotes": "Test email delivery success rates, template rendering, and failure handling. Verify delivery tracking and bounce management functionality."
+    },
+    {
+      "id": "REQ-023",
+      "title": "Advanced UI Response Time Performance Target",
+      "description": "The system must ensure all advanced UI features including application notes editing, timeline visualization interactions, and AI cover letter refinement respond within 500ms of user action. This includes form submissions, dynamic content loading, file uploads up to 5MB, and interactive chart manipulations. Response time is measured from user input to visible UI feedback or completion.",
+      "category": "non-functional",
+      "domain": "Performance",
+      "priority": "should",
+      "rationale": "Responsive advanced features create a smooth, professional user experience that encourages adoption of productivity-enhancing tools. Fast response times reduce user frustration and support efficient job application management workflows.",
+      "tags": [
+        "performance",
+        "ui",
+        "response-time",
+        "user-experience",
+        "interactivity"
+      ],
+      "dependsOn": [
+        "REQ-010",
+        "REQ-011",
+        "REQ-012"
+      ],
+      "testabilityNotes": "Measure response times for each feature type under normal load conditions and validate consistent performance across different user interaction patterns"
+    },
+    {
+      "id": "REQ-024",
+      "title": "Analytics Data Storage Optimization",
+      "description": "The system must implement optimized data storage and retrieval mechanisms for analytics data that grows with user activity tracking, including efficient indexing strategies, data partitioning by time periods, automated data archival for historical records, and query optimization for dashboard performance. The system must support data compression for historical analytics data and implement caching layers for frequently accessed metrics to maintain the 2-second dashboard load time requirement as data volume scales.",
+      "category": "technical",
+      "domain": "Analytics & Reporting",
+      "priority": "should",
+      "rationale": "Storage optimization is critical for maintaining dashboard performance as analytics data grows significantly with user activity, ensuring long-term scalability while meeting the 2-second load time performance target.",
+      "tags": [
+        "storage",
+        "optimization",
+        "analytics",
+        "performance",
+        "scalability",
+        "caching",
+        "indexing"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Test query performance with large datasets and verify caching effectiveness. Monitor storage growth patterns and archival process functionality."
+    },
+    {
+      "id": "REQ-025",
+      "title": "Scraping Detection Rate Performance Target",
+      "description": "The system must maintain a LinkedIn scraping detection rate below 5% across all scraping operations, measured as the percentage of scraping sessions that trigger LinkedIn's anti-bot measures or result in account restrictions. Detection events include CAPTCHAs, rate limiting responses, temporary blocks, or account warnings. The system must achieve this target while maintaining data quality and completeness standards.",
+      "category": "non-functional",
+      "domain": "LinkedIn Integration",
+      "priority": "must",
+      "rationale": "Low detection rates are essential for sustainable LinkedIn integration, protecting user accounts from restrictions and ensuring consistent access to job opportunities. High detection rates would compromise the core value proposition and create legal and operational risks.",
+      "tags": [
+        "detection",
+        "stealth",
+        "linkedin",
+        "anti-bot",
+        "scraping",
+        "reliability"
+      ],
+      "dependsOn": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003",
+        "REQ-004"
+      ],
+      "testabilityNotes": "Track detection events through monitoring systems and measure detection rate over rolling 7-day periods across different user accounts and usage patterns"
+    }
+  ],
+  "createdAt": "2024-12-19T10:30:00Z",
+  "updatedAt": "2026-02-10T05:34:42.891Z"
+}

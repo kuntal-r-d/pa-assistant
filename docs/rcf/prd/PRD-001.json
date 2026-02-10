@@ -1,0 +1,414 @@
+{
+  "prdId": "PRD-001",
+  "productName": "Core Job Assistant MVP",
+  "version": "2.0.0",
+  "status": "draft",
+  "executiveSummary": "Core MVP of an intelligent, locally-hosted job search assistant covering essential job input methods, profile management, AI-powered matching, content generation, and application tracking. Provides foundation for job search automation with privacy-first architecture and zero infrastructure cost. LinkedIn integration covered in PRD-002, backup/operations in PRD-003.",
+  "problemStatement": "Remote job seekers waste 15-20 hours/week manually searching across fragmented platforms, resulting in 80% of relevant jobs being missed, 2-5% response rates from generic applications, and 30% of applications lost due to poor tracking. Existing solutions either lack intelligent matching or cost $136/month. This core MVP addresses the fundamental job input, matching, content generation, and tracking needs while maintaining zero infrastructure cost.",
+  "targetUsers": [
+    "Remote job seekers (software developers, tech professionals)",
+    "Career changers looking for remote opportunities",
+    "Freelancers seeking full-time remote positions",
+    "International candidates targeting US/UK/EU remote jobs"
+  ],
+  "inScope": [
+    "Multiple job input methods (URL import, text paste, manual form, basic scraping)",
+    "Multiple CV/profile variant management",
+    "AI-powered job-candidate matching with customizable preferences",
+    "Cover letter and CV generation using hybrid AI (Ollama + Claude)",
+    "Content editing and version control",
+    "Application lifecycle tracking with Kanban board",
+    "In-app notification system",
+    "Docker-based local deployment",
+    "Error handling with circuit breakers and retry logic"
+  ],
+  "outOfScope": [
+    "LinkedIn integration and stealth scraping (covered in PRD-002)",
+    "Analytics dashboards and email reports (covered in PRD-002)",
+    "Backup and disaster recovery features (covered in PRD-003)",
+    "Cloud sync and automated backup workflows (covered in PRD-003)",
+    "Interview preparation assistant",
+    "Salary negotiation coaching",
+    "Multi-user support or team features",
+    "Mobile application",
+    "Chrome browser extension",
+    "Recruiter marketplace or job board creation"
+  ],
+  "objectives": [
+    "OBJ-001: Reduce job search time from 15 hours/week to 3 hours/week (80% reduction) - Target: ≤3 hours/week",
+    "OBJ-002: Increase job discovery from 50 jobs/week to 200+ jobs/week - Target: ≥200 jobs/week",
+    "OBJ-003: Improve application response rate from 2-5% to 10%+ - Target: ≥10%",
+    "OBJ-004: Maintain zero infrastructure cost with <$5/month AI API budget - Target: <$5/month"
+  ],
+  "constraints": [
+    "CON-001 (technical): Must run on 8GB RAM minimum with documented allocations: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API 256MB, LiteLLM 256MB, Web UI 128MB - Impact: Limits LLM model size to 7B quantized, requires memory monitoring at 80%/90% thresholds",
+    "CON-002 (budget): Zero infrastructure cost, $5/month AI budget - Impact: Must use free local LLMs for most tasks",
+    "CON-003 (legal): Must respect job board Terms of Service - Impact: Implement rate limiting, respect robots.txt",
+    "CON-004 (privacy): All user data must stay local - Impact: No cloud storage; local PostgreSQL only"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "title": "Multi-Platform Job Scraping",
+      "description": "System shall automatically scrape job listings from multiple platforms (RemoteOK, WeWorkRemotely, Himalayas, Indeed) on a daily schedule, handling rate limits gracefully with circuit breakers and exponential backoff.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Core value proposition - automated job discovery eliminates manual searching"
+    },
+    {
+      "id": "REQ-002",
+      "title": "Job Data Extraction",
+      "description": "System shall extract structured data from job listings including: job title, company name, location, salary (if available), full description, required technologies, posted date, and application URL.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Structured data enables filtering, matching, and analytics"
+    },
+    {
+      "id": "REQ-003",
+      "title": "Job Deduplication",
+      "description": "System shall identify and remove duplicate job listings across platforms using title+company matching (case-insensitive), keeping the version with the most complete data.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Prevents user confusion and wasted effort on duplicate applications"
+    },
+    {
+      "id": "REQ-004",
+      "title": "Job Normalization",
+      "description": "System shall normalize extracted job data including: country name standardization, technology name mapping (React.js → React), salary conversion to USD, and experience level categorization.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "should",
+      "rationale": "Normalized data enables accurate filtering and comparison"
+    },
+    {
+      "id": "REQ-005",
+      "title": "Job Filtering",
+      "description": "System shall filter jobs based on user preferences: target countries (OR logic), technologies (must match ≥1), salary range (min/max), remote-only toggle, and experience level.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Filtering reduces noise and surfaces relevant opportunities"
+    },
+    {
+      "id": "REQ-006",
+      "title": "CV Upload and Parsing",
+      "description": "System shall accept CV uploads in PDF and DOCX formats (max 5MB), extract full text with 95%+ accuracy, and identify technical skills, experience duration, and education.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "must",
+      "rationale": "CV data is foundational for matching and content generation"
+    },
+    {
+      "id": "REQ-007",
+      "title": "User Profile Management",
+      "description": "System shall allow users to configure job search preferences including: target countries, preferred technologies, salary expectations, experience level, and remote-only preference.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "must",
+      "rationale": "Profile enables personalized job discovery and matching"
+    },
+    {
+      "id": "REQ-008",
+      "title": "Hybrid Match Scoring",
+      "description": "System shall calculate a match score (0-100%) for each job using a hybrid approach: 30% TF-IDF text similarity, 40% skill overlap, 20% experience match, 10% semantic embeddings.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "must",
+      "rationale": "Hybrid approach balances keyword matching with semantic understanding"
+    },
+    {
+      "id": "REQ-009",
+      "title": "Skill Gap Analysis",
+      "description": "System shall analyze each job to identify: matched skills (in CV AND job), missing skills (in job NOT in CV), and extra skills (in CV NOT in job), with fuzzy matching for synonyms.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "must",
+      "rationale": "Gap analysis provides actionable insights for skill development"
+    },
+    {
+      "id": "REQ-010",
+      "title": "AI-Powered Gap Analysis Report",
+      "description": "System shall use local LLM (Ollama) to generate detailed gap analysis including: strengths (3-5 points), missing skills (3-5 points), improvement suggestions (3-5 actionable items), and overall assessment.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "should",
+      "rationale": "AI analysis provides deeper insights than algorithmic matching alone"
+    },
+    {
+      "id": "REQ-011",
+      "title": "Cover Letter Generation",
+      "description": "System shall generate 3 cover letter variants using local LLM (Ollama): Conservative (professional, formal), Aggressive (bold, confident), and Story-driven (narrative alignment). Each 300-400 words.",
+      "category": "functional",
+      "domain": "Content Generation",
+      "priority": "must",
+      "rationale": "Multiple variants give users choice based on company culture"
+    },
+    {
+      "id": "REQ-012",
+      "title": "CV Tailoring",
+      "description": "System shall generate tailored CV versions that reorder bullet points by relevance to the job, add a 'Key Skills Match' section, and highlight matching technologies.",
+      "category": "functional",
+      "domain": "Content Generation",
+      "priority": "should",
+      "rationale": "Tailored CVs improve ATS compatibility and recruiter attention"
+    },
+    {
+      "id": "REQ-013",
+      "title": "Hybrid AI Cost Management",
+      "description": "System shall track AI usage (Ollama: unlimited, Claude: budget-limited) and alert users when approaching the monthly budget ($10), defaulting to Ollama-only when budget exceeded.",
+      "category": "functional",
+      "domain": "Content Generation",
+      "priority": "should",
+      "rationale": "Cost control ensures sustainability of the zero-cost model"
+    },
+    {
+      "id": "REQ-014",
+      "title": "Application Status Management",
+      "description": "System shall track application lifecycle with statuses: Saved, Reviewing, Applied, Interviewing, Rejected, Offered. Status changes must record timestamps and can only move forward (except Rejected from any).",
+      "category": "functional",
+      "domain": "Application Tracking",
+      "priority": "must",
+      "rationale": "Status tracking prevents lost applications and enables follow-ups"
+    },
+    {
+      "id": "REQ-015",
+      "title": "Follow-Up Reminders",
+      "description": "System shall automatically send email reminders 7 days after 'Applied' status, with options to snooze (3/7/14 days) or dismiss. Reminders cancelled if status changes to Interviewing/Rejected.",
+      "category": "functional",
+      "domain": "Application Tracking",
+      "priority": "must",
+      "rationale": "Automated reminders improve follow-up rates and response rates"
+    },
+    {
+      "id": "REQ-016",
+      "title": "Job List Dashboard",
+      "description": "System shall display discovered jobs in a card layout with match score, technologies, salary, and quick actions. Support sorting by match %, date, salary and filtering by multiple criteria.",
+      "category": "functional",
+      "domain": "User Interface",
+      "priority": "must",
+      "rationale": "Dashboard is the primary user interface for job discovery"
+    },
+    {
+      "id": "REQ-017",
+      "title": "Job Detail View",
+      "description": "System shall display comprehensive job information including full description, requirements checklist (matched/missing), gap analysis, cover letter variants, and tailored CV preview.",
+      "category": "functional",
+      "domain": "User Interface",
+      "priority": "must",
+      "rationale": "Detail view enables informed application decisions"
+    },
+    {
+      "id": "REQ-018",
+      "title": "Kanban Application Board",
+      "description": "System shall provide a Kanban-style board with columns for each application status, supporting drag-and-drop status changes and showing card count per column.",
+      "category": "functional",
+      "domain": "User Interface",
+      "priority": "must",
+      "rationale": "Kanban provides intuitive application pipeline management"
+    },
+    {
+      "id": "REQ-019",
+      "title": "Daily Automated Scraping",
+      "description": "System shall execute automated scraping workflow daily at 8:00 AM via n8n, completing within 60 minutes, with automatic retry on failure and email alert if zero jobs scraped.",
+      "category": "functional",
+      "domain": "Automation",
+      "priority": "must",
+      "rationale": "Scheduled automation ensures consistent job discovery"
+    },
+    {
+      "id": "REQ-020",
+      "title": "Automated Match Scoring",
+      "description": "System shall automatically calculate match scores for all new jobs after daily scraping completes, processing in batches of 10 to prevent resource overload.",
+      "category": "functional",
+      "domain": "Automation",
+      "priority": "must",
+      "rationale": "Automated scoring enables immediate filtering and ranking"
+    },
+    {
+      "id": "REQ-021",
+      "title": "Circuit Breaker Pattern",
+      "description": "System shall implement circuit breakers for each scraper: 3 consecutive failures trigger 1-hour cooldown, health check before scraping, and graceful degradation when platform unavailable.",
+      "category": "functional",
+      "domain": "System Reliability",
+      "priority": "must",
+      "rationale": "Circuit breakers prevent cascade failures and resource waste"
+    },
+    {
+      "id": "REQ-022",
+      "title": "Retry Logic with Backoff",
+      "description": "System shall implement retry logic with exponential backoff (1s, 2s, 4s, 8s, max 30s) for transient failures, with configurable max retry count (default: 3).",
+      "category": "functional",
+      "domain": "System Reliability",
+      "priority": "must",
+      "rationale": "Retry logic handles transient network/API failures gracefully"
+    },
+    {
+      "id": "REQ-023",
+      "title": "Docker Containerization",
+      "description": "System shall be deployable via Docker Compose using pnpm workspaces monorepo architecture with apps/ directory (api-server, job-crawler, web-ui, n8n-workflows) and packages/@jobsearch/ directory (types, database, config, logger, ai-client, common). Containers include: api-server, job-crawler, web-ui, PostgreSQL, Redis, Ollama, LiteLLM, n8n. Single docker-compose up command to start.",
+      "category": "non-functional",
+      "domain": "Infrastructure",
+      "priority": "must",
+      "rationale": "Docker with pnpm workspaces ensures reproducible deployment and clear package boundaries for future microservice extraction"
+    },
+    {
+      "id": "REQ-024",
+      "title": "Security: Local Data Only",
+      "description": "System shall store all user data (CV, preferences, applications) locally in PostgreSQL with no external transmission except optional Claude API calls.",
+      "category": "non-functional",
+      "domain": "Security",
+      "priority": "must",
+      "rationale": "Privacy-first architecture protects sensitive job search data"
+    },
+    {
+      "id": "REQ-025",
+      "title": "Security: API Key Management",
+      "description": "System shall store API keys (Anthropic, email) in environment variables, never in code or logs. Provide .env.example with documentation.",
+      "category": "non-functional",
+      "domain": "Security",
+      "priority": "must",
+      "rationale": "Secure key management prevents credential leakage"
+    },
+    {
+      "id": "REQ-026",
+      "title": "Usability: Single-User Setup",
+      "description": "System shall support single-user deployment with one-time profile setup. No user authentication required - local deployment trusts localhost connections. Internal service-to-service communication uses environment-based shared secrets, not JWT tokens.",
+      "category": "non-functional",
+      "domain": "Usability",
+      "priority": "must",
+      "rationale": "Simple setup reduces friction for personal use; local-trust model appropriate for single-user deployment"
+    },
+    {
+      "id": "REQ-027",
+      "title": "TypeScript Monorepo Architecture",
+      "description": "System shall use pnpm workspaces for monorepo package management (no Turborepo). Applications in apps/ directory: api-server, job-crawler, web-ui, n8n-workflows. Shared packages in packages/@jobsearch/: types, database, config, logger, ai-client, common. TypeScript strict mode with ESLint and Prettier enforcement. Clear package boundaries enable future microservice extraction.",
+      "category": "non-functional",
+      "domain": "Architecture",
+      "priority": "must",
+      "rationale": "Monorepo architecture provides code sharing, type safety, and clear boundaries for future microservice conversion"
+    },
+    {
+      "id": "REQ-028",
+      "title": "Manual Job URL Import",
+      "description": "System shall accept manual job URL imports from any platform (Indeed, Glassdoor, RemoteOK, WeWorkRemotely, AngelList, company career pages), automatically fetch and extract job details (title, company, description, requirements, salary, location), normalize through standard pipeline, and handle failed/blocked URLs gracefully with error messages.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Manual URL import provides flexible job input when automated scraping is unavailable or insufficient"
+    },
+    {
+      "id": "REQ-029",
+      "title": "Manual Job Description Paste",
+      "description": "System shall accept raw job description text (from email, WhatsApp, PDF, etc.), use NLP/AI to parse and extract structured fields (title, company, requirements, skills, salary range, location, remote status), enter parsed data through normalization pipeline, and allow user review and correction of parsed fields before saving.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Text paste handles job descriptions from sources that don't have accessible URLs"
+    },
+    {
+      "id": "REQ-030",
+      "title": "Manual Job Form Entry",
+      "description": "System shall provide structured form for manual job entry with fields: title, company, description, requirements, salary range, location, remote status, URL (optional), deadline (optional). Job enters system and becomes available for matching, cover letter generation, and tracking. Serves as fallback when URL import or text paste don't capture details correctly.",
+      "category": "functional",
+      "domain": "Job Discovery",
+      "priority": "must",
+      "rationale": "Manual form entry ensures all jobs can be captured regardless of source or parsing limitations"
+    },
+    {
+      "id": "REQ-031",
+      "title": "Multiple CV/Profile Variants",
+      "description": "System shall support multiple CV variants (e.g., 'Frontend CV', 'Fullstack CV', 'Data Engineering CV'), independently parse each variant to create separate skill profiles, allow user selection of CV variant for specific job matching, support default CV variant for automated matching, and enable independent creation, update, and deletion of variants.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "must",
+      "rationale": "Multiple CV variants enable targeted job applications for different career paths or skill focuses"
+    },
+    {
+      "id": "REQ-032",
+      "title": "Match Preference Customization",
+      "description": "System shall allow user definition of matching preference weights across dimensions (skills match, remote work preference, salary range, company size, industry, experience level), save preferences to user profile for all automated match scoring, support preference presets (e.g., 'Remote Priority', 'Salary Priority'), and reflect user preferences in match scores beyond raw skill overlap.",
+      "category": "functional",
+      "domain": "Intelligent Matching",
+      "priority": "should",
+      "rationale": "Customizable preferences ensure match scores align with individual user priorities and career goals"
+    },
+    {
+      "id": "REQ-033",
+      "title": "Content Editor and Versioning",
+      "description": "System shall provide rich text editor for generated cover letters and tailored CVs, create new version on each save while preserving previous versions, support version history viewing, version comparison, and reversion to previous versions, enable export as plain text format, and link content versions to specific jobs they were generated for.",
+      "category": "functional",
+      "domain": "Content Generation",
+      "priority": "must",
+      "rationale": "Content editing and versioning allows refinement of AI-generated content while maintaining audit trail"
+    },
+    {
+      "id": "REQ-034",
+      "title": "Manual Application Status Trigger",
+      "description": "System shall provide explicit user action (button/toggle) to mark job as 'Applied', capture application metadata (date, CV variant used, cover letter version used) when marked applied, trigger follow-up reminder scheduling on status change, automatically move applied jobs to 'Applied' column in Kanban board, and support manual status changes to 'Bookmarked', 'Interviewing', 'Offered', 'Rejected', 'Withdrawn'.",
+      "category": "functional",
+      "domain": "Application Tracking",
+      "priority": "must",
+      "rationale": "Explicit application tracking ensures accurate status management and enables proper follow-up workflows"
+    },
+    {
+      "id": "REQ-035",
+      "title": "In-App Notification System",
+      "description": "System shall provide notification center in dashboard showing alerts and updates, support notification types (follow-up reminders, new matched jobs above threshold, scraping completion/errors, application deadline approaching), maintain dismissible notifications with read/unread status, provide notification preferences for enabling/disabling specific types, and persist notifications until dismissed.",
+      "category": "functional",
+      "domain": "User Interface",
+      "priority": "must",
+      "rationale": "In-app notifications keep users informed of important events without relying on external email systems"
+    }
+  ],
+  "glossary": {
+    "TF-IDF": "Term Frequency-Inverse Document Frequency - a text similarity algorithm",
+    "Ollama": "Open-source local LLM runtime for running models like Mistral and Llama",
+    "n8n": "Open-source workflow automation tool similar to Zapier",
+    "Circuit Breaker": "Design pattern that prevents cascading failures by stopping requests to failing services",
+    "ATS": "Applicant Tracking System - software used by companies to manage job applications",
+    "Kanban": "Visual project management method using cards and columns",
+    "NLP": "Natural Language Processing - AI technique for understanding and processing human language",
+    "Rich Text Editor": "Text editing interface that allows formatting (bold, italic, lists) beyond plain text"
+  },
+  "createdAt": "2026-02-08T09:00:00Z",
+  "updatedAt": "2026-02-10T05:29:16.550Z",
+  "_changesSummary": "Major restructuring to Core Job Assistant MVP: Updated title and scope, removed 39 requirements (moved to PRD-002 and PRD-003), renumbered remaining 27 requirements, added 8 new core requirements for manual job input, CV variants, match customization, content editing, and notifications",
+  "_removed": [
+    "REQ-012",
+    "REQ-016",
+    "REQ-018",
+    "REQ-022",
+    "REQ-023",
+    "REQ-024",
+    "REQ-029",
+    "REQ-030",
+    "REQ-031",
+    "REQ-032",
+    "REQ-034",
+    "REQ-035",
+    "REQ-036",
+    "REQ-037",
+    "REQ-041",
+    "REQ-042",
+    "REQ-043",
+    "REQ-044",
+    "REQ-045",
+    "REQ-046",
+    "REQ-047",
+    "REQ-048",
+    "REQ-049",
+    "REQ-050",
+    "REQ-051",
+    "REQ-052",
+    "REQ-053",
+    "REQ-054",
+    "REQ-055",
+    "REQ-056",
+    "REQ-057",
+    "REQ-058",
+    "REQ-059"
+  ]
+}
