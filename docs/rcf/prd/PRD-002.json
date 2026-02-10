@@ -1,576 +1,1006 @@
 {
   "prdId": "PRD-002",
-  "productName": "LinkedIn Integration & Advanced Features",
+  "productName": "Project Opportunity Assistant",
   "version": "1.0.0",
   "status": "draft",
-  "executiveSummary": "The LinkedIn Integration & Advanced Features product extends the Core Job Assistant MVP (PRD-001) with specialized LinkedIn job scraping capabilities and advanced user features. LinkedIn represents the primary job source for remote workers, but accessing this data requires sophisticated stealth techniques to avoid detection by LinkedIn's anti-scraping systems. This product implements browser fingerprint injection, human-like behavior simulation, session management, and real-time detection monitoring to safely extract job listings while providing fallback methods when scraping becomes too risky. The LinkedIn integration is inherently high-risk due to the platform's aggressive anti-bot measures, requiring constant adaptation and monitoring to maintain functionality. Beyond LinkedIn integration, this product introduces power-user features including comprehensive analytics dashboards, automated email reporting, and enhanced application tracking capabilities. Users gain visibility into their job search performance through detailed statistics, success rate analysis, and trend visualization. The analytics system generates daily job digests and weekly performance summaries delivered via email, helping users optimize their job search strategy. Advanced UI features like application notes, timeline visualization, and cover letter refinement tools provide a more sophisticated user experience for serious job seekers. Performance optimization ensures the system meets strict latency requirements across all features, from job scraping completion times to dashboard responsiveness. Health monitoring and centralized error logging provide operational visibility, while comprehensive documentation covers memory budgeting and legal considerations around LinkedIn data extraction.",
-  "problemStatement": "Remote job seekers heavily rely on LinkedIn for job opportunities, but the platform's anti-scraping measures make automated job collection extremely challenging and risky. Additionally, power users need advanced analytics, reporting, and tracking capabilities beyond basic job application management to optimize their job search effectiveness and maintain competitive advantage in the remote job market.",
+  "executiveSummary": "The Project Opportunity Assistant is an AI-powered freelance project discovery and proposal management system designed specifically for solo entrepreneurs and JavaScript/TypeScript developers seeking remote project-based work. The system addresses the critical inefficiency where freelancers waste 10+ hours weekly manually browsing fragmented platforms, writing repetitive proposals, and missing 70% of relevant opportunities due to timing and platform fragmentation. By providing intelligent project-candidate matching, AI-powered proposal generation, and competitive pricing intelligence, the system transforms the freelance opportunity discovery process from a time-consuming manual task into an efficient, data-driven workflow.\n\nThe system operates through a comprehensive project pipeline that begins with manual project input from major freelance platforms (Upwork, Freelancer.com, Contra, Fiverr Pro, PeoplePerHour, Guru.com) and progresses through intelligent matching, proposal generation, and bid tracking. The matching algorithm uses project-specific weights emphasizing skill overlap (35%), budget alignment (25%), and project complexity matching (20%), while the proposal generation system creates both short (200-400 words) and detailed proposals with multiple variants tailored to different client preferences. The pricing intelligence system provides three tiers of guidance, from simple budget-based suggestions to advanced win/loss analytics that learn optimal pricing strategies over time.\n\nTargeting JavaScript/TypeScript developers from South Asia who face geographic restrictions on many platforms, the system prioritizes freelance platforms with global accessibility and high technical project volume. The solution serves solo AI-powered entrepreneurs who leverage AI tools for service delivery, technical consultants seeking contract opportunities, and full-stack developers pursuing both employment and freelance work simultaneously. The system maintains complete user privacy through local deployment while providing enterprise-level functionality for individual professionals.\n\nArchitecturally, the Project Opportunity Assistant operates as an independent system within a multi-PRD ecosystem, sharing infrastructure with the Core Job Assistant (PRD-001) while maintaining separate business logic and data pipelines. Built on the same loosely-coupled plugin architecture using Ports and Adapters pattern, the system supports future expansion to automated scraping, social media monitoring, and integration with a standalone Proposal Builder MCP service. This foundation ensures zero infrastructure costs, complete data privacy, and seamless scalability as the freelance opportunity landscape evolves.",
+  "problemStatement": "Solo AI-powered freelancers and one-person companies waste 10+ hours/week manually browsing fragmented freelance platforms, writing repetitive proposals, and tracking bid statuses. They miss 70% of relevant project opportunities due to timing and platform fragmentation. JavaScript/TypeScript developers from South Asia face additional challenges finding remote-friendly platforms without geographic restrictions. Existing solutions lack intelligent project-candidate matching, AI-powered proposal generation, and competitive pricing intelligence.",
   "targetUsers": [
-    "Remote job seekers who use LinkedIn as primary job source",
-    "Power users who want analytics and reporting capabilities",
-    "Users who need performance guarantees and reliability"
+    "Solo AI-powered entrepreneurs running one-person companies using AI tools to deliver work",
+    "JavaScript/TypeScript freelancers seeking remote project-based work",
+    "South Asian developers targeting global remote freelance opportunities without geographic restrictions",
+    "Technical consultants seeking contract opportunities on freelance platforms",
+    "Full-stack developers pursuing both employment and freelance projects simultaneously"
   ],
   "inScope": [
-    "LinkedIn job scraping with stealth techniques and anti-detection measures",
-    "Alternative LinkedIn job input methods for high-risk scenarios",
-    "Advanced analytics dashboard with performance metrics and trend analysis",
-    "Automated email reporting system for job digests and analytics summaries",
-    "Enhanced application tracking with notes and timeline visualization",
-    "Cover letter polish and refinement capabilities",
-    "Performance optimization with strict latency requirements",
-    "Health monitoring and operational visibility features"
+    "Manual project opportunity input system supporting URL import, text paste, and form entry",
+    "Integration with major freelance platforms prioritizing South Asian developer accessibility",
+    "AI-powered project-candidate matching with project-specific weighting algorithm",
+    "Three-tier pricing intelligence system from basic budget analysis to advanced win/loss learning",
+    "AI-powered proposal generation supporting short and detailed proposal variants",
+    "Comprehensive bid and proposal tracking pipeline separate from job applications",
+    "Project-specific dashboard and user interface with advanced filtering and sorting",
+    "Unified search capabilities across both projects and jobs",
+    "Plugin-ready architecture supporting future automated scraping and social media monitoring",
+    "Event-driven communication system using BullMQ for scalable processing",
+    "Telegram Bot integration for notifications and quick project updates",
+    "Shared infrastructure integration with PRD-001 while maintaining independent business logic"
   ],
   "outOfScope": [
-    "Core job scraping from non-LinkedIn platforms",
-    "Basic CV management and job matching functionality",
-    "Core cover letter and CV generation features",
-    "Basic application tracking capabilities",
-    "Backup and disaster recovery systems",
-    "Cloud synchronization features",
-    "Multi-user support and account management",
-    "Integration with job boards other than LinkedIn"
+    "Automated platform scraping capabilities",
+    "Social media monitoring for project opportunities",
+    "Payment processing and invoicing functionality",
+    "Client relationship management (CRM) features",
+    "Project delivery and management tools",
+    "Time tracking capabilities",
+    "Contract and legal document generation",
+    "Portfolio website development",
+    "Full Proposal Builder MCP service",
+    "Job search features covered by PRD-001",
+    "LinkedIn integration covered by PRD-003",
+    "Backup and disaster recovery covered by PRD-004",
+    "Direct messaging to clients on platforms",
+    "Multi-currency payment tracking",
+    "Team or subcontractor management",
+    "Interview preparation tools",
+    "Chrome browser extension"
   ],
   "objectives": [
-    "Successfully scrape LinkedIn jobs with <5% detection rate while maintaining data quality",
-    "Achieve <30 second average scraping completion time per job batch",
-    "Provide analytics dashboard with <2 second load time for all visualizations",
-    "Deliver 95% uptime for LinkedIn integration services",
-    "Generate actionable insights through weekly analytics reports with >80% user engagement",
-    "Maintain application timeline accuracy with 100% data consistency",
-    "Achieve <500ms response time for all advanced UI features"
+    "Reduce time spent on project discovery from 10+ hours to under 2 hours per week",
+    "Increase relevant project opportunity capture rate from 30% to 85%",
+    "Generate 3 proposal variants per project opportunity in under 5 minutes",
+    "Achieve pricing recommendations within 15% accuracy of optimal bid amounts",
+    "Support manual input of 50+ projects per week with efficient processing",
+    "Maintain 99.9% data privacy through local deployment architecture",
+    "Enable tracking of 100+ concurrent project bids across multiple platforms",
+    "Provide project matching scores with 80%+ correlation to actual project fit"
   ],
   "constraints": [
-    "LinkedIn's Terms of Service and anti-scraping measures create ongoing legal and technical risks",
-    "Browser stealth techniques require constant updates as detection methods evolve",
-    "LinkedIn rate limiting requires careful request throttling and session management",
-    "Memory and CPU constraints limit concurrent scraping operations",
-    "Email delivery rates depend on third-party email service reliability",
-    "Analytics data storage grows significantly with user activity tracking",
-    "Performance requirements must be met across varying network conditions"
+    "Zero infrastructure cost requirement through local deployment only",
+    "Complete data privacy - no external data transmission except for AI API calls",
+    "Must share infrastructure with PRD-001 while maintaining independent business logic",
+    "Limited to manual project input methods for MVP version",
+    "Platform integrations restricted to those accessible to South Asian developers",
+    "Architecture must support future plugin expansion without core system changes",
+    "Proposal generation limited by AI API rate limits and costs",
+    "No direct platform API access for automated data retrieval in initial version",
+    "Must maintain compatibility with existing PostgreSQL and Redis infrastructure",
+    "Telegram Bot integration dependency for notification system"
   ],
   "glossary": {
-    "Stealth Scraping": "Web scraping techniques designed to avoid detection by anti-bot systems through browser fingerprint manipulation and human-like behavior simulation",
-    "Browser Fingerprinting": "The process of collecting device and browser characteristics to create a unique identifier, which must be spoofed to avoid detection",
-    "Session Management": "Maintaining and rotating browser sessions to distribute requests and avoid triggering rate limits or detection algorithms",
-    "Detection Monitoring": "Real-time analysis of scraping responses to identify when anti-bot measures have been triggered",
-    "Application Timeline": "Chronological visualization of all activities and status changes for each job application",
-    "Job Digest": "Automated email summary of new job opportunities matching user criteria",
-    "Analytics Dashboard": "Interactive interface displaying job search performance metrics, trends, and insights",
-    "Memory Budget": "Allocated system resources for data processing and storage operations",
-    "Health Check Endpoint": "API endpoint that returns system status and operational metrics for monitoring purposes"
+    "Project Opportunity": "A freelance project posting from supported platforms that matches user criteria and skill requirements",
+    "Project-Candidate Matching": "AI algorithm that scores project opportunities against user profile using project-specific weights",
+    "Pricing Intelligence": "System providing competitive pricing guidance based on project complexity, budget, and historical data",
+    "Proposal Variants": "Multiple versions of project proposals (Professional, Value-First, Technical) generated for the same opportunity",
+    "Bid Pipeline": "Tracking system for project proposal lifecycle from draft through win/loss resolution",
+    "Plugin Adapter": "Modular integration component for connecting to external platforms following Ports and Adapters pattern",
+    "Trigger Gateway API": "Event-driven API system managing communication between system components",
+    "MCP Service": "Model Context Protocol service for AI-powered proposal generation (future enhancement)",
+    "Win/Loss Analytics": "Historical tracking of successful and unsuccessful bids to improve pricing recommendations",
+    "Project Complexity Score": "AI-generated assessment of project technical difficulty and time requirements",
+    "Client Quality Score": "Rating system for project clients based on platform history and payment reliability",
+    "Geographic Accessibility": "Platform's openness to developers from specific regions, particularly South Asia"
   },
   "requirements": [
     {
       "id": "REQ-001",
-      "title": "Stealth Browser Anti-Detection System",
-      "description": "The system must implement comprehensive browser fingerprint spoofing and anti-detection measures to avoid LinkedIn's automated scraping detection systems. This includes spoofing user agent strings, screen resolution, timezone, language settings, WebGL renderer information, canvas fingerprints, and other browser characteristics that LinkedIn uses for bot detection. The system must rotate these fingerprints across sessions and maintain consistency within each session to simulate legitimate user behavior.",
-      "category": "technical",
-      "domain": "LinkedIn Integration",
+      "title": "Manual Project URL Import from Freelance Platforms",
+      "description": "The system must accept project URLs from supported freelance platforms (Upwork, Freelancer.com, Contra, Fiverr Pro, PeoplePerHour, Guru.com) and automatically extract project details including title, description, budget, deadline, required skills, and client information. The system must validate URL format and platform support before processing, and handle cases where URLs are inaccessible or have changed. Extracted data must be stored in the normalized project format for further processing.",
+      "category": "functional",
+      "domain": "Project Input & Discovery",
       "priority": "must",
-      "rationale": "LinkedIn employs sophisticated anti-bot detection systems that can identify and block automated scraping attempts, making stealth techniques essential for maintaining access to job data and achieving the target <5% detection rate.",
+      "rationale": "Manual URL import provides the fastest way for users to capture project opportunities they discover while browsing platforms, eliminating the need to manually transcribe project details and reducing data entry errors.",
       "tags": [
-        "stealth",
-        "anti-detection",
-        "browser-fingerprinting",
-        "linkedin",
-        "scraping",
-        "mvp"
+        "project-input",
+        "url-parsing",
+        "platform-integration",
+        "mvp",
+        "manual-process"
       ],
       "dependsOn": [],
-      "testabilityNotes": "Test by running scraping operations and monitoring for detection indicators such as CAPTCHAs, rate limiting responses, or blocked requests. Verify fingerprint randomization through browser analysis tools."
+      "testabilityNotes": "Test with valid URLs from each supported platform, invalid URLs, expired project URLs, and URLs requiring authentication"
     },
     {
       "id": "REQ-002",
-      "title": "Session Rotation and Cookie Management",
-      "description": "The system must automatically rotate browser sessions and manage cookies to distribute scraping requests across multiple authenticated contexts. Sessions must be created, maintained, and rotated on a configurable schedule to avoid pattern detection, with each session maintaining its own cookie store and authentication state. The system must support concurrent session pools and gracefully handle session expiration or invalidation.",
+      "title": "Raw Text Project Description Input",
+      "description": "The system must accept unstructured text input containing project descriptions copied from any source and intelligently parse key project information including title, description, budget ranges, timeline, required skills, and client details. The system must handle various text formats, incomplete information, and multiple languages while extracting as much structured data as possible. Parsing confidence levels must be provided to users for manual verification of extracted fields.",
       "category": "functional",
-      "domain": "LinkedIn Integration",
+      "domain": "Project Input & Discovery",
       "priority": "must",
-      "rationale": "Session rotation is critical for avoiding LinkedIn's anti-bot detection systems that track request patterns from individual browser sessions, enabling sustained scraping operations while maintaining anonymity.",
+      "rationale": "Raw text input enables users to quickly capture project opportunities from sources without direct URL access, such as email notifications, social media posts, or platforms that don't provide shareable URLs, maximizing opportunity capture coverage.",
       "tags": [
-        "stealth-scraping",
-        "session-management",
-        "anti-detection",
-        "cookies",
-        "linkedin"
+        "project-input",
+        "text-parsing",
+        "ai-extraction",
+        "mvp",
+        "flexible-input"
       ],
-      "dependsOn": [
-        "REQ-001"
-      ],
-      "testabilityNotes": "Verify sessions rotate on schedule, each maintains separate cookie stores, and scraping continues seamlessly across session changes"
+      "dependsOn": [],
+      "testabilityNotes": "Test with project descriptions from various platforms, incomplete descriptions, multilingual text, and malformed input"
     },
     {
       "id": "REQ-003",
-      "title": "Human-Like Behavior Pattern Simulation",
-      "description": "The system must simulate realistic human browsing patterns including randomized delays between actions (2-8 seconds), natural scrolling behaviors with variable speeds and pause points, realistic mouse movement trajectories, and human-like typing patterns with variable keystroke timing. All timing and movement parameters must be configurable and use realistic probability distributions to avoid predictable patterns.",
+      "title": "Structured Manual Project Form Entry",
+      "description": "The system must provide a guided form interface with fields for project title, description, budget (with currency selection), deadline, required skills (with auto-complete from skill database), client information, platform source, and project category. The form must include field validation, smart defaults based on user history, and the ability to save drafts for later completion. Required fields must be clearly marked and the form must support both quick entry and detailed project specification modes.",
       "category": "functional",
-      "domain": "LinkedIn Integration",
+      "domain": "Project Input & Discovery",
       "priority": "must",
-      "rationale": "Human behavior simulation is essential for bypassing LinkedIn's behavioral analysis systems that detect automated scraping through timing patterns, mouse movements, and interaction sequences.",
+      "rationale": "Structured form entry ensures complete and accurate project data capture when users need to manually input opportunities that cannot be parsed from URLs or text, providing a fallback method that guarantees data quality for matching and analysis algorithms.",
       "tags": [
-        "stealth-scraping",
-        "behavior-simulation",
-        "anti-detection",
-        "timing",
-        "mouse-movement",
-        "linkedin"
+        "project-input",
+        "form-interface",
+        "data-validation",
+        "mvp",
+        "user-experience"
       ],
-      "dependsOn": [
-        "REQ-001"
-      ],
-      "testabilityNotes": "Verify randomized timing falls within configured ranges, scrolling patterns vary naturally, and mouse movements follow realistic trajectories"
+      "dependsOn": [],
+      "testabilityNotes": "Test form validation, auto-complete functionality, draft saving, and submission with various combinations of required and optional fields"
     },
     {
       "id": "REQ-004",
-      "title": "LinkedIn Scraping Detection Monitoring",
-      "description": "The system must continuously monitor scraping operations for detection indicators including CAPTCHA challenges, rate limiting responses, account suspension warnings, and unusual response patterns. When detection is identified, the system must immediately pause scraping operations, log detailed detection events, and trigger configurable alerts to administrators. The system must also track detection rates over time and provide recommendations for stealth parameter adjustments.",
+      "title": "Project Data Normalization Engine",
+      "description": "The system must convert all project data from different input methods (URL import, text parsing, manual form) into a standardized internal format with consistent field names, data types, and value ranges. The engine must normalize budget amounts to USD using current exchange rates, standardize skill names against a master skill taxonomy, convert relative deadlines to absolute dates, and extract structured metadata from unstructured descriptions. All normalization decisions must be logged for audit purposes and manual review capabilities.",
       "category": "functional",
-      "domain": "LinkedIn Integration",
-      "priority": "should",
-      "rationale": "Real-time detection monitoring enables rapid response to anti-bot measures, minimizing account risk and maintaining the <5% detection rate objective while providing data for continuous improvement of stealth techniques.",
+      "domain": "Project Input & Discovery",
+      "priority": "must",
+      "rationale": "Data normalization is essential for accurate project-candidate matching, pricing analysis, and deduplication across platforms, ensuring that projects from different sources can be consistently analyzed and compared regardless of their original format.",
       "tags": [
-        "detection-monitoring",
-        "anti-bot",
-        "alerts",
-        "rate-limiting",
-        "captcha",
-        "linkedin"
+        "data-normalization",
+        "currency-conversion",
+        "skill-taxonomy",
+        "data-processing",
+        "core-functionality"
       ],
       "dependsOn": [
         "REQ-001",
         "REQ-002",
         "REQ-003"
       ],
-      "testabilityNotes": "Test with known detection scenarios like CAPTCHAs and rate limits to verify alerts trigger and scraping pauses appropriately"
+      "testabilityNotes": "Test normalization of projects from each input method, currency conversion accuracy, skill mapping consistency, and date parsing from various formats"
     },
     {
       "id": "REQ-005",
-      "title": "LinkedIn Job Alert Email Parser",
-      "description": "The system must parse incoming LinkedIn job alert emails to extract job listings, company information, posting dates, and application URLs. The parser must handle multiple LinkedIn email formats, extract structured job data including title, company, location, and description, and automatically import valid job postings into the user's job pipeline. The system must validate extracted data quality and handle parsing errors gracefully.",
+      "title": "Platform Registry Configuration System",
+      "description": "The system must maintain a configurable registry of supported freelance platforms containing metadata such as platform name, URL patterns, geographic accessibility flags (particularly South Asian developer access), typical project categories, budget ranges, and platform-specific parsing rules. The registry must support adding new platforms, updating existing platform configurations, and enabling/disabling platforms based on user preferences. Platform configurations must include South Asian accessibility status and JavaScript/TypeScript project frequency ratings.",
       "category": "functional",
-      "domain": "LinkedIn Integration",
+      "domain": "Project Input & Discovery",
       "priority": "should",
-      "rationale": "Email parsing provides a risk-free alternative to direct scraping when LinkedIn detection rates are high, ensuring continuous job discovery while maintaining compliance with anti-scraping measures.",
+      "rationale": "A configurable platform registry enables the system to adapt to new freelance platforms and changing platform policies, particularly important for tracking which platforms are accessible to South Asian developers and optimizing for JavaScript/TypeScript opportunities.",
       "tags": [
-        "email-parsing",
-        "job-alerts",
-        "data-extraction",
-        "alternative-input",
-        "linkedin"
+        "platform-registry",
+        "configuration",
+        "south-asian-access",
+        "javascript-typescript",
+        "metadata"
       ],
       "dependsOn": [],
-      "testabilityNotes": "Test with various LinkedIn email formats and verify accurate extraction of job data fields and proper error handling for malformed emails"
+      "testabilityNotes": "Test adding new platforms, updating existing configurations, geographic accessibility filtering, and platform-specific parsing rule application"
     },
     {
       "id": "REQ-006",
-      "title": "Manual LinkedIn URL Import",
-      "description": "The system must provide a user interface for manually importing LinkedIn job URLs, automatically extracting job details from the provided URLs, and adding the jobs to the user's pipeline. The system must validate URL format, handle private or expired job postings gracefully, and provide clear feedback on import success or failure. Users must be able to import single URLs or batch import multiple URLs at once.",
+      "title": "Project Deduplication Across Platforms",
+      "description": "The system must identify and merge duplicate project postings that appear across multiple platforms using fuzzy matching algorithms on project title, description content, budget ranges, and timeline similarities. When duplicates are detected with confidence above 85%, the system must merge them into a single project record while preserving platform-specific metadata and URLs. Users must be notified of potential duplicates with confidence scores below 85% for manual review and decision.",
       "category": "functional",
-      "domain": "LinkedIn Integration",
+      "domain": "Project Input & Discovery",
       "priority": "should",
-      "rationale": "Manual URL import serves as a fallback method when automated scraping is too risky, allowing users to continue building their job pipeline while maintaining control over which specific opportunities to pursue.",
+      "rationale": "Deduplication prevents users from wasting time analyzing and bidding on the same project multiple times across different platforms, improving efficiency and avoiding potential client confusion from multiple proposals for the same work.",
       "tags": [
-        "manual-import",
-        "url-processing",
-        "user-interface",
-        "alternative-input",
-        "batch-import",
-        "linkedin"
+        "deduplication",
+        "fuzzy-matching",
+        "data-quality",
+        "efficiency",
+        "cross-platform"
       ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify URL validation works correctly, job data extraction succeeds for valid URLs, and error handling provides clear feedback for invalid or inaccessible URLs"
+      "dependsOn": [
+        "REQ-004"
+      ],
+      "testabilityNotes": "Test duplicate detection across different platforms, confidence scoring accuracy, automatic merging of high-confidence matches, and manual review workflow for uncertain cases"
     },
     {
       "id": "REQ-007",
-      "title": "Analytics Dashboard with Performance Metrics",
-      "description": "The system must provide an interactive analytics dashboard displaying application statistics, success rates, response times, interview conversion rates, and trend analysis over configurable time periods. The dashboard must include visualizations such as charts, graphs, and progress indicators, support real-time data updates, and allow users to filter and drill down into specific metrics. All dashboard components must load within the 2-second performance target.",
+      "title": "Project-Candidate Match Scoring Algorithm",
+      "description": "The system must calculate match scores between project opportunities and user profiles using project-specific weights: 35% skill overlap, 25% budget alignment with user rate expectations, 20% project complexity versus experience match, 10% client quality score, and 10% timeline feasibility. The algorithm must generate scores from 0-100 and provide detailed breakdowns showing how each weight factor contributed to the final score.",
       "category": "functional",
-      "domain": "Analytics & Reporting",
+      "domain": "Project-Candidate Matching",
       "priority": "must",
-      "rationale": "The analytics dashboard provides users with actionable insights to optimize their job search strategy and track progress toward their career goals, directly supporting the objective of generating insights with >80% user engagement.",
+      "rationale": "This is the core matching engine that enables users to quickly identify the most suitable project opportunities, directly supporting the objective to increase relevant project capture rate from 30% to 85%.",
       "tags": [
-        "analytics",
-        "dashboard",
-        "metrics",
-        "visualization",
-        "performance-tracking",
-        "user-interface"
+        "matching",
+        "ai",
+        "scoring",
+        "mvp",
+        "core-algorithm"
       ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify all metrics display accurately, visualizations render within performance targets, and filtering/drill-down functionality works correctly across different data sets"
+      "dependsOn": [
+        "REQ-004"
+      ],
+      "testabilityNotes": "Can be verified by comparing calculated scores against expected results for test project-profile combinations, and measuring correlation with user acceptance rates"
     },
     {
       "id": "REQ-008",
-      "title": "Daily Job Digest Email Automation",
-      "description": "The system must automatically generate and send daily email digests containing new job opportunities that match user criteria, application status updates, and key metrics from the previous day. Emails must be personalized based on user preferences, include actionable job recommendations, and provide direct links to apply or save jobs. Users must be able to configure digest frequency, content preferences, and opt-out options.",
+      "title": "Skill Gap Analysis for Projects",
+      "description": "The system must analyze project requirements against user skills to identify missing technical skills, experience gaps, and knowledge areas that could impact project success. The analysis must categorize gaps as critical (project cannot be completed), moderate (may require learning), or minor (nice-to-have), and provide specific recommendations for skill development or partnership opportunities.",
       "category": "functional",
-      "domain": "Analytics & Reporting",
+      "domain": "Project-Candidate Matching",
       "priority": "should",
-      "rationale": "Daily job digests keep users engaged with fresh opportunities and progress updates, supporting the >80% user engagement objective while providing convenient access to relevant job matches without requiring daily platform visits.",
+      "rationale": "Helps users make informed decisions about project feasibility and identifies growth opportunities, supporting better project selection and professional development planning.",
       "tags": [
-        "email-automation",
-        "job-digest",
-        "personalization",
-        "notifications",
-        "user-preferences"
+        "skills",
+        "analysis",
+        "gap-assessment",
+        "user-guidance",
+        "learning"
       ],
       "dependsOn": [
         "REQ-007"
       ],
-      "testabilityNotes": "Verify emails generate with correct job matches, personalization works properly, and user preference settings control digest content and frequency"
+      "testabilityNotes": "Verify by testing against projects with known skill requirements and validating gap identification accuracy"
     },
     {
       "id": "REQ-009",
-      "title": "Weekly Analytics Summary Reports",
-      "description": "The system must generate comprehensive weekly email reports containing job search performance analysis, trend identification, success rate comparisons, and actionable recommendations for improving application effectiveness. Reports must include visual charts, comparative metrics against previous periods, and personalized insights based on user activity patterns. The system must track report engagement metrics and optimize content based on user interactions.",
+      "title": "Client Quality Assessment Integration",
+      "description": "The system must extract and analyze client quality indicators from project data including payment history, project completion rates, client reviews, response time patterns, and budget-to-scope alignment. The system must generate a client quality score from 0-100 and flag potential red flags such as unrealistic budgets, poor communication history, or payment disputes.",
       "category": "functional",
-      "domain": "Analytics & Reporting",
+      "domain": "Project-Candidate Matching",
       "priority": "should",
-      "rationale": "Weekly analytics reports provide deeper insights and strategic guidance for job search optimization, supporting the >80% user engagement objective by delivering high-value content that helps users improve their job search effectiveness.",
+      "rationale": "Protects users from problematic clients and helps prioritize high-quality opportunities, improving overall project success rates and reducing time wasted on poor-quality leads.",
       "tags": [
-        "analytics-reports",
-        "email-automation",
-        "insights",
-        "recommendations",
-        "engagement-tracking"
+        "client-assessment",
+        "risk-management",
+        "quality-scoring",
+        "data-extraction"
       ],
       "dependsOn": [
-        "REQ-007"
+        "REQ-004"
       ],
-      "testabilityNotes": "Verify reports contain accurate analytics data, visual elements render correctly in email clients, and engagement tracking captures user interactions properly"
+      "testabilityNotes": "Test with known client profiles and validate score accuracy against historical client performance data"
     },
     {
       "id": "REQ-010",
-      "title": "Application Notes and Conversation Tracking",
-      "description": "The system must allow users to add rich text notes, attach files, and track conversations for each job application throughout the entire application lifecycle. Notes must support formatting, tagging, and search functionality, while conversation tracking must capture email exchanges, interview details, follow-up actions, and contact information. All data must be timestamped and maintain complete audit trails for reference.",
+      "title": "JavaScript/TypeScript Technology Focus Matching",
+      "description": "The system must provide enhanced matching capabilities specifically for JavaScript and TypeScript ecosystem projects, including recognition of related frameworks (React, Node.js, Vue, Angular), build tools (Webpack, Vite), testing frameworks (Jest, Cypress), and deployment platforms (Vercel, Netlify). The matching must weight JS/TS projects higher when user profile indicates specialization in these technologies and recognize transferable skills within the ecosystem.",
       "category": "functional",
-      "domain": "Application Management",
+      "domain": "Project-Candidate Matching",
       "priority": "must",
-      "rationale": "Comprehensive note-taking and conversation tracking enables users to maintain detailed application context, improving follow-up effectiveness and providing valuable reference material for interview preparation and relationship management.",
+      "rationale": "Addresses the specific needs of our primary target audience of JavaScript/TypeScript developers by providing more accurate matching for their specialized skill set and preferred technology stack.",
       "tags": [
-        "notes",
-        "conversation-tracking",
-        "rich-text",
-        "file-attachments",
-        "search",
-        "audit-trail"
+        "javascript",
+        "typescript",
+        "technology-matching",
+        "specialization",
+        "ecosystem"
       ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify rich text formatting works correctly, file attachments save and retrieve properly, search functionality returns relevant results, and timestamps are accurate"
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Verify by testing match scores for JS/TS projects against profiles with varying levels of ecosystem experience"
     },
     {
       "id": "REQ-011",
-      "title": "Application Timeline Visualization",
-      "description": "The system must display a chronological timeline visualization showing all events and status changes for each job application, including application submission, recruiter contact, interview scheduling, follow-ups, and final outcomes. The timeline must be interactive, allowing users to add events, view detailed information, and track progress visually. Timeline events must be color-coded by status and include relevant metadata such as dates, contacts, and action items.",
+      "title": "Match Preference Customization for Projects",
+      "description": "The system must allow users to customize the matching algorithm weights for project-specific preferences, adjusting the relative importance of skill overlap, budget alignment, complexity match, client quality, and timeline feasibility. Users must be able to save multiple preference profiles (e.g., 'High Budget Focus', 'Skill Development', 'Quick Turnaround') and apply them to different project searches while maintaining the default balanced approach.",
       "category": "functional",
-      "domain": "Application Management",
-      "priority": "should",
-      "rationale": "Visual timeline representation helps users track application progress, identify bottlenecks in their process, and maintain awareness of pending actions, ultimately improving application management efficiency and follow-up consistency.",
+      "domain": "Project-Candidate Matching",
+      "priority": "could",
+      "rationale": "Provides flexibility for users with different career strategies and project preferences, allowing them to optimize matching based on their current priorities and circumstances.",
       "tags": [
-        "timeline",
-        "visualization",
-        "application-tracking",
-        "interactive",
-        "status-tracking",
-        "user-interface"
+        "customization",
+        "preferences",
+        "user-control",
+        "profiles",
+        "flexibility"
       ],
       "dependsOn": [
-        "REQ-010"
+        "REQ-007"
       ],
-      "testabilityNotes": "Verify timeline displays events chronologically, interactive features work properly, color coding reflects correct statuses, and timeline updates when new events are added"
+      "testabilityNotes": "Test by creating different preference profiles and verifying that match scores change appropriately based on weight adjustments"
     },
     {
       "id": "REQ-012",
-      "title": "AI-Powered Cover Letter Refinement",
-      "description": "The system must provide AI-assisted cover letter analysis and refinement suggestions, including grammar corrections, tone improvements, keyword optimization for job descriptions, and personalization recommendations. Users must be able to upload or paste cover letter text, receive specific improvement suggestions with explanations, and apply changes through an interactive editing interface with real-time feedback.",
+      "title": "Simple Price Range Suggestion Engine",
+      "description": "The system must generate basic pricing recommendations for project opportunities by analyzing the posted project budget, user's configured hourly/project rates, and project scope indicators. When a project budget is available, the system must suggest a competitive price range (minimum, recommended, maximum) that positions the user competitively while maintaining profitability. For projects without budgets, the system must estimate pricing based on project description complexity and user rate preferences.",
       "category": "functional",
-      "domain": "Application Management",
-      "priority": "should",
-      "rationale": "Cover letters significantly impact application success rates, and AI-powered refinement helps users create more compelling, tailored applications that stand out to employers and improve their chances of securing interviews.",
+      "domain": "Pricing Intelligence",
+      "priority": "must",
+      "rationale": "Provides immediate value to solo professionals who struggle with competitive pricing decisions, directly supporting the objective of achieving pricing recommendations within 15% accuracy of optimal bid amounts.",
       "tags": [
+        "pricing",
+        "mvp",
         "ai",
-        "cover-letter",
-        "editing",
-        "user-facing",
-        "text-analysis"
+        "competition",
+        "profitability"
       ],
-      "dependsOn": [],
-      "testabilityNotes": "Can be tested by submitting various cover letter samples and verifying that relevant, actionable suggestions are provided with clear explanations"
+      "dependsOn": [
+        "REQ-004"
+      ],
+      "testabilityNotes": "Can be verified by comparing suggested price ranges against actual project budgets and user rate configurations across different project types"
     },
     {
       "id": "REQ-013",
-      "title": "Scraping Completion Time Performance Target",
-      "description": "The system must complete LinkedIn job scraping operations within an average of 30 seconds per job batch, measured from initiation to data persistence. This includes time for stealth browser initialization, session setup, page navigation, data extraction, and processing. Performance must be maintained across batches of 10-50 job listings under normal network conditions and LinkedIn response times.",
-      "category": "non-functional",
-      "domain": "Performance",
-      "priority": "must",
-      "rationale": "Fast scraping completion times are critical for user satisfaction and competitive advantage, enabling users to access fresh job opportunities quickly before other candidates. This performance target ensures the LinkedIn integration remains practical for daily job search workflows.",
+      "title": "AI Project Complexity Analysis",
+      "description": "The system must use AI to analyze project descriptions and requirements to estimate technical complexity, time requirements, and effort multipliers. The analysis must identify key complexity factors including technology stack requirements, integration needs, custom development scope, and deliverable specifications. The system must generate a Project Complexity Score and estimated hour ranges that feed into pricing calculations, accounting for JavaScript/TypeScript project nuances and common freelance project patterns.",
+      "category": "functional",
+      "domain": "Pricing Intelligence",
+      "priority": "should",
+      "rationale": "Enables more accurate pricing by moving beyond simple budget-based suggestions to understanding actual project effort requirements, essential for competitive positioning in technical freelance markets.",
       "tags": [
-        "performance",
-        "scraping",
-        "linkedin",
-        "timing",
-        "user-experience"
+        "ai",
+        "complexity-analysis",
+        "time-estimation",
+        "javascript",
+        "technical-assessment"
       ],
       "dependsOn": [
-        "REQ-001",
-        "REQ-002",
-        "REQ-003"
+        "REQ-012"
       ],
-      "testabilityNotes": "Measure completion time across multiple batch sizes and network conditions, with 95th percentile not exceeding 45 seconds"
+      "testabilityNotes": "Validate by comparing AI complexity assessments against actual project completion times and effort for completed projects"
     },
     {
       "id": "REQ-014",
-      "title": "Dashboard Load Time Performance Target",
-      "description": "The system must load the analytics dashboard and all visualizations within 2 seconds from user navigation or refresh, including chart rendering, data aggregation, and interactive element initialization. This applies to dashboards containing up to 6 months of historical data and up to 500 job applications across all supported chart types and filters.",
-      "category": "non-functional",
-      "domain": "Performance",
-      "priority": "must",
-      "rationale": "Rapid dashboard loading ensures users can quickly access their job search analytics without frustration, encouraging regular engagement with performance insights that drive better job search outcomes. Slow dashboards reduce user adoption of analytics features.",
+      "title": "Three-Tier Pricing Strategy Generator",
+      "description": "The system must generate three distinct pricing options for each project opportunity: Economy (competitive/low-margin), Recommended (balanced value), and Premium (high-value positioning). Each tier must include different value propositions, delivery timelines, and scope considerations based on the AI Project Complexity Analysis results. The system must provide rationale for each pricing tier and suggest which approach might work best based on client quality indicators and project characteristics.",
+      "category": "functional",
+      "domain": "Pricing Intelligence",
+      "priority": "should",
+      "rationale": "Empowers users with strategic pricing options that can be tailored to different client types and competitive situations, supporting the goal of generating multiple proposal variants efficiently.",
       "tags": [
-        "performance",
-        "dashboard",
-        "analytics",
-        "load-time",
-        "visualization"
+        "pricing-strategy",
+        "value-proposition",
+        "client-segmentation",
+        "competitive-positioning"
       ],
       "dependsOn": [
-        "REQ-007"
+        "REQ-013"
       ],
-      "testabilityNotes": "Test with varying data volumes and measure Time to Interactive (TTI) across different browser and network conditions"
+      "testabilityNotes": "Verify that all three tiers are generated with distinct pricing, timelines, and value propositions that align with complexity analysis results"
     },
     {
       "id": "REQ-015",
-      "title": "Health Check API Endpoints",
-      "description": "The system must provide RESTful health check endpoints that return comprehensive system status information including service availability, database connectivity, external API status, memory usage, and operational metrics. The endpoints must respond within 500ms and return standardized health status codes (healthy, degraded, unhealthy) with detailed component-level status information in JSON format. Critical services like LinkedIn scraping, email delivery, and database operations must be individually monitored.",
-      "category": "technical",
-      "domain": "Monitoring",
-      "priority": "must",
-      "rationale": "Health check endpoints are essential for monitoring system reliability, enabling automated alerting, and supporting the 95% uptime requirement by providing early detection of service degradation or failures.",
+      "title": "Win/Loss Pricing Data Tracking",
+      "description": "The system must capture and store win/loss outcomes for project bids correlated with the pricing strategies used, project characteristics, and client responses. The tracking must record bid amounts, pricing tier selected, project complexity factors, client feedback when available, and final outcomes. This data must be structured to enable pattern analysis for improving future pricing recommendations while maintaining complete local data privacy.",
+      "category": "functional",
+      "domain": "Pricing Intelligence",
+      "priority": "should",
+      "rationale": "Creates a learning foundation for the pricing intelligence system, enabling continuous improvement of pricing accuracy and supporting the long-term goal of adaptive recommendations based on actual market feedback.",
       "tags": [
-        "monitoring",
-        "health-check",
-        "api",
-        "reliability",
-        "uptime",
-        "observability"
+        "data-tracking",
+        "win-loss-analysis",
+        "learning-data",
+        "pricing-optimization",
+        "local-storage"
       ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify endpoints return correct status codes and response times under normal and degraded conditions. Test that component failures are accurately reflected in health status."
+      "dependsOn": [
+        "REQ-012"
+      ],
+      "testabilityNotes": "Confirm that bid outcomes are properly captured and linked to original pricing decisions with sufficient metadata for pattern analysis"
     },
     {
       "id": "REQ-016",
-      "title": "Centralized Error Logging and Monitoring",
-      "description": "The system must implement structured error logging with centralized collection and monitoring capabilities that capture all application errors, warnings, and critical events with contextual information including timestamps, user sessions, request IDs, and stack traces. The logging system must support log aggregation, real-time alerting for critical errors, and provide searchable interfaces for troubleshooting. Log retention must be maintained for at least 30 days with automatic archival of older logs.",
-      "category": "technical",
-      "domain": "Monitoring",
-      "priority": "should",
-      "rationale": "Centralized error logging provides operational visibility essential for maintaining system reliability, debugging issues quickly, and supporting the uptime and performance targets through proactive issue identification.",
+      "title": "Adaptive Pricing Recommendations",
+      "description": "The system must analyze historical win/loss pricing data to identify successful pricing patterns and adjust future recommendations accordingly. The system must learn from user-specific bidding success rates across different project types, budget ranges, and client profiles to personalize pricing suggestions. Recommendations must evolve based on market feedback while maintaining the three-tier structure, with the system highlighting when pricing strategies deviate from historical successful patterns.",
+      "category": "functional",
+      "domain": "Pricing Intelligence",
+      "priority": "could",
+      "rationale": "Represents the advanced tier of pricing intelligence that transforms the system from static recommendations to a learning system that improves pricing accuracy over time based on actual market results.",
       "tags": [
-        "logging",
-        "monitoring",
-        "error-handling",
-        "observability",
-        "troubleshooting",
-        "alerting"
+        "machine-learning",
+        "personalization",
+        "pricing-optimization",
+        "pattern-recognition",
+        "adaptive-algorithms"
       ],
       "dependsOn": [
         "REQ-015"
       ],
-      "testabilityNotes": "Generate test errors and verify they appear in centralized logs with proper structure and context. Test alert triggering for critical error conditions."
+      "testabilityNotes": "Validate that pricing recommendations change over time based on win/loss data and that suggested adjustments correlate with improved success rates"
     },
     {
       "id": "REQ-017",
-      "title": "LinkedIn Service Uptime Reliability Target",
-      "description": "The system must maintain 95% uptime for all LinkedIn integration services including scraping operations, session management, and detection monitoring, measured over rolling 30-day periods. Planned maintenance windows are excluded from uptime calculations. The system must automatically recover from transient failures and provide graceful degradation when LinkedIn services are temporarily unavailable.",
-      "category": "non-functional",
-      "domain": "Performance",
-      "priority": "must",
-      "rationale": "High uptime reliability ensures users can depend on the LinkedIn integration for their job search activities without unexpected interruptions. Consistent availability builds user trust and prevents job seekers from missing time-sensitive opportunities due to service outages.",
-      "tags": [
-        "reliability",
-        "uptime",
-        "linkedin",
-        "availability",
-        "monitoring"
-      ],
-      "dependsOn": [
-        "REQ-001",
-        "REQ-015"
-      ],
-      "testabilityNotes": "Monitor service availability through health check endpoints and track recovery times from failures"
-    },
-    {
-      "id": "REQ-018",
-      "title": "Memory Budget Documentation",
-      "description": "The system must maintain comprehensive documentation of memory usage requirements and resource allocation for each system component including LinkedIn scraping operations, analytics data processing, browser sessions, cached data, and background tasks. Documentation must specify memory limits, peak usage scenarios, cleanup procedures, and monitoring thresholds for each component. The documentation must be updated whenever significant changes are made to system architecture or data processing workflows.",
-      "category": "technical",
-      "domain": "Documentation",
-      "priority": "should",
-      "rationale": "Memory budget documentation is crucial for capacity planning, preventing resource exhaustion during peak operations, and ensuring system stability as analytics data storage grows significantly with user activity tracking.",
-      "tags": [
-        "documentation",
-        "memory-management",
-        "resource-planning",
-        "capacity",
-        "performance"
-      ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify documentation accuracy by comparing documented memory budgets with actual usage during load testing. Ensure documentation is updated with system changes."
-    },
-    {
-      "id": "REQ-019",
-      "title": "LinkedIn Terms of Service Legal Disclaimer",
-      "description": "The system must display a prominent legal disclaimer informing users about potential risks of LinkedIn scraping activities, including account suspension, legal implications, and Terms of Service violations. The disclaimer must be shown before users enable LinkedIn integration features, require explicit acknowledgment through checkbox confirmation, and remain accessible through a dedicated legal information section with clear language about user responsibility and liability.",
+      "title": "Short Proposal Generation with Variants",
+      "description": "The system must generate three distinct variants of short proposals (200-400 words each) for any project opportunity: Professional (formal tone, emphasizing credentials and methodology), Value-First (focusing on ROI and business outcomes), and Technical (highlighting technical expertise and implementation details). Each variant must be contextually relevant to the project requirements and include relevant skills, proposed approach, and competitive positioning.",
       "category": "functional",
-      "domain": "Legal Compliance",
+      "domain": "Proposal Generation",
       "priority": "must",
-      "rationale": "LinkedIn's Terms of Service explicitly prohibit automated data collection, making it essential to inform users of legal risks and ensure they understand their responsibility when choosing to use scraping features.",
+      "rationale": "Different clients respond to different proposal styles, and having multiple variants significantly increases the chance of winning projects while saving time compared to manually writing custom proposals for each opportunity.",
       "tags": [
-        "legal",
-        "disclaimer",
-        "linkedin",
-        "terms-of-service",
-        "user-consent",
-        "compliance"
-      ],
-      "dependsOn": [],
-      "testabilityNotes": "Verify disclaimer appears before LinkedIn features are accessible, requires user acknowledgment, and contains all required legal language"
-    },
-    {
-      "id": "REQ-020",
-      "title": "LinkedIn Rate Limiting Compliance",
-      "description": "The system must implement intelligent request throttling and rate limiting mechanisms to comply with LinkedIn's usage restrictions and avoid triggering anti-abuse measures. This includes implementing exponential backoff for failed requests, distributing requests across time windows, respecting HTTP 429 responses, and maintaining request queues with priority handling. The system must monitor request frequency and automatically adjust throttling parameters based on response patterns and detected rate limiting signals.",
-      "category": "technical",
-      "domain": "LinkedIn Integration",
-      "priority": "must",
-      "rationale": "Compliance with LinkedIn's rate limiting is essential for maintaining access to the platform and avoiding account suspension, which would compromise the core job scraping functionality and user value proposition.",
-      "tags": [
-        "rate-limiting",
-        "throttling",
-        "linkedin",
-        "compliance",
-        "anti-abuse",
-        "request-management"
-      ],
-      "dependsOn": [
-        "REQ-002",
-        "REQ-003"
-      ],
-      "testabilityNotes": "Test by monitoring request patterns and verifying throttling behavior when rate limits are approached. Simulate rate limiting responses to ensure proper backoff handling."
-    },
-    {
-      "id": "REQ-021",
-      "title": "Data Quality Validation for Scraped Jobs",
-      "description": "The system must validate all scraped LinkedIn job data for completeness, accuracy, and format consistency before storage, including verification of required fields (title, company, location, description), duplicate detection across multiple scraping sessions, data sanitization to remove malformed content, and rejection of jobs with insufficient or corrupted information. Validation results must be logged with specific error details and retry mechanisms for failed validations.",
-      "category": "functional",
-      "domain": "LinkedIn Integration",
-      "priority": "should",
-      "rationale": "High-quality job data is essential for user trust and decision-making, and validation prevents corrupted or incomplete job listings from cluttering the user interface and degrading the job search experience.",
-      "tags": [
-        "data-quality",
-        "validation",
-        "linkedin",
-        "scraping",
-        "data-integrity",
-        "error-handling"
-      ],
-      "dependsOn": [
-        "REQ-001"
-      ],
-      "testabilityNotes": "Test with various scraped data samples including incomplete, malformed, and duplicate job listings to verify validation rules are properly applied"
-    },
-    {
-      "id": "REQ-022",
-      "title": "Email Service Integration for Reports",
-      "description": "The system must integrate with a reliable third-party email service provider (such as SendGrid, Amazon SES, or Mailgun) to handle automated delivery of daily job digests and weekly analytics reports. The integration must support email templating, batch sending, delivery tracking, bounce handling, and unsubscribe management. The system must maintain delivery logs and provide retry mechanisms for failed deliveries with exponential backoff to ensure high delivery rates.",
-      "category": "technical",
-      "domain": "Analytics & Reporting",
-      "priority": "must",
-      "rationale": "Professional email service integration is necessary to ensure reliable delivery of automated reports, maintain sender reputation, and provide the user engagement required for the >80% weekly analytics report engagement target.",
-      "tags": [
-        "email",
-        "integration",
-        "reporting",
-        "delivery",
-        "automation",
-        "third-party"
-      ],
-      "dependsOn": [
-        "REQ-008",
-        "REQ-009"
-      ],
-      "testabilityNotes": "Test email delivery success rates, template rendering, and failure handling. Verify delivery tracking and bounce management functionality."
-    },
-    {
-      "id": "REQ-023",
-      "title": "Advanced UI Response Time Performance Target",
-      "description": "The system must ensure all advanced UI features including application notes editing, timeline visualization interactions, and AI cover letter refinement respond within 500ms of user action. This includes form submissions, dynamic content loading, file uploads up to 5MB, and interactive chart manipulations. Response time is measured from user input to visible UI feedback or completion.",
-      "category": "non-functional",
-      "domain": "Performance",
-      "priority": "should",
-      "rationale": "Responsive advanced features create a smooth, professional user experience that encourages adoption of productivity-enhancing tools. Fast response times reduce user frustration and support efficient job application management workflows.",
-      "tags": [
-        "performance",
-        "ui",
-        "response-time",
-        "user-experience",
-        "interactivity"
-      ],
-      "dependsOn": [
-        "REQ-010",
-        "REQ-011",
-        "REQ-012"
-      ],
-      "testabilityNotes": "Measure response times for each feature type under normal load conditions and validate consistent performance across different user interaction patterns"
-    },
-    {
-      "id": "REQ-024",
-      "title": "Analytics Data Storage Optimization",
-      "description": "The system must implement optimized data storage and retrieval mechanisms for analytics data that grows with user activity tracking, including efficient indexing strategies, data partitioning by time periods, automated data archival for historical records, and query optimization for dashboard performance. The system must support data compression for historical analytics data and implement caching layers for frequently accessed metrics to maintain the 2-second dashboard load time requirement as data volume scales.",
-      "category": "technical",
-      "domain": "Analytics & Reporting",
-      "priority": "should",
-      "rationale": "Storage optimization is critical for maintaining dashboard performance as analytics data grows significantly with user activity, ensuring long-term scalability while meeting the 2-second load time performance target.",
-      "tags": [
-        "storage",
-        "optimization",
-        "analytics",
-        "performance",
-        "scalability",
-        "caching",
-        "indexing"
+        "ai-powered",
+        "proposal-variants",
+        "mvp",
+        "user-facing"
       ],
       "dependsOn": [
         "REQ-007"
       ],
-      "testabilityNotes": "Test query performance with large datasets and verify caching effectiveness. Monitor storage growth patterns and archival process functionality."
+      "testabilityNotes": "Verify each variant meets word count requirements, contains distinct tone and focus areas, and incorporates project-specific details from the match scoring analysis"
+    },
+    {
+      "id": "REQ-018",
+      "title": "Detailed Proposal with Timeline and Milestones",
+      "description": "The system must generate comprehensive proposals that include project breakdown into phases, detailed timeline with milestones, deliverable specifications, risk assessment, and itemized pricing structure. The detailed proposal must build upon the selected short proposal variant and expand it with technical approach, resource allocation, quality assurance processes, and client communication plan.",
+      "category": "functional",
+      "domain": "Proposal Generation",
+      "priority": "should",
+      "rationale": "Complex projects require detailed proposals to demonstrate thorough understanding and professional project management capabilities, which increases win rates for high-value opportunities.",
+      "tags": [
+        "detailed-proposals",
+        "project-planning",
+        "timeline",
+        "milestones"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify proposal contains all required sections, timeline is realistic based on project complexity, and pricing aligns with the three-tier strategy"
+    },
+    {
+      "id": "REQ-019",
+      "title": "Proposal Personalization Engine",
+      "description": "The system must customize all generated proposals by incorporating user's specific skills, relevant past experience, portfolio highlights, and preferred working methodologies from their profile. Personalization must adapt language, technical depth, and emphasis based on project requirements and client preferences while maintaining consistency with the user's professional brand and communication style.",
+      "category": "functional",
+      "domain": "Proposal Generation",
+      "priority": "must",
+      "rationale": "Generic proposals have low success rates; personalization ensures proposals reflect the user's unique value proposition and increases client engagement by demonstrating relevant expertise.",
+      "tags": [
+        "personalization",
+        "user-profile",
+        "branding",
+        "ai-powered"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify proposals contain user-specific skills and experience relevant to the project, and maintain consistent tone with user's professional profile"
+    },
+    {
+      "id": "REQ-020",
+      "title": "Proposal Version History Management",
+      "description": "The system must maintain complete version history for all proposals generated for each project, allowing users to compare different versions, track changes, and revert to previous versions. The system must store metadata including generation timestamp, variant type, user modifications, and performance outcomes when available, enabling users to identify the most effective proposal approaches over time.",
+      "category": "functional",
+      "domain": "Proposal Generation",
+      "priority": "should",
+      "rationale": "Version control enables users to iterate on proposals, learn from successful approaches, and maintain audit trails for client communications and business development optimization.",
+      "tags": [
+        "version-control",
+        "history",
+        "audit-trail",
+        "learning"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify all proposal versions are stored with complete metadata, users can access and compare any historical version, and changes are tracked accurately"
+    },
+    {
+      "id": "REQ-021",
+      "title": "Proposal Export in Multiple Formats",
+      "description": "The system must export generated proposals in multiple formats including PDF with professional formatting, plain text for platform text boxes, and platform-specific formatted versions optimized for major freelance platforms. Each export format must preserve proposal content while adapting layout, formatting, and structure to match the target platform's requirements and best practices.",
+      "category": "functional",
+      "domain": "Proposal Generation",
+      "priority": "should",
+      "rationale": "Different platforms have varying submission requirements and formatting constraints; multiple export formats ensure proposals can be submitted efficiently across all target platforms without manual reformatting.",
+      "tags": [
+        "export",
+        "multi-format",
+        "platform-optimization",
+        "user-facing"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify exported proposals maintain content integrity across all formats, PDF formatting is professional and readable, and platform-specific exports meet target platform requirements"
+    },
+    {
+      "id": "REQ-022",
+      "title": "Project Bid Lifecycle Management",
+      "description": "The system must track the complete lifecycle of project bids through defined stages: Drafted, Submitted, Viewed, Shortlisted, Interview/Call, Won, Lost, and Withdrawn. Each status transition must be recorded with timestamps and maintain a complete audit trail. The system must allow manual status updates by users and support bulk status changes for multiple bids simultaneously.",
+      "category": "functional",
+      "domain": "Bid & Proposal Tracking",
+      "priority": "must",
+      "rationale": "Tracking bid lifecycle is essential for understanding project pursuit effectiveness and maintaining organized follow-up activities, directly supporting the objective to track 100+ concurrent project bids.",
+      "tags": [
+        "bid-tracking",
+        "lifecycle",
+        "status-management",
+        "audit-trail"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify status transitions are recorded with accurate timestamps and that all lifecycle stages are supported"
+    },
+    {
+      "id": "REQ-023",
+      "title": "Bid Metadata Capture System",
+      "description": "The system must capture and store comprehensive metadata for each bid including submission date, proposal version used, pricing submitted, target platform, client contact information, project deadline, and any custom notes. All metadata must be editable after creation and support bulk export for analysis. The system must link bid metadata to the corresponding project opportunity and proposal version.",
+      "category": "functional",
+      "domain": "Bid & Proposal Tracking",
+      "priority": "must",
+      "rationale": "Detailed bid metadata enables pricing intelligence improvements, win/loss analysis, and provides context for follow-up activities, supporting the 15% pricing accuracy objective.",
+      "tags": [
+        "metadata",
+        "bid-data",
+        "pricing-tracking",
+        "export"
+      ],
+      "dependsOn": [
+        "REQ-022"
+      ],
+      "testabilityNotes": "Confirm all specified metadata fields are captured and properly linked to proposals and projects"
+    },
+    {
+      "id": "REQ-024",
+      "title": "Project Bid Kanban Board Interface",
+      "description": "The system must provide a visual Kanban board interface specifically for project bids, separate from the job applications board in PRD-001. The board must display bid cards organized by lifecycle status columns with drag-and-drop functionality for status updates. Each card must show key information including project title, client name, bid amount, submission date, and current status with color-coded priority indicators.",
+      "category": "functional",
+      "domain": "Bid & Proposal Tracking",
+      "priority": "should",
+      "rationale": "Visual bid management improves user productivity and provides quick overview of bid pipeline status, supporting efficient tracking of 100+ concurrent bids across multiple platforms.",
+      "tags": [
+        "kanban",
+        "visual-management",
+        "drag-drop",
+        "user-interface"
+      ],
+      "dependsOn": [
+        "REQ-022"
+      ],
+      "testabilityNotes": "Verify Kanban board displays correctly, drag-drop updates status, and remains separate from job applications interface"
     },
     {
       "id": "REQ-025",
-      "title": "Scraping Detection Rate Performance Target",
-      "description": "The system must maintain a LinkedIn scraping detection rate below 5% across all scraping operations, measured as the percentage of scraping sessions that trigger LinkedIn's anti-bot measures or result in account restrictions. Detection events include CAPTCHAs, rate limiting responses, temporary blocks, or account warnings. The system must achieve this target while maintaining data quality and completeness standards.",
-      "category": "non-functional",
-      "domain": "LinkedIn Integration",
-      "priority": "must",
-      "rationale": "Low detection rates are essential for sustainable LinkedIn integration, protecting user accounts from restrictions and ensuring consistent access to job opportunities. High detection rates would compromise the core value proposition and create legal and operational risks.",
+      "title": "Bid Follow-up Reminder System",
+      "description": "The system must generate automated follow-up reminders for submitted bids based on configurable timeframes and bid status. Reminders must be sent via Telegram Bot integration and include bid details, days since submission, and suggested follow-up actions. Users must be able to customize reminder schedules, snooze reminders, and mark bids as 'no follow-up needed' to suppress future alerts.",
+      "category": "functional",
+      "domain": "Bid & Proposal Tracking",
+      "priority": "should",
+      "rationale": "Automated follow-up reminders ensure no opportunities are missed due to lack of communication, improving bid success rates and client relationship management.",
       "tags": [
-        "detection",
-        "stealth",
-        "linkedin",
-        "anti-bot",
-        "scraping",
-        "reliability"
+        "reminders",
+        "follow-up",
+        "telegram-integration",
+        "automation"
       ],
       "dependsOn": [
-        "REQ-001",
-        "REQ-002",
-        "REQ-003",
+        "REQ-022"
+      ],
+      "testabilityNotes": "Confirm reminders are generated at correct intervals, Telegram notifications work, and snooze functionality operates properly"
+    },
+    {
+      "id": "REQ-026",
+      "title": "Bid Analytics and Success Rate Tracking",
+      "description": "The system must generate comprehensive analytics on bid performance including success rates by platform, average response times, earnings per platform, and bid-to-win conversion rates. Analytics must provide trend analysis over time periods and identify patterns in successful bids. The system must generate exportable reports and dashboard visualizations showing key performance indicators for bid activities.",
+      "category": "functional",
+      "domain": "Bid & Proposal Tracking",
+      "priority": "could",
+      "rationale": "Bid analytics provide insights for improving proposal strategies and platform selection, enabling data-driven decisions to increase the 30% to 85% opportunity capture rate objective.",
+      "tags": [
+        "analytics",
+        "success-rate",
+        "reporting",
+        "performance-tracking"
+      ],
+      "dependsOn": [
+        "REQ-023"
+      ],
+      "testabilityNotes": "Verify analytics calculations are accurate, reports generate correctly, and dashboard displays meaningful insights"
+    },
+    {
+      "id": "REQ-027",
+      "title": "Project Discovery Dashboard with Card Layout",
+      "description": "The system must provide a dedicated project discovery dashboard displaying freelance project opportunities in a card-based layout. Each project card must show match score, budget range, required skills, client rating, platform source, and deadline. The dashboard must be separate from the job application dashboard and support pagination for efficient browsing of large project datasets.",
+      "category": "functional",
+      "domain": "Project Dashboard & UI",
+      "priority": "must",
+      "rationale": "Provides the primary interface for users to quickly scan and evaluate project opportunities, enabling efficient project discovery that reduces browsing time from 10+ hours to under 2 hours per week.",
+      "tags": [
+        "dashboard",
+        "ui",
+        "project-discovery",
+        "mvp",
+        "card-layout"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Verify card displays all required metadata fields, pagination works with 50+ projects, and dashboard loads within performance requirements"
+    },
+    {
+      "id": "REQ-028",
+      "title": "Project Detail View with Analysis",
+      "description": "The system must provide a comprehensive project detail view accessible from the project dashboard cards. The detail view must display full project description, detailed skill match analysis with gap identification, client profile information, pricing analysis with recommendations, and direct access to proposal generation variants. The view must integrate analysis from REQ-007 (match scoring), REQ-012 (pricing), and REQ-017 (proposals).",
+      "category": "functional",
+      "domain": "Project Dashboard & UI",
+      "priority": "must",
+      "rationale": "Enables informed decision-making by providing all necessary project analysis in a single view, supporting the objective of increasing relevant project opportunity capture rate to 85%.",
+      "tags": [
+        "project-detail",
+        "analysis",
+        "ui",
+        "mvp",
+        "decision-support"
+      ],
+      "dependsOn": [
+        "REQ-027"
+      ],
+      "testabilityNotes": "Verify all analysis components display correctly, proposal generation is accessible, and view integrates data from matching, pricing, and proposal systems"
+    },
+    {
+      "id": "REQ-029",
+      "title": "Advanced Project Filtering and Sorting",
+      "description": "The system must provide comprehensive filtering and sorting capabilities for the project dashboard. Filtering options must include platform source, budget range, required skills, match score threshold, project deadline, and client quality rating. Sorting must support match score, budget, deadline, and submission date in ascending/descending order. Filters must be combinable and persist during user session.",
+      "category": "functional",
+      "domain": "Project Dashboard & UI",
+      "priority": "should",
+      "rationale": "Enables users to quickly focus on the most relevant opportunities based on their preferences and constraints, improving the efficiency of project discovery and supporting the goal of capturing 85% of relevant opportunities.",
+      "tags": [
+        "filtering",
+        "sorting",
+        "search",
+        "ui",
+        "project-discovery"
+      ],
+      "dependsOn": [
+        "REQ-027"
+      ],
+      "testabilityNotes": "Verify all filter combinations work correctly, sorting maintains stability, and filter state persists across page refreshes"
+    },
+    {
+      "id": "REQ-030",
+      "title": "Unified Search Across Jobs and Projects",
+      "description": "The system must provide an optional unified search interface that allows users to search across both job applications (from PRD-001) and project opportunities simultaneously. The unified view must clearly distinguish between job and project results, maintain separate filtering options for each type, and allow users to toggle between unified and separate views. Search must support keyword matching across titles, descriptions, and skills.",
+      "category": "functional",
+      "domain": "Project Dashboard & UI",
+      "priority": "should",
+      "rationale": "Serves users who pursue both employment and freelance projects simultaneously by providing a consolidated view of all opportunities, improving workflow efficiency for this target user segment.",
+      "tags": [
+        "unified-search",
+        "cross-system",
+        "ui",
+        "search",
+        "integration"
+      ],
+      "dependsOn": [
+        "REQ-027"
+      ],
+      "testabilityNotes": "Verify search returns results from both systems, result types are clearly distinguished, and toggle between views works seamlessly"
+    },
+    {
+      "id": "REQ-031",
+      "title": "Project Notification System Integration",
+      "description": "The system must integrate with the notification system to provide real-time alerts for project-related events. Notifications must include new projects matching user criteria, bid status changes, approaching project deadlines, and client responses. Notifications must be configurable by type and delivery method (in-app, Telegram bot integration via REQ-036), and include direct links to relevant project detail views.",
+      "category": "functional",
+      "domain": "Project Dashboard & UI",
+      "priority": "should",
+      "rationale": "Ensures users don't miss time-sensitive opportunities and can respond quickly to project developments, supporting the objective of capturing 85% of relevant opportunities through timely awareness.",
+      "tags": [
+        "notifications",
+        "real-time",
+        "telegram",
+        "project-alerts",
+        "integration"
+      ],
+      "dependsOn": [
+        "REQ-027"
+      ],
+      "testabilityNotes": "Verify notifications trigger correctly for each event type, configuration options work, and links navigate to correct project views"
+    },
+    {
+      "id": "REQ-032",
+      "title": "Shared Docker Infrastructure with PRD-001",
+      "description": "The system must utilize the existing Docker containerized infrastructure from PRD-001, including shared PostgreSQL database, Redis cache, and Docker networking. The project opportunity system must deploy as additional containers within the same Docker Compose environment while maintaining complete logical separation of business logic and data schemas. Database isolation must be achieved through separate schemas or table prefixes, and Redis keyspace isolation through namespace prefixes.",
+      "category": "technical",
+      "domain": "Architecture & Integration",
+      "priority": "must",
+      "rationale": "Sharing infrastructure with PRD-001 eliminates duplicate infrastructure costs and complexity while maintaining the zero-cost deployment constraint. This approach leverages existing stable infrastructure while ensuring independent operation of both systems.",
+      "tags": [
+        "docker",
+        "infrastructure",
+        "shared-resources",
+        "mvp",
+        "zero-cost"
+      ],
+      "dependsOn": [],
+      "testabilityNotes": "Verify containers deploy successfully in existing environment, database schemas remain isolated, and Redis keyspaces don't conflict"
+    },
+    {
+      "id": "REQ-033",
+      "title": "Plugin Adapter Architecture for Platforms",
+      "description": "The system must implement a pluggable adapter architecture following the Ports and Adapters pattern for integrating with freelance platforms. Each platform adapter must implement a standardized interface for project data extraction, normalization, and platform-specific operations. The plugin registry must support dynamic loading of adapters without core system changes, with each adapter handling platform-specific authentication, rate limiting, and data formatting requirements.",
+      "category": "technical",
+      "domain": "Architecture & Integration",
+      "priority": "must",
+      "rationale": "The pluggable architecture enables future expansion to new platforms without modifying core system logic, supporting the constraint of platform integrations accessible to South Asian developers while maintaining extensibility for future automated integrations.",
+      "tags": [
+        "plugin-architecture",
+        "adapters",
+        "extensibility",
+        "platform-integration",
+        "ports-adapters"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Verify new adapters can be added without core changes, standardized interface is enforced, and platform-specific operations are properly isolated"
+    },
+    {
+      "id": "REQ-034",
+      "title": "Trigger Gateway API for Project Operations",
+      "description": "The system must provide a RESTful Trigger Gateway API with endpoints for all project-related operations including project creation, updates, proposal generation triggers, and bid status changes. The API must support both synchronous operations for immediate responses and asynchronous operations for long-running tasks like AI proposal generation. All API endpoints must include proper authentication, input validation, and error handling with standardized response formats.",
+      "category": "technical",
+      "domain": "Architecture & Integration",
+      "priority": "must",
+      "rationale": "The Trigger Gateway API serves as the central coordination point for all project operations, enabling integration with external systems like Telegram Bot while maintaining loose coupling between system components and supporting future MCP service extraction.",
+      "tags": [
+        "api",
+        "gateway",
+        "triggers",
+        "rest",
+        "integration-layer"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Verify all CRUD operations work correctly, asynchronous operations return proper job IDs, and error responses follow standard format"
+    },
+    {
+      "id": "REQ-035",
+      "title": "Event-Driven Communication via BullMQ",
+      "description": "The system must implement event-driven communication using BullMQ for asynchronous processing of project operations including proposal generation, match scoring calculations, pricing analysis, and notification triggers. Events must be properly queued with appropriate retry mechanisms, dead letter handling, and job progress tracking. The system must support priority queues for time-sensitive operations and batch processing for bulk project imports.",
+      "category": "technical",
+      "domain": "Architecture & Integration",
+      "priority": "should",
+      "rationale": "Event-driven architecture ensures responsive user experience by offloading time-consuming operations like AI proposal generation to background processes, while providing reliable processing of the target 50+ projects per week with proper error handling and retry mechanisms.",
+      "tags": [
+        "event-driven",
+        "bullmq",
+        "async-processing",
+        "queues",
+        "background-jobs"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Verify events are properly queued and processed, retry mechanisms work for failed jobs, and job progress can be tracked"
+    },
+    {
+      "id": "REQ-036",
+      "title": "Telegram Bot Integration for Project Management",
+      "description": "The system must integrate with the existing Telegram Bot infrastructure to provide project management commands including project status updates, new opportunity notifications, proposal generation triggers, and bid tracking summaries. Bot commands must support quick actions like marking projects as applied, updating bid status, and requesting project summaries. All bot interactions must maintain the same authentication and security standards as the web interface.",
+      "category": "functional",
+      "domain": "Architecture & Integration",
+      "priority": "should",
+      "rationale": "Telegram Bot integration provides mobile-friendly access to project management functions, enabling users to stay updated on opportunities and manage their bid pipeline without requiring constant web interface access, supporting the goal of efficient project opportunity management.",
+      "tags": [
+        "telegram-bot",
+        "mobile-access",
+        "notifications",
+        "quick-actions",
+        "project-management"
+      ],
+      "dependsOn": [
+        "REQ-034"
+      ],
+      "testabilityNotes": "Verify bot commands execute correctly, notifications are delivered promptly, and authentication is properly maintained across bot interactions"
+    },
+    {
+      "id": "REQ-037",
+      "title": "MCP-Ready Proposal Engine Interface",
+      "description": "The system must design the proposal generation engine with a clean interface suitable for future extraction into a standalone Model Context Protocol (MCP) service. The interface must abstract AI provider interactions, maintain stateless operation for proposal generation, and support standardized input/output formats compatible with MCP specifications. The current implementation must remain embedded while ensuring future service extraction requires minimal code changes.",
+      "category": "technical",
+      "domain": "Architecture & Integration",
+      "priority": "could",
+      "rationale": "Future-proofing the proposal engine for MCP extraction enables potential monetization as a standalone service while maintaining current embedded operation, supporting long-term product evolution without requiring immediate architectural changes.",
+      "tags": [
+        "mcp",
+        "future-ready",
+        "service-extraction",
+        "proposal-engine",
+        "interface-design"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify proposal engine interface is properly abstracted, stateless operation is maintained, and input/output formats are standardized"
+    },
+    {
+      "id": "REQ-038",
+      "title": "Project Discovery Performance Under 2 Seconds",
+      "description": "The project discovery dashboard and search operations must complete within 2 seconds for datasets containing up to 1000 active projects, including match score calculations, filtering operations, and result rendering. Database queries must be optimized with appropriate indexing on frequently searched fields (skills, budget, deadline, match scores), and the system must implement caching strategies for expensive operations like match score calculations. Performance must be measured from user action initiation to complete page rendering.",
+      "category": "non-functional",
+      "domain": "Performance & Scalability",
+      "priority": "must",
+      "rationale": "Fast project discovery is critical for user productivity and adoption, as users need to quickly scan through multiple opportunities to identify the most promising projects for bidding within their limited time budget.",
+      "tags": [
+        "performance",
+        "response-time",
+        "database-optimization",
+        "caching",
+        "user-experience"
+      ],
+      "dependsOn": [
+        "REQ-027"
+      ],
+      "testabilityNotes": "Performance test with varying dataset sizes, concurrent user loads, different search and filter combinations, and measure end-to-end response times"
+    },
+    {
+      "id": "REQ-039",
+      "title": "Support 50+ Weekly Project Input Processing",
+      "description": "The system must handle the input and processing of 50 or more project opportunities per week without performance degradation, maintaining response times under 5 seconds for each project input method (URL import, text parsing, form entry). The system must queue processing tasks appropriately, provide progress feedback to users during batch operations, and maintain data integrity under high-volume input scenarios. Processing must include full normalization, deduplication checks, and match score calculation for each project.",
+      "category": "non-functional",
+      "domain": "Performance & Scalability",
+      "priority": "should",
+      "rationale": "High-volume project processing capability is essential for power users who want to capture maximum opportunity coverage across multiple platforms, supporting the objective of increasing relevant project opportunity capture rate to 85%.",
+      "tags": [
+        "scalability",
+        "high-volume",
+        "batch-processing",
+        "performance",
+        "data-integrity"
+      ],
+      "dependsOn": [
         "REQ-004"
       ],
-      "testabilityNotes": "Track detection events through monitoring systems and measure detection rate over rolling 7-day periods across different user accounts and usage patterns"
+      "testabilityNotes": "Load test with 50+ projects per week, measure processing times under sustained load, test data integrity with concurrent inputs, and verify queue management effectiveness"
+    },
+    {
+      "id": "REQ-040",
+      "title": "Concurrent Tracking of 100+ Project Bids",
+      "description": "The system must efficiently handle concurrent tracking of at least 100 active project bids across multiple platforms without performance degradation. Database queries for bid retrieval must execute within 500ms, and the Kanban board must load all bid cards within 2 seconds. The system must support pagination and filtering to manage large bid volumes while maintaining responsive user interactions.",
+      "category": "non-functional",
+      "domain": "Performance & Scalability",
+      "priority": "should",
+      "rationale": "Supporting high-volume bid tracking enables users to pursue maximum opportunities across multiple platforms, directly supporting the objective to track 100+ concurrent project bids.",
+      "tags": [
+        "performance",
+        "scalability",
+        "concurrent-tracking",
+        "database-optimization"
+      ],
+      "dependsOn": [
+        "REQ-022"
+      ],
+      "testabilityNotes": "Load test with 100+ bids to verify response times meet requirements and user interface remains responsive"
+    },
+    {
+      "id": "REQ-041",
+      "title": "Proposal Generation Under 5 Minutes",
+      "description": "The system must generate all three short proposal variants within 5 minutes of user initiation, including AI processing time, personalization, and formatting. The system must provide progress indicators during generation and handle AI API timeouts gracefully by implementing retry logic and fallback mechanisms to ensure consistent performance within the time constraint.",
+      "category": "non-functional",
+      "domain": "Performance & Scalability",
+      "priority": "must",
+      "rationale": "Fast proposal generation is critical for capturing time-sensitive opportunities and maintaining user productivity, as delays can result in missed project deadlines or reduced competitive advantage.",
+      "tags": [
+        "performance",
+        "time-constraint",
+        "ai-processing",
+        "user-experience"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Measure end-to-end generation time under various load conditions and verify system meets 5-minute constraint in 95% of cases"
+    },
+    {
+      "id": "REQ-042",
+      "title": "Local Data Privacy with Zero External Transmission",
+      "description": "The system must ensure complete data privacy by storing all project data, client information, proposals, and user preferences locally within the Docker infrastructure. No project-related data may be transmitted to external services except for AI API calls during proposal generation, which must only send sanitized project requirements without client-identifying information. All external API calls must be logged and auditable, with user consent required for any data transmission.",
+      "category": "security",
+      "domain": "Data Security & Privacy",
+      "priority": "must",
+      "rationale": "Zero external data transmission ensures complete data privacy and security for sensitive project and client information, addressing privacy concerns while maintaining the local deployment constraint and building user trust through transparent data handling.",
+      "tags": [
+        "data-privacy",
+        "local-storage",
+        "zero-transmission",
+        "ai-api-security",
+        "audit-logging"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Verify no project data leaves local environment except sanitized AI calls, all external requests are logged, and user consent mechanisms work properly"
+    },
+    {
+      "id": "REQ-043",
+      "title": "AI API Rate Limit Management",
+      "description": "The system must implement intelligent rate limit management for AI API calls including request queuing, exponential backoff for rate limit errors, cost tracking per proposal generation, and user notifications when approaching rate limits. The system must optimize API usage by batching requests where possible and implementing local caching for repeated content patterns to minimize API costs while maintaining proposal quality.",
+      "category": "technical",
+      "domain": "AI Integration",
+      "priority": "should",
+      "rationale": "AI API costs and rate limits directly impact system operational costs and user experience; proper management ensures sustainable operation while preventing service disruptions during peak usage periods.",
+      "tags": [
+        "rate-limiting",
+        "cost-management",
+        "api-optimization",
+        "queue-management"
+      ],
+      "dependsOn": [
+        "REQ-017"
+      ],
+      "testabilityNotes": "Verify system handles rate limit responses correctly, tracks API usage accurately, and maintains service availability during rate limit periods"
+    },
+    {
+      "id": "REQ-044",
+      "title": "Project Data Encryption at Rest",
+      "description": "The system must encrypt sensitive project data at rest in the local PostgreSQL database, including client contact information, project descriptions, proposal content, and pricing data. Encryption must use industry-standard AES-256 encryption with proper key management stored separately from encrypted data. The system must support transparent encryption/decryption during normal operations while maintaining query performance for project discovery and matching operations.",
+      "category": "security",
+      "domain": "Data Security & Privacy",
+      "priority": "should",
+      "rationale": "Encrypting sensitive data at rest provides additional security layer protecting against unauthorized access to the local database, ensuring client confidentiality and competitive proposal information remains secure even if the local system is compromised.",
+      "tags": [
+        "encryption",
+        "data-at-rest",
+        "aes-256",
+        "key-management",
+        "database-security"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Verify sensitive data is properly encrypted in database, decryption works transparently during operations, and query performance remains acceptable"
+    },
+    {
+      "id": "REQ-045",
+      "title": "Match Score Accuracy Above 80% Correlation",
+      "description": "The project matching algorithm must achieve at least 80% correlation between calculated match scores and actual project fit as measured by user acceptance rates, successful bid outcomes, and project completion satisfaction. The system must track and analyze matching performance over time, automatically flagging when correlation drops below the 80% threshold and providing insights for algorithm improvement.",
+      "category": "non-functional",
+      "domain": "AI & Matching Quality",
+      "priority": "must",
+      "rationale": "Ensures the matching algorithm provides genuine value by accurately predicting project suitability, directly supporting the objective to increase relevant project opportunity capture rate to 85%.",
+      "tags": [
+        "accuracy",
+        "correlation",
+        "performance-metrics",
+        "quality-assurance",
+        "tracking"
+      ],
+      "dependsOn": [
+        "REQ-007"
+      ],
+      "testabilityNotes": "Measure through A/B testing, user feedback collection, and statistical analysis of match scores versus actual user project selection and success rates"
+    },
+    {
+      "id": "REQ-046",
+      "title": "Pricing Recommendation Accuracy Within 15%",
+      "description": "The pricing recommendation system must achieve accuracy within 15% of optimal bid amounts, where optimal is defined as the highest price that would still win the project based on historical data and competitive analysis. The system must track this accuracy metric across different project types, budget ranges, and complexity levels, providing feedback on recommendation quality and identifying areas where pricing intelligence needs improvement.",
+      "category": "non-functional",
+      "domain": "AI & Matching Quality",
+      "priority": "should",
+      "rationale": "Ensures the pricing intelligence system delivers measurable business value by providing recommendations that are competitive yet profitable, directly supporting the product objective of achieving pricing recommendations within 15% accuracy.",
+      "tags": [
+        "accuracy-metrics",
+        "performance-measurement",
+        "pricing-validation",
+        "business-value",
+        "competitive-analysis"
+      ],
+      "dependsOn": [
+        "REQ-012"
+      ],
+      "testabilityNotes": "Measure by comparing recommended prices against actual winning bid amounts for similar projects, tracking accuracy percentages across different project categories"
+    },
+    {
+      "id": "REQ-047",
+      "title": "System Availability 99.9% Uptime",
+      "description": "The system must maintain 99.9% availability (less than 8.76 hours downtime per year) for all core project management functions including project discovery, proposal generation, bid tracking, and data access. The system must implement automated health checks, graceful error handling, and recovery mechanisms to ensure continuous operation of critical freelancer workflows even during component failures or maintenance operations.",
+      "category": "non-functional",
+      "domain": "Reliability",
+      "priority": "should",
+      "rationale": "High availability is critical for freelancers who depend on the system for time-sensitive project opportunities and proposal submissions. System downtime directly impacts their ability to capture project opportunities and could result in missed business opportunities worth thousands of dollars.",
+      "tags": [
+        "availability",
+        "uptime",
+        "reliability",
+        "health-checks",
+        "error-handling",
+        "business-critical"
+      ],
+      "dependsOn": [
+        "REQ-032"
+      ],
+      "testabilityNotes": "Measure actual uptime over extended periods, test graceful degradation during component failures, verify automated recovery mechanisms, and validate health check effectiveness"
     }
   ],
   "createdAt": "2024-12-19T10:30:00Z",
-  "updatedAt": "2026-02-10T05:34:42.891Z"
+  "updatedAt": "2026-02-10T16:52:55.758Z"
 }
