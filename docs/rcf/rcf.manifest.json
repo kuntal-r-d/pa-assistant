@@ -4,6 +4,17 @@
   "description": "Personal productivity assistant application",
   "prds": [
     {
+      "id": "PRD-004",
+      "name": "Project Opportunity Assistant",
+      "path": "docs/rcf/prd/PRD-004.json",
+      "stories": [],
+      "tad": [],
+      "bs": [],
+      "fbs": [],
+      "ts": [],
+      "tc": []
+    },
+    {
       "id": "PRD-003",
       "name": "Backup, Operations & Data Resilience",
       "path": "docs/rcf/prd/PRD-003.json",
