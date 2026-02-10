@@ -5,8 +5,8 @@
   "prds": [
     {
       "id": "PRD-001",
-      "name": "Zero-Cost Remote Job Search Automation System",
-      "path": "docs/rcf/prds/PRD-001.json",
+      "name": "Core Job Assistant MVP",
+      "path": "docs/rcf/prd/PRD-001.json",
       "stories": [
         {
           "id": "STD-001",
