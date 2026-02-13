@@ -361,20 +361,6 @@
       "domain": "User Interface",
       "priority": "must",
       "rationale": "In-app notifications keep users informed of important events without relying on external email systems"
-    },
-    {
-      "id": "REQ-036",
-      "title": "Demo Requirement",
-      "description": "The system shall provide a demo feature that displays a test section on the dashboard, allowing users to verify the system works correctly and all components are properly connected.",
-      "category": "functional",
-      "domain": "Demo",
-      "priority": "should",
-      "rationale": "Added for demonstration purposes to test the RCF workflow",
-      "tags": [
-        "demo",
-        "testing",
-        "verification"
-      ]
     }
   ],
   "glossary": {
@@ -388,7 +374,7 @@
     "Rich Text Editor": "Text editing interface that allows formatting (bold, italic, lists) beyond plain text"
   },
   "createdAt": "2026-02-08T09:00:00Z",
-  "updatedAt": "2026-02-13T05:04:23.441Z",
+  "updatedAt": "2026-02-13T15:42:14.452Z",
   "_changesSummary": "Major restructuring to Core Job Assistant MVP: Updated title and scope, removed 39 requirements (moved to PRD-002 and PRD-003), renumbered remaining 27 requirements, added 8 new core requirements for manual job input, CV variants, match customization, content editing, and notifications",
   "_removed": [
     "REQ-012",
