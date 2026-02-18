@@ -3,78 +3,70 @@
   "prdId": "PRD-001",
   "version": "1.0.0",
   "status": "draft",
-  "title": "Build Sequence: PRD-001 (Part 7 of 7)",
-  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
-  "generationStrategy": "dependency-first",
+  "title": "Build Sequence: PRD-001 (Part 7 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
   "buildSequence": [
     {
       "id": "FBS-061",
-      "title": "Docker Backup & Restore Scripts",
-      "summary": "Implements comprehensive backup-docker.sh and restore-docker.sh scripts with progress indicators, error handling, and POSIX compliance. Scripts handle complete Docker environment backup including containers, volumes, images, and compose files with automatic container lifecycle management.",
+      "title": "Manual Job Entry Form",
+      "summary": "Delivers a comprehensive manual job entry form with validation and field organization. Enables users to manually add job opportunities when automated scraping is not available or suitable.",
       "storyScope": [
         {
-          "usId": "US-258",
+          "usId": "US-166",
           "acIds": [
-            "AC-1215",
-            "AC-1216",
-            "AC-1217",
-            "AC-1218",
-            "AC-1219",
-            "AC-1220",
-            "AC-1221",
-            "AC-1222"
+            "AC-762",
+            "AC-763",
+            "AC-764",
+            "AC-765"
           ]
         },
         {
-          "usId": "US-259",
+          "usId": "US-167",
           "acIds": [
-            "AC-1223",
-            "AC-1224",
-            "AC-1225",
-            "AC-1226",
-            "AC-1227",
-            "AC-1228",
-            "AC-1229",
-            "AC-1230"
+            "AC-766",
+            "AC-767",
+            "AC-768",
+            "AC-769",
+            "AC-770",
+            "AC-771",
+            "AC-772"
           ]
         },
         {
-          "usId": "US-260",
+          "usId": "US-168",
           "acIds": [
-            "AC-1231",
-            "AC-1232",
-            "AC-1233",
-            "AC-1234",
-            "AC-1235"
+            "AC-773",
+            "AC-774",
+            "AC-775",
+            "AC-776"
           ]
         },
         {
-          "usId": "US-261",
+          "usId": "US-169",
           "acIds": [
-            "AC-1236",
-            "AC-1237",
-            "AC-1238",
-            "AC-1239",
-            "AC-1240",
-            "AC-1241"
+            "AC-777",
+            "AC-778",
+            "AC-779",
+            "AC-780",
+            "AC-781"
           ]
         }
       ],
       "dependencies": [
-        "FBS-059"
+        "FBS-001",
+        "FBS-002",
+        "FBS-045"
       ],
       "testableOutcomes": [
-        "backup-docker.sh creates timestamped backup directory with format 'backup-YYYY-MM-DD-HH-MM-SS' when executed",
-        "backup-docker.sh stops all running containers gracefully before backup and restarts them after completion",
-        "backup-docker.sh backs up all named volumes (postgres_data, backup_data, linkedin_sessions, user_uploads) to timestamped directory",
-        "backup-docker.sh exports all Docker images as tar files in the backup directory",
-        "backup-docker.sh displays progress indicators showing current operation and completion percentage during execution",
-        "restore-docker.sh validates backup directory contains all required files before proceeding with restoration",
-        "restore-docker.sh imports all image tar files and restores volume data to original locations",
-        "restore-docker.sh displays progress indicators and starts containers that were running at backup time",
-        "Both scripts use only POSIX shell commands and Docker CLI without external dependencies",
-        "Scripts display clear error messages and exit with appropriate status codes on failure conditions",
-        "Scripts exit with status code 0 and display success messages on successful completion"
+        "User can access manual job entry form by clicking 'Add Job Manually' button from job discovery page",
+        "Form displays all required fields: job title (200 chars), company name (100 chars), job description (5000 chars), requirements (3000 chars), salary range, location (100 chars), and remote status",
+        "Form displays optional fields: job URL and application deadline with proper validation",
+        "System validates required fields and shows error messages when fields are empty or exceed character limits",
+        "System validates URL format in job URL field and shows error for invalid URLs",
+        "System validates salary values and rejects negative numbers or non-numeric text",
+        "System validates deadline dates and only accepts today or future dates",
+        "Character count warnings appear when approaching field limits and prevent exceeding limits"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -82,794 +74,96 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "backup-strategy",
-            "disaster-recovery"
+            "Job Discovery",
+            "User Interface"
           ],
           "tadSections": [
-            "docker-architecture",
-            "volume-management"
+            "Job Discovery Service",
+            "Web Frontend"
           ],
           "existingModules": [
-            "docker-compose.yml"
+            "JobDashboard",
+            "JobCard",
+            "form validation utilities"
           ],
-          "schemas": []
+          "schemas": [
+            "jobs table structure",
+            "validation schemas"
+          ]
         },
         "deliverables": [
-          "backup-docker.sh script with progress indicators",
-          "restore-docker.sh script with validation",
-          "Error handling and logging utilities",
-          "Container lifecycle management functions",
-          "Volume backup and restore utilities",
-          "Image export and import handlers",
-          "Progress indicator display functions",
-          "Comprehensive test suite for both scripts"
+          "apps/web-ui/src/components/ManualJobEntryForm.tsx",
+          "apps/web-ui/src/components/JobFormFields.tsx",
+          "apps/web-ui/src/components/SalaryRangeInput.tsx",
+          "apps/web-ui/src/components/RemoteStatusSelector.tsx",
+          "apps/web-ui/src/hooks/useJobFormValidation.ts",
+          "packages/@jobsearch/validation/src/job-form-validator.ts",
+          "Form styling and responsive CSS"
         ]
       },
-      "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Scripts must handle Docker daemon connectivity, disk space validation, and graceful error recovery. Progress indicators should use standard shell techniques without external dependencies. Container state tracking is critical for proper restoration."
+      "riskLevel": "low",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Focus on comprehensive form validation and user experience. Ensure character limits are enforced client-side with server-side validation backup. Consider accessibility requirements for form fields and error messaging."
     },
     {
       "id": "FBS-062",
-      "title": "Backup Integrity & Validation",
-      "summary": "Implements comprehensive backup integrity verification including SHA-256 checksum validation, tar.gz structural integrity checks, manifest generation with file metadata, and optional test restore verification. Provides systematic validation workflow to ensure backup reliability.",
+      "title": "Manual Job Entry Integration",
+      "summary": "Integrates manual job entry with existing job processing pipeline including matching, tracking, and content generation. Ensures manually entered jobs receive full system functionality.",
       "storyScope": [
         {
-          "usId": "US-262",
+          "usId": "US-170",
           "acIds": [
-            "AC-1242",
-            "AC-1243",
-            "AC-1244",
-            "AC-1245",
-            "AC-1246"
+            "AC-782",
+            "AC-783",
+            "AC-784",
+            "AC-785",
+            "AC-786"
           ]
         },
         {
-          "usId": "US-263",
+          "usId": "US-171",
           "acIds": [
-            "AC-1247",
-            "AC-1248",
-            "AC-1249",
-            "AC-1250",
-            "AC-1251"
+            "AC-787",
+            "AC-788",
+            "AC-789"
           ]
         },
         {
-          "usId": "US-264",
+          "usId": "US-172",
           "acIds": [
-            "AC-1252",
-            "AC-1253",
-            "AC-1254",
-            "AC-1255",
-            "AC-1256"
+            "AC-790",
+            "AC-791",
+            "AC-792"
           ]
         },
         {
-          "usId": "US-265",
+          "usId": "US-173",
           "acIds": [
-            "AC-1257",
-            "AC-1258",
-            "AC-1259",
-            "AC-1260",
-            "AC-1261",
-            "AC-1262"
-          ]
-        },
-        {
-          "usId": "US-266",
-          "acIds": [
-            "AC-1263",
-            "AC-1264",
-            "AC-1265",
-            "AC-1266",
-            "AC-1267"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-061"
-      ],
-      "testableOutcomes": [
-        "System calculates and stores SHA-256 checksum for backup archives after creation",
-        "System recalculates checksums and compares with stored values during verification",
-        "System logs success messages with archive path and checksum value when verification passes",
-        "System logs errors and marks backups as corrupted when checksum verification fails",
-        "System validates tar.gz archive structure using tar test flag without extraction",
-        "System detects and reports specific corruption errors in damaged archives",
-        "System generates JSON manifest file with total file count, archive size, and individual file metadata",
-        "System verifies actual archive contents match manifest entries during validation",
-        "System performs optional test restore to temporary location with automatic cleanup",
-        "System executes comprehensive verification workflow with checksum, archive, and manifest validation in sequence",
-        "System halts verification workflow and reports specific failure point when any step fails",
-        "System marks backup as verified and generates comprehensive verification report on successful completion"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "backup-validation",
-            "data-integrity"
-          ],
-          "tadSections": [
-            "backup-architecture",
-            "validation-workflows"
-          ],
-          "existingModules": [
-            "backup-docker.sh"
-          ],
-          "schemas": [
-            "backup-manifest-schema"
-          ]
-        },
-        "deliverables": [
-          "SHA-256 checksum validation service",
-          "tar.gz structural integrity validator",
-          "Backup manifest generation engine",
-          "Test restore verification system",
-          "Comprehensive verification workflow orchestrator",
-          "Backup integrity API endpoints",
-          "Validation reporting utilities",
-          "Error handling and logging for all validation operations"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Validation must handle large archives efficiently without excessive memory usage. Test restore requires careful temporary directory management and cleanup. Workflow orchestration needs proper error propagation and rollback capabilities."
-    },
-    {
-      "id": "FBS-063",
-      "title": "Pre-uninstall Backup Verification",
-      "summary": "Implements interactive pre-uninstall backup verification checklist with real-time backup status checking, volume backup verification, external storage confirmation, and explicit user confirmation workflow. Ensures comprehensive data protection before system uninstallation.",
-      "storyScope": [
-        {
-          "usId": "US-267",
-          "acIds": [
-            "AC-1268",
-            "AC-1269",
-            "AC-1270",
-            "AC-1271"
-          ]
-        },
-        {
-          "usId": "US-268",
-          "acIds": [
-            "AC-1272",
-            "AC-1273",
-            "AC-1274",
-            "AC-1275",
-            "AC-1276"
-          ]
-        },
-        {
-          "usId": "US-269",
-          "acIds": [
-            "AC-1277",
-            "AC-1278",
-            "AC-1279",
-            "AC-1280"
-          ]
-        },
-        {
-          "usId": "US-270",
-          "acIds": [
-            "AC-1281",
-            "AC-1282",
-            "AC-1283",
-            "AC-1284",
-            "AC-1285",
-            "AC-1286"
-          ]
-        },
-        {
-          "usId": "US-271",
-          "acIds": [
-            "AC-1287",
-            "AC-1288",
-            "AC-1289",
-            "AC-1290",
-            "AC-1291",
-            "AC-1292"
+            "AC-793",
+            "AC-794",
+            "AC-795",
+            "AC-796"
           ]
         }
       ],
       "dependencies": [
         "FBS-061",
-        "FBS-062"
+        "FBS-030",
+        "FBS-036",
+        "FBS-051"
       ],
       "testableOutcomes": [
-        "Pre-uninstall checklist displays interactive checkboxes for each verification item when loaded",
-        "Proceed button remains disabled when all checklist items are not checked",
-        "Proceed button becomes enabled when all checklist items are checked",
-        "System verifies latest backup exists and was created within last 24 hours",
-        "System displays green checkmark with timestamp for recent backups (<24h)",
-        "System shows warning icon with age information for backups older than 24 hours",
-        "System shows error icon with 'No backup found' message when no backup exists",
-        "External storage checkbox displays with help text explaining importance of external backup copy",
-        "System displays warning about external backup requirement when checkbox is unchecked",
-        "System lists all system volumes by name and path with backup status indicators",
-        "System shows green checkmark for backed up volumes and red X for non-backed up volumes",
-        "System displays last backup timestamp and volume size comparison for each volume",
-        "Final confirmation checkbox requires 'I understand this will permanently remove all system data' acknowledgment",
-        "System displays final warning dialog requiring additional confirmation when proceed button is clicked",
-        "System returns to checklist without proceeding when user cancels final warning dialog"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 6,
-        "contextRequirements": {
-          "prdSections": [
-            "uninstall-process",
-            "data-protection"
-          ],
-          "tadSections": [
-            "backup-verification",
-            "user-interface"
-          ],
-          "existingModules": [
-            "backup-docker.sh",
-            "web-ui"
-          ],
-          "schemas": [
-            "backup-status-schema"
-          ]
-        },
-        "deliverables": [
-          "Pre-uninstall checklist React component",
-          "Backup status verification service",
-          "Volume backup status checker",
-          "External storage confirmation interface",
-          "Final confirmation dialog component",
-          "Checklist progress tracking utilities",
-          "Real-time backup status API endpoints",
-          "Interactive checkbox and button state management"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "UI must provide clear visual feedback for all verification states. Real-time backup checking should handle various backup states gracefully. Confirmation workflow needs multiple safety checks to prevent accidental data loss."
-    },
-    {
-      "id": "FBS-064",
-      "title": "Disaster Recovery Documentation",
-      "summary": "Generates comprehensive disaster recovery documentation including backup file structure, step-by-step recovery instructions, troubleshooting guides, and recovery time estimates. Ensures documentation is accessible during disaster scenarios and maintains version control.",
-      "storyScope": [
-        {
-          "usId": "US-272",
-          "acIds": [
-            "AC-1293",
-            "AC-1294",
-            "AC-1295",
-            "AC-1296",
-            "AC-1297"
-          ]
-        },
-        {
-          "usId": "US-273",
-          "acIds": [
-            "AC-1298",
-            "AC-1299",
-            "AC-1300",
-            "AC-1301",
-            "AC-1302",
-            "AC-1303"
-          ]
-        },
-        {
-          "usId": "US-274",
-          "acIds": [
-            "AC-1304",
-            "AC-1305",
-            "AC-1306",
-            "AC-1307",
-            "AC-1308",
-            "AC-1309"
-          ]
-        },
-        {
-          "usId": "US-275",
-          "acIds": [
-            "AC-1310",
-            "AC-1311",
-            "AC-1312",
-            "AC-1313",
-            "AC-1314",
-            "AC-1315"
-          ]
-        },
-        {
-          "usId": "US-276",
-          "acIds": [
-            "AC-1316",
-            "AC-1317",
-            "AC-1318",
-            "AC-1319"
-          ]
-        },
-        {
-          "usId": "US-277",
-          "acIds": [
-            "AC-1320",
-            "AC-1321",
-            "AC-1322",
-            "AC-1323"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-057",
-        "FBS-058",
-        "FBS-060",
-        "FBS-061",
-        "FBS-062"
-      ],
-      "testableOutcomes": [
-        "MANIFEST.md file is automatically generated in backup directory after backup completion with complete directory tree structure",
-        "MANIFEST.md contains file size, creation timestamp, and file type for each backup component entry",
-        "RESTORE.md file is created with sequential recovery steps including exact commands and expected output examples",
-        "Recovery instructions are ordered by dependency requirements with infrastructure first, then data, then services",
-        "Troubleshooting section includes common error scenarios with error messages, root causes, and solution steps",
-        "Recovery time estimation table shows estimated times for database, application services, and configuration restoration",
-        "Documentation files are stored in plain text/markdown format alongside backup data for offline accessibility",
-        "Documentation is automatically regenerated with version numbers and timestamps when system configuration changes"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Data Management",
-            "Backup and Recovery"
-          ],
-          "tadSections": [
-            "Backup System",
-            "Documentation Generation"
-          ],
-          "existingModules": [
-            "backup services",
-            "file system utilities"
-          ],
-          "schemas": [
-            "backup metadata",
-            "documentation templates"
-          ]
-        },
-        "deliverables": [
-          "Documentation generation service",
-          "MANIFEST.md template engine",
-          "RESTORE.md template engine",
-          "Troubleshooting guide generator",
-          "Recovery time calculator",
-          "Documentation versioning system",
-          "Offline accessibility validator",
-          "Documentation update orchestrator"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Focus on template-based documentation generation that automatically reflects current system state. Ensure documentation remains accessible during disaster scenarios by storing in multiple locations with backup data."
-    },
-    {
-      "id": "FBS-065",
-      "title": "Cloud Backup Sync System",
-      "summary": "Implements automated cloud backup synchronization using rclone with support for Google Drive and other cloud providers. Manages 90-day retention, monitors sync status, and provides cloud backup restoration capabilities with encryption support.",
-      "storyScope": [
-        {
-          "usId": "US-243",
-          "acIds": [
-            "AC-1143",
-            "AC-1144",
-            "AC-1145",
-            "AC-1146"
-          ]
-        },
-        {
-          "usId": "US-244",
-          "acIds": [
-            "AC-1147",
-            "AC-1148",
-            "AC-1149",
-            "AC-1150",
-            "AC-1151"
-          ]
-        },
-        {
-          "usId": "US-245",
-          "acIds": [
-            "AC-1152",
-            "AC-1153",
-            "AC-1154",
-            "AC-1155",
-            "AC-1156"
-          ]
-        },
-        {
-          "usId": "US-246",
-          "acIds": [
-            "AC-1157",
-            "AC-1158",
-            "AC-1159",
-            "AC-1160",
-            "AC-1161"
-          ]
-        },
-        {
-          "usId": "US-247",
-          "acIds": [
-            "AC-1162",
-            "AC-1163",
-            "AC-1164",
-            "AC-1165",
-            "AC-1166"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-057",
-        "FBS-060",
-        "FBS-062"
-      ],
-      "testableOutcomes": [
-        "rclone configuration is created with proper authentication credentials when Google Drive is specified as cloud provider",
-        "System validates cloud connectivity and reports success or failure when testing connection",
-        "Encrypted backup files are automatically uploaded to cloud storage after successful daily backup completion",
-        "Cloud sync retries up to 3 times with exponential backoff when rclone returns error",
-        "System identifies and deletes backup files older than 90 days from cloud storage during daily retention check",
-        "System displays last successful sync timestamp, file size, and duration when viewing sync status",
-        "System flags sync as unhealthy and logs warning when 24 hours pass without successful sync",
-        "System downloads encrypted backup from cloud storage and restores database when restore operation is initiated",
-        "System reports current cloud storage usage and estimated days until quota exceeded"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Cloud Integration",
-            "Data Management",
-            "Security"
-          ],
-          "tadSections": [
-            "Cloud Storage",
-            "Encryption",
-            "Backup System"
-          ],
-          "existingModules": [
-            "backup services",
-            "encryption utilities",
-            "configuration management"
-          ],
-          "schemas": [
-            "cloud provider config",
-            "sync status tracking"
-          ]
-        },
-        "deliverables": [
-          "Cloud provider configuration service",
-          "rclone integration wrapper",
-          "Automatic sync orchestrator",
-          "90-day retention manager",
-          "Cloud sync status monitor",
-          "Cloud backup restoration service",
-          "Encryption/decryption handlers",
-          "Storage quota monitoring",
-          "Sync health checker"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Requires careful handling of cloud provider authentication and encryption keys. Implement robust error handling for network failures and API rate limits. Consider implementing progressive sync for large backup files."
-    },
-    {
-      "id": "FBS-066",
-      "title": "n8n Automated Backup Workflow",
-      "summary": "Creates comprehensive n8n workflow for automated daily Docker backups at 2:00 AM including volume and image backup, Google Drive sync via rclone, email notifications, and automatic cleanup of old backups with 7 local and 5 cloud retention limits.",
-      "storyScope": [
-        {
-          "usId": "US-278",
-          "acIds": [
-            "AC-1324",
-            "AC-1325",
-            "AC-1326",
-            "AC-1327"
-          ]
-        },
-        {
-          "usId": "US-279",
-          "acIds": [
-            "AC-1328",
-            "AC-1329",
-            "AC-1330",
-            "AC-1331",
-            "AC-1332"
-          ]
-        },
-        {
-          "usId": "US-280",
-          "acIds": [
-            "AC-1333",
-            "AC-1334",
-            "AC-1335",
-            "AC-1336",
-            "AC-1337"
-          ]
-        },
-        {
-          "usId": "US-281",
-          "acIds": [
-            "AC-1338",
-            "AC-1339",
-            "AC-1340",
-            "AC-1341",
-            "AC-1342"
-          ]
-        },
-        {
-          "usId": "US-282",
-          "acIds": [
-            "AC-1343",
-            "AC-1344",
-            "AC-1345",
-            "AC-1346",
-            "AC-1347",
-            "AC-1348"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-060",
-        "FBS-061",
-        "FBS-065"
-      ],
-      "testableOutcomes": [
-        "n8n workflow executes automatically at 2:00 AM daily with workflow logs recording start time, end time, and execution status",
-        "Workflow shows daily recurrence pattern at 2:00 AM when checking workflow schedule configuration",
-        "All named and anonymous Docker volumes are included in backup when workflow runs",
-        "All locally built and tagged custom Docker images are backed up during workflow execution",
-        "rclone uploads all new backup files to configured Google Drive location when sync process runs",
-        "rclone skips upload to avoid duplicates when backup file already exists in Google Drive",
-        "Success notification email is sent with backup summary details when backup workflow completes successfully",
-        "Failure notification email is sent with error details and timestamp when backup workflow encounters error",
-        "Only 7 most recent local backups are retained when more than 7 local backup files exist",
-        "Only 5 most recent cloud backups are retained when more than 5 cloud backup files exist in Google Drive"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Workflow Automation",
-            "Data Management",
-            "Notification System"
-          ],
-          "tadSections": [
-            "n8n Workflows",
-            "Docker Management",
-            "Email System"
-          ],
-          "existingModules": [
-            "n8n-workflows",
-            "backup scripts",
-            "email service"
-          ],
-          "schemas": [
-            "workflow definitions",
-            "backup metadata",
-            "notification templates"
-          ]
-        },
-        "deliverables": [
-          "n8n daily backup workflow definition",
-          "Docker volume backup nodes",
-          "Docker image backup nodes",
-          "rclone sync integration nodes",
-          "Email notification nodes",
-          "Backup cleanup orchestrator",
-          "Error handling and retry logic",
-          "Workflow monitoring utilities",
-          "Schedule configuration templates"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Requires integration with existing Docker backup scripts and cloud sync system. Implement comprehensive error handling for each workflow step and ensure proper cleanup even when individual steps fail. Consider workflow timeout handling for large backup operations."
-    },
-    {
-      "id": "FBS-067",
-      "title": "Backup Notification & Reporting System",
-      "summary": "Implements comprehensive email notification system for backup operations including success/failure notifications, cloud sync status updates, and weekly health reports. Provides configurable notification settings and SMTP integration for reliable delivery.",
-      "storyScope": [
-        {
-          "usId": "US-283",
-          "acIds": [
-            "AC-1349",
-            "AC-1350",
-            "AC-1351",
-            "AC-1352",
-            "AC-1353",
-            "AC-1354",
-            "AC-1355"
-          ]
-        },
-        {
-          "usId": "US-284",
-          "acIds": [
-            "AC-1356",
-            "AC-1357",
-            "AC-1358",
-            "AC-1359",
-            "AC-1360",
-            "AC-1361",
-            "AC-1362"
-          ]
-        },
-        {
-          "usId": "US-285",
-          "acIds": [
-            "AC-1363",
-            "AC-1364",
-            "AC-1365",
-            "AC-1366",
-            "AC-1367",
-            "AC-1368",
-            "AC-1369"
-          ]
-        },
-        {
-          "usId": "US-286",
-          "acIds": [
-            "AC-1370",
-            "AC-1371",
-            "AC-1372",
-            "AC-1373",
-            "AC-1374",
-            "AC-1375",
-            "AC-1376",
-            "AC-1377"
-          ]
-        },
-        {
-          "usId": "US-287",
-          "acIds": [
-            "AC-1378",
-            "AC-1379",
-            "AC-1380",
-            "AC-1381",
-            "AC-1382",
-            "AC-1383"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-057",
-        "FBS-060",
-        "FBS-065",
-        "FBS-066"
-      ],
-      "testableOutcomes": [
-        "System sends email notification with completion timestamp, volume count, image count, backup size, and duration when backup completes successfully",
-        "System sends immediate email notification with failure timestamp, error message, and partial completion details when backup operation fails",
-        "System sends cloud sync notification with file count, data size, and provider details when cloud synchronization completes",
-        "System generates weekly backup health report email with success/failure counts, storage trends, performance metrics, and optimization recommendations",
-        "Administrator can configure email recipients, notification types, weekly report schedule, and SMTP settings through configuration interface",
-        "System validates email addresses and SMTP connectivity before saving notification configuration",
-        "System groups multiple backup failures within short time window into single email to prevent notification spam",
-        "System skips cloud sync notifications when cloud sync is disabled in configuration"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "backup-management",
-            "notification-system"
-          ],
-          "tadSections": [
-            "api-server",
-            "@jobsearch/config",
-            "@jobsearch/logger"
-          ],
-          "existingModules": [
-            "backup services",
-            "email utilities",
-            "configuration management"
-          ],
-          "schemas": [
-            "notification_config",
-            "backup_events",
-            "email_templates"
-          ]
-        },
-        "deliverables": [
-          "Email notification service with template system",
-          "SMTP configuration and validation module",
-          "Backup event listener and notification trigger",
-          "Weekly report generator with metrics aggregation",
-          "Notification configuration API endpoints",
-          "Email template components for all notification types",
-          "Notification settings UI components",
-          "Error handling and retry logic for email delivery"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Requires SMTP server configuration and email template design. Consider using nodemailer for email delivery with retry logic. Weekly reports need aggregated metrics from backup history. Email grouping logic prevents spam from multiple failures."
-    },
-    {
-      "id": "FBS-068",
-      "title": "Backup Retention Policy Management",
-      "summary": "Implements automated backup retention management with configurable policies for local (7-day) and cloud (90-day) storage. Provides automatic cleanup triggers, manual backup protection, and policy validation to optimize storage usage while maintaining recovery capabilities.",
-      "storyScope": [
-        {
-          "usId": "US-288",
-          "acIds": [
-            "AC-1384",
-            "AC-1385",
-            "AC-1386",
-            "AC-1387"
-          ]
-        },
-        {
-          "usId": "US-289",
-          "acIds": [
-            "AC-1388",
-            "AC-1389",
-            "AC-1390",
-            "AC-1391"
-          ]
-        },
-        {
-          "usId": "US-290",
-          "acIds": [
-            "AC-1392",
-            "AC-1393",
-            "AC-1394",
-            "AC-1395"
-          ]
-        },
-        {
-          "usId": "US-291",
-          "acIds": [
-            "AC-1396",
-            "AC-1397",
-            "AC-1398",
-            "AC-1399"
-          ]
-        },
-        {
-          "usId": "US-292",
-          "acIds": [
-            "AC-1400",
-            "AC-1401",
-            "AC-1402",
-            "AC-1403"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-057",
-        "FBS-060",
-        "FBS-065",
-        "FBS-066"
-      ],
-      "testableOutcomes": [
-        "System automatically deletes local backups older than 7 days when retention cleanup runs while preserving backups within 7 days",
-        "System automatically deletes cloud backups older than 90 days when retention cleanup runs while preserving backups within 90 days",
-        "System triggers local retention cleanup automatically after successful local backup completion",
-        "System triggers cloud retention cleanup automatically after successful cloud backup completion",
-        "System skips retention cleanup when backup operations fail or are interrupted",
-        "System preserves manual backups regardless of age when retention cleanup runs for both local and cloud storage",
-        "System marks backups as manual when created with manual flag and exempts them from all future cleanup operations",
-        "System loads default retention policies of 7 days local and 90 days cloud on startup",
-        "System validates retention period values and rejects invalid configuration with appropriate error messages",
-        "System applies updated retention policies to all subsequent cleanup operations when configuration changes",
-        "System returns active local and cloud retention periods with last update timestamps when configuration is queried"
+        "User can successfully submit completed manual job form and receive confirmation message",
+        "System prevents submission when required fields are missing and shows validation errors",
+        "Successfully submitted jobs receive unique identifier and timestamp",
+        "User is redirected to job details view or job list after successful submission",
+        "Manually entered jobs appear in matching algorithm results with compatibility scores",
+        "Manually entered jobs are available as targets for cover letter generation",
+        "Generated cover letters use job title, company, description, and requirements from manual entry",
+        "Manually entered jobs appear in application tracking dashboard alongside scraped jobs",
+        "Application status updates work correctly for manually entered jobs",
+        "Jobs with deadlines show appropriate deadline highlighting in tracking dashboard",
+        "Jobs with URLs allow clickable navigation to original posting"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -877,50 +171,759 @@
         "estimatedHours": 5,
         "contextRequirements": {
           "prdSections": [
-            "backup-management",
-            "data-retention"
+            "Job Discovery",
+            "Job Matching",
+            "Application Tracking"
           ],
           "tadSections": [
-            "api-server",
-            "@jobsearch/config",
-            "@jobsearch/database"
+            "Job Discovery Service",
+            "Intelligent Matching Service",
+            "Application Management Service"
           ],
           "existingModules": [
-            "backup services",
-            "configuration management",
-            "database utilities"
+            "matching algorithms",
+            "cover letter generation",
+            "application tracking"
           ],
           "schemas": [
-            "backup_metadata",
-            "retention_policies",
-            "backup_events"
+            "jobs table",
+            "applications table",
+            "match_scores table"
           ]
         },
         "deliverables": [
-          "Retention policy configuration module",
-          "Local backup cleanup service with age-based deletion",
-          "Cloud backup cleanup service with API integration",
-          "Manual backup protection and flagging system",
-          "Automatic cleanup trigger orchestrator",
-          "Retention policy validation utilities",
-          "Cleanup scheduling and execution engine",
-          "Error handling and logging for cleanup operations"
+          "apps/api-server/src/routes/manual-job-entry.ts",
+          "packages/@jobsearch/jobs/src/manual-job-processor.ts",
+          "packages/@jobsearch/jobs/src/job-integrator.ts",
+          "Enhanced matching service integration",
+          "Enhanced cover letter generation integration",
+          "Enhanced application tracking integration",
+          "Database migration for manual job source tracking"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Ensure manual jobs integrate seamlessly with existing pipeline. Pay attention to data consistency and proper source attribution. Test all downstream services with manually entered job data."
+    },
+    {
+      "id": "FBS-063",
+      "title": "Multiple CV Variants System",
+      "summary": "Implements comprehensive CV variant management allowing users to create, parse, and manage multiple CV versions with independent skill profiles. Enables targeted job matching using different professional presentations.",
+      "storyScope": [
+        {
+          "usId": "US-174",
+          "acIds": [
+            "AC-797",
+            "AC-798",
+            "AC-799",
+            "AC-800",
+            "AC-801",
+            "AC-802"
+          ]
+        },
+        {
+          "usId": "US-175",
+          "acIds": [
+            "AC-803",
+            "AC-804",
+            "AC-805",
+            "AC-806",
+            "AC-807"
+          ]
+        },
+        {
+          "usId": "US-176",
+          "acIds": [
+            "AC-808",
+            "AC-809",
+            "AC-810",
+            "AC-811",
+            "AC-812"
+          ]
+        },
+        {
+          "usId": "US-177",
+          "acIds": [
+            "AC-813",
+            "AC-814",
+            "AC-815",
+            "AC-816",
+            "AC-817"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-019",
+        "FBS-020",
+        "FBS-021",
+        "FBS-030"
+      ],
+      "testableOutcomes": [
+        "User can create new CV variant with unique name and upload PDF, DOC, or DOCX files",
+        "System prevents duplicate variant names and shows error for name conflicts",
+        "First created variant automatically becomes default variant",
+        "Each uploaded CV variant is independently parsed into separate skill profile",
+        "Skill profiles remain isolated with no cross-variant contamination",
+        "Failed parsing shows error message with retry option",
+        "Re-parsing updated variant only affects that variant's skill profile",
+        "User can select specific CV variant from dropdown when viewing job postings",
+        "Match calculations use only skills and experience from selected variant",
+        "System clearly indicates which variant was used for matching analysis",
+        "Changing selected variant triggers recalculation with new variant data",
+        "Single variant automatically selected without dropdown display",
+        "User can designate default variant for automated matching in settings",
+        "Automated job matching uses default variant's skill profile",
+        "Default variant is clearly marked in profile settings",
+        "Deleting current default variant automatically sets next available as default"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "User Profile Management",
+            "CV Processing",
+            "Job Matching"
+          ],
+          "tadSections": [
+            "User Profile Service",
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "CV parser",
+            "skill extraction",
+            "matching algorithms"
+          ],
+          "schemas": [
+            "user_profiles table",
+            "cv_variants table",
+            "skill_profiles table"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/cv-variants/src/variant-manager.ts",
+          "packages/@jobsearch/cv-variants/src/variant-parser.ts",
+          "packages/@jobsearch/cv-variants/src/skill-profile-isolator.ts",
+          "packages/@jobsearch/cv-variants/src/default-variant-manager.ts",
+          "apps/web-ui/src/components/CVVariantManager.tsx",
+          "apps/web-ui/src/components/VariantSelector.tsx",
+          "apps/web-ui/src/components/VariantUpload.tsx",
+          "apps/web-ui/src/hooks/useCVVariants.ts",
+          "apps/api-server/src/routes/cv-variants.ts",
+          "Database migration for cv_variants and skill_profiles tables",
+          "Enhanced matching service with variant selection"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Profile & CV Management",
+      "implementationNotes": "Critical to maintain skill profile isolation between variants. Ensure parsing pipeline can handle multiple variants without interference. Consider storage implications for multiple CV files per user. Test default variant logic thoroughly, especially edge cases around deletion."
+    },
+    {
+      "id": "FBS-064",
+      "title": "CV Variant Management",
+      "summary": "Implements comprehensive CV variant management allowing users to update, rename, and delete individual CV variants independently. Provides safeguards for default variant management and prevents deletion of the last remaining variant.",
+      "storyScope": [
+        {
+          "usId": "US-178",
+          "acIds": [
+            "AC-818",
+            "AC-819",
+            "AC-820",
+            "AC-821",
+            "AC-822"
+          ]
+        },
+        {
+          "usId": "US-179",
+          "acIds": [
+            "AC-823",
+            "AC-824",
+            "AC-825",
+            "AC-826",
+            "AC-827",
+            "AC-828"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-063"
+      ],
+      "testableOutcomes": [
+        "User can edit variant name, upload new file, and modify settings for specific CV variant without affecting other variants",
+        "System re-parses only the updated variant's skill profile when file is changed, leaving other variants unchanged",
+        "System prevents deletion of the last remaining CV variant with error message 'At least one CV variant is required'",
+        "System automatically assigns new default variant when current default variant is deleted",
+        "System displays confirmation dialog with warning about losing application history before deleting variant with associated data",
+        "Variant name changes are immediately reflected in all dropdown menus and selection lists across the application"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "User Profile Management",
+            "CV Management"
+          ],
+          "tadSections": [
+            "User Profile Service",
+            "CV Variants System"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/cv-variants",
+            "apps/web-ui/src/components/CVVariantManager.tsx"
+          ],
+          "schemas": [
+            "cv_variants",
+            "skill_profiles",
+            "user_profiles"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/cv-variants/src/variant-editor.ts",
+          "packages/@jobsearch/cv-variants/src/variant-deleter.ts",
+          "packages/@jobsearch/cv-variants/src/default-manager.ts",
+          "apps/web-ui/src/components/VariantEditModal.tsx",
+          "apps/web-ui/src/components/VariantDeleteConfirmation.tsx",
+          "apps/api-server/src/routes/cv-variant-management.ts"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Profile & CV Management",
+      "implementationNotes": "Requires careful handling of file uploads, skill profile re-parsing, and cascade deletion logic. Must ensure atomic operations for variant updates and proper cleanup of associated data."
+    },
+    {
+      "id": "FBS-065",
+      "title": "Match Preference Customization",
+      "summary": "Delivers comprehensive match preference customization system allowing users to set custom weights for different matching dimensions, apply predefined presets, and save preferences to their profile. Implements weighted scoring algorithm that uses personalized preferences.",
+      "storyScope": [
+        {
+          "usId": "US-180",
+          "acIds": [
+            "AC-829",
+            "AC-830",
+            "AC-831",
+            "AC-832",
+            "AC-833"
+          ]
+        },
+        {
+          "usId": "US-181",
+          "acIds": [
+            "AC-834",
+            "AC-835",
+            "AC-836",
+            "AC-837",
+            "AC-838"
+          ]
+        },
+        {
+          "usId": "US-182",
+          "acIds": [
+            "AC-839",
+            "AC-840",
+            "AC-841",
+            "AC-842",
+            "AC-843",
+            "AC-844"
+          ]
+        },
+        {
+          "usId": "US-183",
+          "acIds": [
+            "AC-845",
+            "AC-846",
+            "AC-847",
+            "AC-848",
+            "AC-849",
+            "AC-850"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-030",
+        "FBS-024"
+      ],
+      "testableOutcomes": [
+        "User can adjust preference weights using sliders for skills match, remote work, salary range, company size, industry, and experience level",
+        "System automatically normalizes weights to sum to 100% when total exceeds 100%",
+        "System displays validation errors and prevents saving when negative or non-numeric weight values are entered",
+        "User can select 'Remote Priority' preset which sets remote work weight to 40% and distributes other dimensions with lower weights",
+        "User can select 'Salary Priority' preset which sets salary range weight to 40% and distributes other dimensions appropriately",
+        "User can select 'Skills Match Priority' preset which sets skills match weight to 50% and distributes remaining dimensions",
+        "System saves custom preference weights to user profile and persists across sessions",
+        "Job match scores are calculated using saved preference weights with each dimension score multiplied by its corresponding weight",
+        "Jobs with high scores in user's high-weight preferences rank higher than jobs with high scores in low-weight preferences",
+        "System recalculates all match scores when user updates and saves new preference weights"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Intelligent Matching",
+            "User Preferences",
+            "Job Scoring"
+          ],
+          "tadSections": [
+            "Intelligent Matching Service",
+            "User Profile Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/matching/src/hybrid-scorer.ts",
+            "packages/@jobsearch/profile"
+          ],
+          "schemas": [
+            "user_profiles",
+            "match_preferences",
+            "jobs",
+            "match_scores"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/matching/src/preference-engine.ts",
+          "packages/@jobsearch/matching/src/weighted-scorer.ts",
+          "packages/@jobsearch/matching/src/preset-manager.ts",
+          "packages/@jobsearch/profile/src/preference-service.ts",
+          "apps/web-ui/src/components/MatchPreferences.tsx",
+          "apps/web-ui/src/components/PreferenceSliders.tsx",
+          "apps/web-ui/src/components/PresetSelector.tsx",
+          "apps/api-server/src/routes/match-preferences.ts",
+          "Database migration for match_preferences table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Complex integration with existing hybrid scoring algorithm. Requires careful weight normalization logic and efficient recalculation of match scores. Must handle preset application and custom weight validation properly."
+    },
+    {
+      "id": "FBS-066",
+      "title": "Preference Impact Visualization",
+      "summary": "Provides detailed visualization of how user preference weights affect individual job match scores. Shows breakdown of raw scores, weighted contributions, and total match score calculations to help users understand and optimize their preferences.",
+      "storyScope": [
+        {
+          "usId": "US-184",
+          "acIds": [
+            "AC-851",
+            "AC-852",
+            "AC-853",
+            "AC-854"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-065"
+      ],
+      "testableOutcomes": [
+        "User can expand match details for any job to see breakdown of scores for each dimension (skills, remote, salary, company size, industry, experience level)",
+        "Match breakdown displays both raw score and weighted score contribution for each dimension",
+        "Jobs with high remote work scores show high weighted contribution when user has set high remote work preference weight",
+        "User can compare same job's match breakdown before and after preference changes to see how weighted scores and total changed",
+        "Match score visualization clearly shows which dimensions contribute most to the final score based on user's preference weights"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Matching Visualization",
+            "User Interface"
+          ],
+          "tadSections": [
+            "Web Frontend",
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "apps/web-ui/src/components/MatchScoreIndicator.tsx",
+            "packages/@jobsearch/matching"
+          ],
+          "schemas": [
+            "match_scores",
+            "match_preferences"
+          ]
+        },
+        "deliverables": [
+          "apps/web-ui/src/components/MatchScoreBreakdown.tsx",
+          "apps/web-ui/src/components/DimensionScoreCard.tsx",
+          "apps/web-ui/src/components/WeightedContributionChart.tsx",
+          "apps/web-ui/src/hooks/useMatchBreakdown.ts",
+          "apps/api-server/src/routes/match-score-breakdown.ts"
         ]
       },
       "riskLevel": "low",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Critical to implement proper date/time handling for retention calculations using UTC for cloud and configured timezone for local. Manual backup protection requires persistent flagging in metadata. Cleanup operations need robust error handling to prevent data loss from failed deletions."
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Primarily UI-focused with data visualization components. Requires integration with existing match scoring system to retrieve detailed score breakdowns. Should include responsive design for mobile viewing."
+    },
+    {
+      "id": "FBS-067",
+      "title": "Content Editing & Versioning",
+      "summary": "Implements rich text editing capabilities for cover letters and CVs with automatic version creation on save. Users can edit generated content with formatting controls and maintain complete version history with job associations.",
+      "storyScope": [
+        {
+          "usId": "US-185",
+          "acIds": [
+            "AC-855",
+            "AC-856",
+            "AC-857",
+            "AC-858",
+            "AC-859"
+          ]
+        },
+        {
+          "usId": "US-186",
+          "acIds": [
+            "AC-860",
+            "AC-861",
+            "AC-862",
+            "AC-863",
+            "AC-864"
+          ]
+        },
+        {
+          "usId": "US-187",
+          "acIds": [
+            "AC-865",
+            "AC-866",
+            "AC-867",
+            "AC-868",
+            "AC-869"
+          ]
+        },
+        {
+          "usId": "US-192",
+          "acIds": [
+            "AC-890",
+            "AC-891",
+            "AC-892",
+            "AC-893",
+            "AC-894"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-036",
+        "FBS-038"
+      ],
+      "testableOutcomes": [
+        "User can click edit button on generated cover letter and rich text editor opens with current content loaded",
+        "User can apply bold, italic, and underline formatting to selected text in the editor",
+        "User can create paragraphs and line breaks that are preserved in the content structure",
+        "User can edit different CV sections (summary, experience, skills) with changes applied to respective sections",
+        "User can rearrange CV section order and the new order is preserved when saved",
+        "System automatically creates new version with incremented number when user saves edited content",
+        "System preserves previous versions unchanged and accessible after creating new version",
+        "System creates version 1.0 as original generated content and version 1.1 as first user edit",
+        "System automatically links initial generated content version to the specific job it was created for",
+        "System maintains job link when user saves edited versions for the same job application"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Content Generation",
+            "Version Management"
+          ],
+          "tadSections": [
+            "Content Generation Service",
+            "User Profile Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/content-generation",
+            "packages/@jobsearch/cv-variants"
+          ],
+          "schemas": [
+            "cover_letters",
+            "tailored_cvs",
+            "content_versions"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/rich-text-editor.ts",
+          "packages/@jobsearch/content-generation/src/version-manager.ts",
+          "packages/@jobsearch/content-generation/src/content-editor.ts",
+          "apps/web-ui/src/components/RichTextEditor.tsx",
+          "apps/web-ui/src/components/ContentVersionManager.tsx",
+          "apps/api-server/src/routes/content-editing.ts",
+          "Database migration for content_versions table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Rich text editor requires careful handling of formatting preservation and version diff tracking. Version management must maintain referential integrity with job associations."
+    },
+    {
+      "id": "FBS-068",
+      "title": "Version Management & Export",
+      "summary": "Provides comprehensive version history management with comparison tools and export capabilities. Users can view version history, compare versions side-by-side, revert to previous versions, and export content as plain text.",
+      "storyScope": [
+        {
+          "usId": "US-188",
+          "acIds": [
+            "AC-870",
+            "AC-871",
+            "AC-872",
+            "AC-873",
+            "AC-874"
+          ]
+        },
+        {
+          "usId": "US-189",
+          "acIds": [
+            "AC-875",
+            "AC-876",
+            "AC-877",
+            "AC-878",
+            "AC-879"
+          ]
+        },
+        {
+          "usId": "US-190",
+          "acIds": [
+            "AC-880",
+            "AC-881",
+            "AC-882",
+            "AC-883",
+            "AC-884"
+          ]
+        },
+        {
+          "usId": "US-191",
+          "acIds": [
+            "AC-885",
+            "AC-886",
+            "AC-887",
+            "AC-888",
+            "AC-889"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-067"
+      ],
+      "testableOutcomes": [
+        "User can click version history and see chronological list of all versions ordered newest to oldest",
+        "User can view version entry showing version number, creation date, and associated job information",
+        "User can click on specific version and view the full content of that version",
+        "User can select two versions and open side-by-side comparison view with differences highlighted",
+        "User can see added content highlighted in green and removed content highlighted in red in comparison",
+        "User can select previous version and click revert to open confirmation dialog",
+        "User can confirm revert action and selected version becomes current active version with new version created",
+        "User can click export button and see option to export content as plain text format",
+        "User can complete plain text export and receive .txt file with formatting removed but structure preserved",
+        "System prevents revert when user cancels confirmation dialog and returns to version history unchanged"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Version Management",
+            "Export Features"
+          ],
+          "tadSections": [
+            "Content Generation Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/content-generation"
+          ],
+          "schemas": [
+            "content_versions",
+            "version_comparisons"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/version-history-manager.ts",
+          "packages/@jobsearch/content-generation/src/version-comparator.ts",
+          "packages/@jobsearch/content-generation/src/content-exporter.ts",
+          "apps/web-ui/src/components/VersionHistory.tsx",
+          "apps/web-ui/src/components/VersionComparison.tsx",
+          "apps/web-ui/src/components/ExportOptions.tsx",
+          "apps/api-server/src/routes/version-management.ts"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Version comparison requires efficient diff algorithms for large content. Export functionality must handle various formatting edge cases and maintain readability."
+    },
+    {
+      "id": "FBS-069",
+      "title": "Application Status Management",
+      "summary": "Implements comprehensive application status management with metadata capture, automatic Kanban board updates, and follow-up reminder scheduling. Users can mark jobs as applied with CV and cover letter tracking, and manually change status across all workflow states.",
+      "storyScope": [
+        {
+          "usId": "US-193",
+          "acIds": [
+            "AC-895",
+            "AC-896",
+            "AC-897",
+            "AC-898",
+            "AC-899",
+            "AC-900"
+          ]
+        },
+        {
+          "usId": "US-194",
+          "acIds": [
+            "AC-901",
+            "AC-902",
+            "AC-903",
+            "AC-904"
+          ]
+        },
+        {
+          "usId": "US-195",
+          "acIds": [
+            "AC-905",
+            "AC-906",
+            "AC-907",
+            "AC-908"
+          ]
+        },
+        {
+          "usId": "US-196",
+          "acIds": [
+            "AC-909",
+            "AC-910",
+            "AC-911",
+            "AC-912",
+            "AC-913",
+            "AC-914"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-051",
+        "FBS-053",
+        "FBS-063"
+      ],
+      "testableOutcomes": [
+        "User can click 'Mark as Applied' button and job status changes to 'Applied' with metadata modal opening",
+        "User can select CV variant and cover letter version from available options in application metadata form",
+        "User can submit application metadata form with application date automatically set to today's date",
+        "User can cancel metadata form and job status remains unchanged from original state",
+        "System automatically moves job from any column to 'Applied' column when marked as applied",
+        "System updates 'Applied' column job count correctly when jobs move to applied status",
+        "System automatically schedules follow-up reminder when job is marked as applied",
+        "User can view scheduled reminder date in job details after marking job as applied",
+        "User can select 'Change Status' and see all workflow options: Bookmarked, Applied, Interviewing, Offered, Rejected, Withdrawn",
+        "User can change status to any workflow state and job moves to appropriate Kanban column",
+        "System creates independent follow-up reminders for multiple jobs marked as applied on same day"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Management",
+            "Status Tracking",
+            "Reminder System"
+          ],
+          "tadSections": [
+            "Application Management Service",
+            "Notification Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/applications",
+            "packages/@jobsearch/reminders"
+          ],
+          "schemas": [
+            "job_applications",
+            "application_metadata",
+            "reminder_schedules"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/applications/src/application-metadata-manager.ts",
+          "packages/@jobsearch/applications/src/status-workflow-manager.ts",
+          "packages/@jobsearch/applications/src/kanban-updater.ts",
+          "apps/web-ui/src/components/ApplicationMetadataModal.tsx",
+          "apps/web-ui/src/components/StatusChangeModal.tsx",
+          "apps/web-ui/src/components/MarkAsAppliedButton.tsx",
+          "apps/api-server/src/routes/application-status-management.ts",
+          "Database migration for application_metadata table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Application Management & Tracking",
+      "implementationNotes": "Status workflow management requires careful validation of state transitions and integration with reminder scheduling. Kanban board updates must handle concurrent status changes gracefully."
+    },
+    {
+      "id": "FBS-070",
+      "title": "Status Change Validation & Error Handling",
+      "summary": "Implements comprehensive validation for job application status changes with error handling, network failure recovery, and concurrent request management. Ensures data integrity and provides clear user feedback for all status change scenarios.",
+      "storyScope": [
+        {
+          "usId": "US-197",
+          "acIds": [
+            "AC-915",
+            "AC-916",
+            "AC-917",
+            "AC-918",
+            "AC-919"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-028",
+        "FBS-069"
+      ],
+      "testableOutcomes": [
+        "Status remains unchanged and error message displays when network error occurs during status update",
+        "Validation errors prevent status change to 'Applied' when required metadata fields are missing",
+        "Clear error message explains invalid transition when user attempts unsupported status change",
+        "Second status change request is queued or blocked when first request is still processing",
+        "Confirmation message displays new status when status change completes successfully"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Management",
+            "Status Tracking"
+          ],
+          "tadSections": [
+            "Application Management Service"
+          ],
+          "existingModules": [
+            "status-manager.ts",
+            "status-transitions.ts"
+          ],
+          "schemas": [
+            "applications",
+            "application_metadata"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/applications/src/status-validator.ts",
+          "packages/@jobsearch/applications/src/concurrent-request-handler.ts",
+          "packages/@jobsearch/applications/src/network-error-handler.ts",
+          "apps/web-ui/src/components/StatusChangeErrorDisplay.tsx",
+          "Enhanced status update API endpoints with validation"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Application Management & Tracking",
+      "implementationNotes": "Focus on robust validation logic and graceful error handling. Implement request queuing to prevent concurrent status changes. Ensure all error messages are user-friendly and actionable."
     }
   ],
-  "createdAt": "2026-02-09T11:24:34.997Z",
-  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
   "partInfo": {
     "partNumber": 7,
-    "totalParts": 7,
+    "totalParts": 8,
     "fbsRange": {
       "start": "FBS-061",
-      "end": "FBS-068"
+      "end": "FBS-070"
     },
-    "globalFbsCount": 68
+    "globalFbsCount": 73
   }
 }

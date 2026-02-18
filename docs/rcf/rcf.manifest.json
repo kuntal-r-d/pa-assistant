@@ -54,6 +54,10 @@
       ],
       "bs": [
         {
+          "id": "BS-008",
+          "path": "docs/rcf/build-sequence/PRD-001/BS-008.json"
+        },
+        {
           "id": "BS-007",
           "path": "docs/rcf/build-sequence/PRD-001/BS-007.json"
         },

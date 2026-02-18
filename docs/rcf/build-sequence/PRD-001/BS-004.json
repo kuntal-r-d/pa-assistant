@@ -3,64 +3,50 @@
   "prdId": "PRD-001",
   "version": "1.0.0",
   "status": "draft",
-  "title": "Build Sequence: PRD-001 (Part 4 of 7)",
-  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
-  "generationStrategy": "dependency-first",
+  "title": "Build Sequence: PRD-001 (Part 4 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
   "buildSequence": [
     {
       "id": "FBS-031",
-      "title": "Application Timeline Visualization",
-      "summary": "Implements horizontal timeline visualization for job applications showing stage progression, duration calculations, and comparison to averages. Provides visual representation of application status history with chronological stage transitions and performance indicators.",
+      "title": "Semantic Embeddings & Algorithm Validation",
+      "summary": "Implements semantic embeddings component for contextual meaning analysis between user profiles and job descriptions. Validates the complete hybrid scoring algorithm for accuracy, consistency, and performance across all components.",
       "storyScope": [
         {
-          "usId": "US-094",
+          "usId": "US-050",
           "acIds": [
-            "AC-471",
-            "AC-472",
-            "AC-473",
-            "AC-474"
+            "AC-237",
+            "AC-238",
+            "AC-239",
+            "AC-240",
+            "AC-241"
           ]
         },
         {
-          "usId": "US-095",
+          "usId": "US-051",
           "acIds": [
-            "AC-475",
-            "AC-476",
-            "AC-477",
-            "AC-478"
-          ]
-        },
-        {
-          "usId": "US-096",
-          "acIds": [
-            "AC-479",
-            "AC-480",
-            "AC-481",
-            "AC-482"
-          ]
-        },
-        {
-          "usId": "US-097",
-          "acIds": [
-            "AC-483",
-            "AC-484",
-            "AC-485"
+            "AC-242",
+            "AC-243",
+            "AC-244",
+            "AC-245",
+            "AC-246"
           ]
         }
       ],
       "dependencies": [
-        "FBS-028",
-        "FBS-029"
+        "FBS-030"
       ],
       "testableOutcomes": [
-        "User can view horizontal timeline showing all stages an application has progressed through in chronological order",
-        "Timeline displays current stage with visual highlighting distinct from completed stages",
-        "System calculates and displays duration for each completed stage in hours (<24h) or days (≥1 day) format",
-        "Current stage shows elapsed time since entering that stage with real-time updates",
-        "System calculates average durations across all applications and compares individual stages to averages",
-        "Stages significantly above average duration are visually indicated as slow-moving",
-        "Timeline loads within 2 seconds for applications with up to 10 stage transitions",
-        "Applications with no stage transitions display message indicating no timeline data available"
+        "Semantic embeddings component returns scores between 0-100% for any user profile and job description pair",
+        "Semantic embeddings contributes exactly 10% to the final hybrid match score calculation",
+        "System detects semantic similarity above 70% for contextually similar content with different wording",
+        "System returns similarity scores below 20% for completely unrelated profiles and job descriptions",
+        "System generates identical vector representations when processing the same text input multiple times",
+        "Hybrid score calculation produces weighted sum totaling exactly 100% from all four components (30% + 40% + 20% + 10%)",
+        "System handles edge cases (empty profiles, missing skills, zero experience) without errors and returns valid scores",
+        "Match scores remain consistent within 0.1% variance across different system loads for identical inputs",
+        "System calculates match scores for 1000 user-job pairs within 5 seconds",
+        "System gracefully handles component failures and continues calculation with remaining valid components"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -68,106 +54,105 @@
         "estimatedHours": 5,
         "contextRequirements": {
           "prdSections": [
-            "Application Tracking",
-            "Timeline Visualization"
+            "Intelligent Matching Service"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/database"
+            "Intelligent Matching Service"
           ],
           "existingModules": [
-            "Application database schema",
-            "Status tracking system"
+            "packages/@jobsearch/matching/src/hybrid-scorer.ts"
           ],
           "schemas": [
-            "Application status transitions",
-            "Timeline visualization data"
+            "user_profiles",
+            "job_postings",
+            "match_scores"
           ]
         },
         "deliverables": [
-          "Timeline visualization React component",
-          "Stage duration calculation service",
-          "Average duration comparison engine",
-          "Timeline data aggregation API",
-          "Timeline UI integration"
+          "packages/@jobsearch/matching/src/semantic-embeddings.ts",
+          "packages/@jobsearch/matching/src/embedding-generator.ts",
+          "packages/@jobsearch/matching/src/vector-similarity.ts",
+          "packages/@jobsearch/matching/src/algorithm-validator.ts",
+          "packages/@jobsearch/matching/src/performance-monitor.ts",
+          "Enhanced hybrid-scorer.ts with semantic embeddings integration",
+          "Comprehensive validation and performance test suite"
         ]
       },
-      "riskLevel": "low",
-      "domain": "Application Tracking",
-      "implementationNotes": "Leverages existing application status tracking from FBS-028. Focus on efficient duration calculations and responsive timeline rendering for optimal user experience."
+      "riskLevel": "high",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "High risk due to AI/ML integration complexity, vector similarity calculations, and performance requirements for large-scale matching operations. Requires careful handling of embedding generation and similarity scoring algorithms."
     },
     {
       "id": "FBS-032",
-      "title": "Job Dashboard Foundation",
-      "summary": "Creates the core job dashboard with responsive card layout, match score display, technology requirements, salary information, and quick actions. Establishes the primary interface for job discovery and management with comprehensive job information presentation.",
+      "title": "Skill Gap Analysis Engine",
+      "summary": "Implements comprehensive skill analysis engine that identifies matched skills, missing requirements, and extra qualifications between user CVs and job postings. Includes fuzzy matching for skill synonyms, variations, and abbreviations with confidence scoring.",
       "storyScope": [
         {
-          "usId": "US-098",
+          "usId": "US-052",
           "acIds": [
-            "AC-486",
-            "AC-487",
-            "AC-488",
-            "AC-489"
+            "AC-247",
+            "AC-248",
+            "AC-249",
+            "AC-250",
+            "AC-251"
           ]
         },
         {
-          "usId": "US-099",
+          "usId": "US-053",
           "acIds": [
-            "AC-490",
-            "AC-491",
-            "AC-492",
-            "AC-493",
-            "AC-494"
+            "AC-252",
+            "AC-253",
+            "AC-254",
+            "AC-255",
+            "AC-256"
           ]
         },
         {
-          "usId": "US-100",
+          "usId": "US-054",
           "acIds": [
-            "AC-495",
-            "AC-496",
-            "AC-497",
-            "AC-498",
-            "AC-499"
+            "AC-257",
+            "AC-258",
+            "AC-259",
+            "AC-260"
           ]
         },
         {
-          "usId": "US-101",
+          "usId": "US-055",
           "acIds": [
-            "AC-500",
-            "AC-501",
-            "AC-502",
-            "AC-503",
-            "AC-504"
-          ]
-        },
-        {
-          "usId": "US-102",
-          "acIds": [
-            "AC-505",
-            "AC-506",
-            "AC-507",
-            "AC-508",
-            "AC-509",
-            "AC-510"
+            "AC-261",
+            "AC-262",
+            "AC-263",
+            "AC-264",
+            "AC-265",
+            "AC-266"
           ]
         }
       ],
       "dependencies": [
-        "FBS-019",
-        "FBS-028",
-        "FBS-014"
+        "FBS-020",
+        "FBS-021"
       ],
       "testableOutcomes": [
-        "Dashboard displays jobs in responsive card grid layout with consistent spacing and proper alignment",
-        "Job cards prominently show job title, company name, and location with readable typography",
-        "Empty state displays appropriate message when no jobs are available",
-        "Match scores display as percentages with color coding: green (>80%), yellow (50-80%), red (<50%)",
-        "Technology tags show up to 5 technologies with '+X more' indicator and tooltip for additional technologies",
-        "Salary information displays formatted ranges ($X,XXX - $X,XXX) or exact amounts with currency and time period",
-        "Quick action buttons (Save, Apply, View Details) are accessible with hover tooltips and state management",
-        "Save action updates job to saved state and reflects change in button styling",
-        "Apply action redirects to application page or external URL as appropriate",
-        "View Details opens job details modal or navigates to detailed view"
+        "System identifies exact skill matches between CV skills ['Python', 'JavaScript', 'React'] and job requirements ['Python', 'Java', 'React'] returning ['Python', 'React']",
+        "Fuzzy matching identifies 'Machine Learning' as match for 'ML' requirement with confidence score above 80%",
+        "Fuzzy matching identifies 'JavaScript' as match for 'JS' requirement with confidence score above 80%",
+        "System returns empty array for matched skills when CV and job posting have no overlapping skills",
+        "Case-insensitive matching treats 'python' and 'Python' as identical skills",
+        "Gap analysis identifies missing skills ['Java', 'Docker'] when CV has ['Python', 'React'] and job requires ['Python', 'Java', 'Docker', 'React']",
+        "System excludes 'UI Development' from missing skills when CV contains semantically similar 'Frontend Development'",
+        "System returns empty array for missing skills when CV contains all job requirements",
+        "Synonym matching prevents 'NodeJS' from appearing in missing skills when CV contains 'Node.js'",
+        "Missing skills are prioritized by frequency of appearance in job posting text",
+        "Extra skills analysis identifies ['Docker', 'Kubernetes'] when CV has ['Python', 'Java', 'Docker', 'Kubernetes'] and job requires ['Python', 'Java']",
+        "System excludes 'AWS' from extra skills when job posting requires 'Amazon Web Services'",
+        "System returns empty array for extra skills when CV only contains job requirements",
+        "Extra skills are categorized by relevance to job domain",
+        "Common synonyms 'AI' and 'Artificial Intelligence' are treated as equivalent skills",
+        "Abbreviations 'CSS' and 'Cascading Style Sheets' are recognized as same skill",
+        "Technology variations 'React.js', 'ReactJS', and 'React' are treated as equivalent",
+        "Skills with 80% similarity threshold are considered potential fuzzy matches",
+        "Completely different skills like 'Python' and 'Java' are not considered fuzzy matches",
+        "Version-specific skills 'Python 3' and 'Python' are treated as equivalent for analysis"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -175,206 +160,234 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Job Dashboard",
-            "Job Display",
-            "User Interface"
+            "Intelligent Matching Service",
+            "CV Upload & Text Extraction"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/types",
-            "@jobsearch/database"
+            "Intelligent Matching Service"
           ],
           "existingModules": [
-            "Match scoring system",
-            "Job filtering system",
-            "Application tracking"
+            "packages/@jobsearch/cv-parser/src/skills-extractor.ts",
+            "packages/@jobsearch/matching/src/skill-matcher.ts"
           ],
           "schemas": [
-            "Job data schema",
-            "Match score schema",
-            "Application status schema"
+            "user_profiles",
+            "job_postings",
+            "skills",
+            "skill_synonyms"
           ]
         },
         "deliverables": [
-          "Job dashboard main component",
-          "Job card component with all information display",
-          "Match score visualization component",
-          "Technology tags component with overflow handling",
-          "Salary display formatting utilities",
-          "Quick actions component with state management",
-          "Empty state component",
-          "Dashboard API integration layer"
+          "packages/@jobsearch/matching/src/skill-gap-analyzer.ts",
+          "packages/@jobsearch/matching/src/fuzzy-skill-matcher.ts",
+          "packages/@jobsearch/matching/src/skill-synonym-engine.ts",
+          "packages/@jobsearch/matching/src/skill-categorizer.ts",
+          "packages/@jobsearch/matching/src/confidence-calculator.ts",
+          "packages/@jobsearch/matching/src/skill-prioritizer.ts",
+          "Skill synonyms and variations configuration database",
+          "Enhanced skill-matcher.ts with gap analysis integration",
+          "Comprehensive skill analysis test suite"
         ]
       },
-      "riskLevel": "low",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Builds on existing match scoring (FBS-019) and job filtering (FBS-014) systems. Requires careful attention to responsive design and performance for large job datasets."
+      "riskLevel": "medium",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Medium risk due to complex fuzzy matching algorithms and comprehensive skill synonym database requirements. Performance considerations for large skill sets and accurate confidence scoring implementation."
     },
     {
       "id": "FBS-033",
-      "title": "Job Dashboard Sorting & Filtering",
-      "summary": "Implements comprehensive sorting and filtering capabilities for the job dashboard including match percentage, posting date, salary, location, technology, and company filters. Provides advanced search and filter management with real-time results updates.",
+      "title": "Gap Analysis Reporting",
+      "summary": "Generates comprehensive skill gap analysis reports combining matched, missing, and extra skills with confidence scores, match percentages, and prioritized recommendations. Provides detailed metadata and clear marking of fuzzy-matched skills.",
       "storyScope": [
         {
-          "usId": "US-103",
+          "usId": "US-056",
           "acIds": [
-            "AC-511",
-            "AC-512",
-            "AC-513",
-            "AC-514",
-            "AC-515"
-          ]
-        },
-        {
-          "usId": "US-104",
-          "acIds": [
-            "AC-516",
-            "AC-517",
-            "AC-518",
-            "AC-519",
-            "AC-520"
-          ]
-        },
-        {
-          "usId": "US-105",
-          "acIds": [
-            "AC-521",
-            "AC-522",
-            "AC-523",
-            "AC-524",
-            "AC-525",
-            "AC-526"
-          ]
-        },
-        {
-          "usId": "US-106",
-          "acIds": [
-            "AC-527",
-            "AC-528",
-            "AC-529",
-            "AC-530",
-            "AC-531"
-          ]
-        },
-        {
-          "usId": "US-107",
-          "acIds": [
-            "AC-532",
-            "AC-533",
-            "AC-534",
-            "AC-535",
-            "AC-536"
-          ]
-        },
-        {
-          "usId": "US-108",
-          "acIds": [
-            "AC-537",
-            "AC-538",
-            "AC-539",
-            "AC-540",
-            "AC-541"
-          ]
-        },
-        {
-          "usId": "US-109",
-          "acIds": [
-            "AC-542",
-            "AC-543",
-            "AC-544",
-            "AC-545"
+            "AC-267",
+            "AC-268",
+            "AC-269",
+            "AC-270",
+            "AC-271",
+            "AC-272"
           ]
         }
       ],
       "dependencies": [
-        "FBS-032",
-        "FBS-015",
-        "FBS-014"
+        "FBS-032"
       ],
       "testableOutcomes": [
-        "Sort dropdown provides options for Match %, Date Posted, and Salary with high-to-low and low-to-high variants",
-        "Match percentage sorting displays highest scores first and places jobs without scores at end",
-        "Date sorting shows newest jobs first with relative posting dates (e.g., '2 days ago') and handles missing dates",
-        "Salary sorting uses midpoint of ranges for comparison and normalizes mixed currencies/time periods",
-        "Location filter displays available cities/regions with multi-select capability and remote work option",
-        "Location filter search provides autocomplete functionality with matching location suggestions",
-        "Technology filter allows multi-select with 'Match All' toggle and search with autocomplete",
-        "Selected technology requirements are highlighted on matching job cards",
-        "Salary range filter accepts min/max inputs and shows jobs with overlapping salary ranges",
-        "Company filter provides multi-select with search autocomplete and prominently displays company names",
-        "Active filters display as removable tags with clear indication of applied criteria",
-        "Filter and sort combinations maintain state when new jobs are loaded"
+        "Generated report includes three distinct sections: matched skills, missing skills, and extra skills",
+        "Each fuzzy-matched skill includes confidence score above 80% in the report",
+        "Report calculates and displays overall match percentage as (matched skills / total job requirements)",
+        "Missing skills are ranked by importance based on frequency and context in job posting",
+        "Report includes metadata: total skills analyzed, analysis timestamp, and fuzzy matching threshold used",
+        "Fuzzy-matched skills are clearly marked with original terms from both CV and job posting",
+        "Report displays skill categories and relevance scores for extra skills",
+        "Generated reports maintain consistent format across different user profiles and job postings"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Intelligent Matching Service"
+          ],
+          "tadSections": [
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/matching/src/skill-gap-analyzer.ts"
+          ],
+          "schemas": [
+            "skill_gap_reports",
+            "user_profiles",
+            "job_postings"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/matching/src/gap-report-generator.ts",
+          "packages/@jobsearch/matching/src/report-formatter.ts",
+          "packages/@jobsearch/matching/src/metadata-collector.ts",
+          "apps/api-server/src/routes/skill-gap-analysis.ts",
+          "apps/web-ui/src/components/SkillGapReport.tsx",
+          "Report generation and formatting test suite"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Low risk as primarily focuses on data presentation and formatting. Straightforward implementation building on existing skill gap analysis engine with clear reporting requirements."
+    },
+    {
+      "id": "FBS-034",
+      "title": "AI-Powered Gap Analysis",
+      "summary": "Implements AI-powered gap analysis using Ollama LLM to generate comprehensive reports with strengths, missing skills, improvement suggestions, and overall assessment. Provides intelligent, contextual analysis of candidate-job fit with structured reporting and error handling.",
+      "storyScope": [
+        {
+          "usId": "US-057",
+          "acIds": [
+            "AC-273",
+            "AC-274",
+            "AC-275",
+            "AC-276"
+          ]
+        },
+        {
+          "usId": "US-062",
+          "acIds": [
+            "AC-293",
+            "AC-294",
+            "AC-295",
+            "AC-296",
+            "AC-297"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-022",
+        "FBS-032",
+        "FBS-033"
+      ],
+      "testableOutcomes": [
+        "System successfully connects to local Ollama LLM service endpoint when processing gap analysis requests",
+        "LLM request includes structured resume data and job posting requirements in proper format",
+        "Generated gap analysis report contains exactly 4 sections: strengths, missing skills, improvement suggestions, and overall assessment",
+        "Gap analysis report loads and displays to user within 30 seconds of request initiation",
+        "System validates LLM response structure and requests regeneration when response is malformed or incomplete",
+        "System displays user-friendly error message and retry option when Ollama service is unavailable or times out",
+        "System handles malformed LLM responses gracefully and provides fallback messaging to user"
       ],
       "status": "not-started",
       "sessionMeta": {
         "estimatedSize": "large",
-        "estimatedHours": 8,
+        "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Job Filtering",
-            "Job Sorting",
-            "Search Interface"
+            "AI Integration",
+            "Gap Analysis",
+            "LLM Services"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/database",
-            "@jobsearch/types"
+            "Intelligent Matching Service",
+            "Hybrid AI Service"
           ],
           "existingModules": [
-            "Job filtering system",
-            "Filter preferences",
-            "Job dashboard foundation"
+            "packages/@jobsearch/matching",
+            "packages/@jobsearch/ai-service"
           ],
           "schemas": [
-            "Job search filters",
-            "Sort configurations",
-            "Filter preference storage"
+            "user_profiles",
+            "job_postings",
+            "ai_usage_tracking"
           ]
         },
         "deliverables": [
-          "Sort dropdown component with all sorting options",
-          "Advanced filter panel with all filter types",
-          "Location filter with autocomplete search",
-          "Technology filter with match-all toggle",
-          "Salary range filter component",
-          "Company filter with search capability",
-          "Active filter tags component",
-          "Filter state management service",
-          "Sort and filter API integration",
-          "Filter persistence service"
+          "packages/@jobsearch/ai-analysis/src/gap-analyzer.ts",
+          "packages/@jobsearch/ai-analysis/src/llm-client.ts",
+          "packages/@jobsearch/ai-analysis/src/prompt-builder.ts",
+          "packages/@jobsearch/ai-analysis/src/response-validator.ts",
+          "packages/@jobsearch/ai-analysis/src/error-handler.ts",
+          "packages/@jobsearch/ai-analysis/src/timeout-manager.ts",
+          "apps/api-server/src/routes/ai-gap-analysis.ts"
         ]
       },
-      "riskLevel": "medium",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Complex interaction between multiple filter types and sorting options. Requires careful state management and performance optimization for real-time filtering. Integration with existing filter preferences system from FBS-015 is critical."
+      "riskLevel": "high",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Requires careful integration with Ollama LLM service, robust error handling for AI service failures, and structured prompt engineering for consistent report generation. Performance optimization needed for 30-second response requirement."
     },
     {
-      "id": "FBS-034",
-      "title": "Advanced Dashboard Filter Management",
-      "summary": "Implements comprehensive filter management system with active filter display, individual filter removal, and clear all functionality. Provides visual feedback for applied filters and handles empty states with helpful suggestions.",
+      "id": "FBS-035",
+      "title": "AI Gap Analysis Integration & Assessment",
+      "summary": "Integrates AI gap analysis with existing matching system and implements comprehensive assessment reporting with strengths identification, missing skills categorization, and actionable improvement suggestions. Provides structured user interface for gap analysis results.",
       "storyScope": [
         {
-          "usId": "US-110",
+          "usId": "US-058",
           "acIds": [
-            "AC-546",
-            "AC-547",
-            "AC-548",
-            "AC-549",
-            "AC-550",
-            "AC-551"
+            "AC-277",
+            "AC-278",
+            "AC-279",
+            "AC-280"
+          ]
+        },
+        {
+          "usId": "US-059",
+          "acIds": [
+            "AC-281",
+            "AC-282",
+            "AC-283",
+            "AC-284"
+          ]
+        },
+        {
+          "usId": "US-060",
+          "acIds": [
+            "AC-285",
+            "AC-286",
+            "AC-287",
+            "AC-288"
+          ]
+        },
+        {
+          "usId": "US-061",
+          "acIds": [
+            "AC-289",
+            "AC-290",
+            "AC-291",
+            "AC-292"
           ]
         }
       ],
       "dependencies": [
-        "FBS-033"
+        "FBS-034"
       ],
       "testableOutcomes": [
-        "User can apply multiple filters simultaneously and see jobs matching all active criteria",
-        "Dashboard displays active filter tags showing current selections with clear labels",
-        "User can click X on any filter tag to remove that specific filter and see results update immediately",
-        "User can click 'Clear All Filters' button to remove all filters and display all available jobs",
-        "System displays 'X jobs found' count that updates dynamically as filters are applied or removed",
-        "System shows 'No jobs found' message with filter adjustment suggestions when no jobs match current criteria"
+        "Strengths section displays between 3 and 5 specific strength points with supporting evidence from resume",
+        "Each strength point directly relates to job requirements and includes evidence from candidate profile",
+        "Missing skills section displays between 3 and 5 categorized skills (technical, soft skill, certification, experience)",
+        "Each missing skill includes importance level (critical, important, nice-to-have) based on job requirements",
+        "Improvement suggestions section displays between 3 and 5 actionable items with specific actions and timeframes",
+        "Improvement suggestions are prioritized by impact on job match score",
+        "Overall assessment provides summary rating (strong match, good match, moderate match, weak match) with key factors",
+        "Assessment includes confidence level for AI analysis accuracy and next steps recommendation",
+        "System displays appropriate messaging when no significant gaps exist or limited strengths are found"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -382,223 +395,420 @@
         "estimatedHours": 5,
         "contextRequirements": {
           "prdSections": [
-            "Job Search and Filtering"
+            "Gap Analysis Reporting",
+            "User Interface",
+            "Assessment Display"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/types"
+            "Intelligent Matching Service",
+            "Web Frontend"
           ],
           "existingModules": [
-            "FBS-033 dashboard components"
+            "packages/@jobsearch/matching",
+            "apps/web-ui/src/components"
           ],
           "schemas": [
-            "Job filtering schemas"
+            "gap_analysis_reports",
+            "user_profiles",
+            "job_postings"
           ]
         },
         "deliverables": [
-          "Active filter tags component",
-          "Filter removal handlers",
-          "Clear all filters functionality",
-          "Job count display component",
-          "Empty state with suggestions",
-          "Filter state management updates"
+          "packages/@jobsearch/ai-analysis/src/assessment-generator.ts",
+          "packages/@jobsearch/ai-analysis/src/strengths-analyzer.ts",
+          "packages/@jobsearch/ai-analysis/src/gaps-categorizer.ts",
+          "packages/@jobsearch/ai-analysis/src/suggestions-prioritizer.ts",
+          "apps/web-ui/src/components/GapAnalysisReport.tsx",
+          "apps/web-ui/src/components/StrengthsSection.tsx",
+          "apps/web-ui/src/components/MissingSkillsSection.tsx",
+          "apps/web-ui/src/components/ImprovementSuggestions.tsx",
+          "apps/web-ui/src/components/OverallAssessment.tsx"
         ]
       },
-      "riskLevel": "low",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Extends existing dashboard filtering with enhanced UX. Focus on smooth state transitions and clear visual feedback for filter operations."
+      "riskLevel": "high",
+      "domain": "Intelligent Matching & Analysis",
+      "implementationNotes": "Requires sophisticated categorization logic for skills and suggestions, integration with existing matching algorithms, and careful UI design for complex assessment data presentation. AI response parsing must be robust."
     },
     {
-      "id": "FBS-035",
-      "title": "Job Detail View System",
-      "summary": "Creates comprehensive job detail pages with full job information, requirements checklist with match status, AI-powered gap analysis, cover letter variants, and tailored CV preview. Includes responsive navigation and loading states.",
+      "id": "FBS-036",
+      "title": "Cover Letter Generation System",
+      "summary": "Implements AI-powered cover letter generation system using Ollama LLM to create three distinct style variants (Conservative, Aggressive, Story-driven). Each variant maintains appropriate tone, length constraints, and style-specific characteristics while leveraging job posting and user profile data.",
       "storyScope": [
         {
-          "usId": "US-111",
+          "usId": "US-063",
           "acIds": [
-            "AC-552",
-            "AC-553",
-            "AC-554",
-            "AC-555",
-            "AC-556"
+            "AC-298",
+            "AC-299",
+            "AC-300",
+            "AC-301"
           ]
         },
         {
-          "usId": "US-112",
+          "usId": "US-064",
           "acIds": [
-            "AC-557",
-            "AC-558",
-            "AC-559",
-            "AC-560",
-            "AC-561",
-            "AC-562"
+            "AC-302",
+            "AC-303",
+            "AC-304",
+            "AC-305"
           ]
         },
         {
-          "usId": "US-113",
+          "usId": "US-065",
           "acIds": [
-            "AC-563",
-            "AC-564",
-            "AC-565",
-            "AC-566",
-            "AC-567"
+            "AC-306",
+            "AC-307",
+            "AC-308",
+            "AC-309"
           ]
         },
         {
-          "usId": "US-114",
+          "usId": "US-066",
           "acIds": [
-            "AC-568",
-            "AC-569",
-            "AC-570",
-            "AC-571",
-            "AC-572",
-            "AC-573"
+            "AC-310",
+            "AC-311",
+            "AC-312",
+            "AC-313"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-022",
+        "FBS-024"
+      ],
+      "testableOutcomes": [
+        "System generates exactly 3 cover letter variants labeled as Conservative, Aggressive, and Story-driven",
+        "Each generated cover letter variant is between 300-400 words in length",
+        "All cover letter variants use local Ollama LLM service for generation",
+        "Conservative variant uses formal language, proper business structure, and professional tone throughout",
+        "Conservative variant focuses on qualifications and experience without bold claims or informal expressions",
+        "Aggressive variant uses confident language, bold statements, and assertive tone with quantifiable achievements",
+        "Aggressive variant includes power words, competitive terminology, and confident success predictions",
+        "Story-driven variant includes narrative elements, anecdotes, and follows storytelling arc structure",
+        "Story-driven variant demonstrates clear connections between candidate story and company mission/values",
+        "Each variant maintains distinct tone and approach appropriate to its style category"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "Content Generation",
+            "Cover Letter Styles",
+            "AI Integration"
+          ],
+          "tadSections": [
+            "Content Generation Service",
+            "Hybrid AI Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/ai-service",
+            "packages/@jobsearch/profile"
+          ],
+          "schemas": [
+            "user_profiles",
+            "job_postings",
+            "cover_letters",
+            "ai_usage_tracking"
           ]
         },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/cover-letter-generator.ts",
+          "packages/@jobsearch/content-generation/src/style-prompts/conservative-prompt.ts",
+          "packages/@jobsearch/content-generation/src/style-prompts/aggressive-prompt.ts",
+          "packages/@jobsearch/content-generation/src/style-prompts/story-driven-prompt.ts",
+          "packages/@jobsearch/content-generation/src/content-validator.ts",
+          "packages/@jobsearch/content-generation/src/length-enforcer.ts",
+          "packages/@jobsearch/content-generation/src/style-analyzer.ts",
+          "apps/api-server/src/routes/cover-letter-generation.ts",
+          "apps/web-ui/src/components/CoverLetterGenerator.tsx",
+          "apps/web-ui/src/components/CoverLetterVariants.tsx",
+          "Database migration for cover_letters table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Requires sophisticated prompt engineering for each style variant, content validation for length and style compliance, and integration with existing AI service infrastructure. Style differentiation logic must be robust and consistent."
+    },
+    {
+      "id": "FBS-037",
+      "title": "Cover Letter Error Handling",
+      "summary": "Implements comprehensive error handling for cover letter generation including LLM service failures, input validation, timeout management, and retry mechanisms. Provides user-friendly error messages and recovery options for all failure scenarios.",
+      "storyScope": [
+        {
+          "usId": "US-067",
+          "acIds": [
+            "AC-314",
+            "AC-315",
+            "AC-316",
+            "AC-317"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-036"
+      ],
+      "testableOutcomes": [
+        "System displays 'LLM service unavailable' error message with retry button when Ollama service is down",
+        "System validates required inputs and displays specific error 'Missing job description' when job posting data is incomplete",
+        "System regenerates cover letter variants that fail to meet 300-400 word count requirements automatically",
+        "System displays timeout error message after 60 seconds and provides retry option for generation requests",
+        "Error messages include actionable next steps and maintain consistent styling across all failure scenarios"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Error Handling",
+            "User Experience"
+          ],
+          "tadSections": [
+            "Content Generation Service",
+            "Hybrid AI Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/content-generation",
+            "packages/@jobsearch/ai-service"
+          ],
+          "schemas": [
+            "cover_letters",
+            "error_logs"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/error-handler.ts",
+          "packages/@jobsearch/content-generation/src/input-validator.ts",
+          "packages/@jobsearch/content-generation/src/timeout-manager.ts",
+          "packages/@jobsearch/content-generation/src/retry-handler.ts",
+          "apps/web-ui/src/components/ErrorDisplay.tsx",
+          "Enhanced cover letter generation endpoints with error handling"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Focus on graceful degradation and clear user communication. Implement exponential backoff for retries and comprehensive logging for debugging generation failures."
+    },
+    {
+      "id": "FBS-038",
+      "title": "CV Tailoring Engine",
+      "summary": "Implements intelligent CV tailoring that reorders bullet points by relevance, adds Key Skills Match sections, and highlights matching technologies. Uses hybrid scoring algorithm to optimize CV content for specific job postings while maintaining professional structure.",
+      "storyScope": [
+        {
+          "usId": "US-068",
+          "acIds": [
+            "AC-318",
+            "AC-319",
+            "AC-320",
+            "AC-321",
+            "AC-322"
+          ]
+        },
+        {
+          "usId": "US-069",
+          "acIds": [
+            "AC-323",
+            "AC-324",
+            "AC-325",
+            "AC-326",
+            "AC-327",
+            "AC-328"
+          ]
+        },
+        {
+          "usId": "US-070",
+          "acIds": [
+            "AC-329",
+            "AC-330",
+            "AC-331",
+            "AC-332",
+            "AC-333",
+            "AC-334"
+          ]
+        },
+        {
+          "usId": "US-071",
+          "acIds": [
+            "AC-335",
+            "AC-336",
+            "AC-337",
+            "AC-338",
+            "AC-339"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-030",
+        "FBS-032",
+        "FBS-020"
+      ],
+      "testableOutcomes": [
+        "System reorders bullet points with relevance scores above 0.7 appearing before those below 0.7 within each role",
+        "Key Skills Match section appears after summary section and contains only skills with exact or semantic matches to job requirements",
+        "Matching technologies like 'Python' and 'AWS' are highlighted with bold formatting throughout all CV sections",
+        "System recognizes technology variations ('JS' vs 'JavaScript') and highlights both appropriately",
+        "Overall relevance score between 0-100 is calculated and displayed for the tailored CV",
+        "Individual bullet points display their relevance scores rounded to whole numbers",
+        "Skills in Key Skills Match section show match confidence scores above 80%",
+        "Original bullet point order is preserved when no matching keywords exist between CV and job posting"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "CV Tailoring",
+            "Matching Algorithm",
+            "Content Generation"
+          ],
+          "tadSections": [
+            "Content Generation Service",
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/matching",
+            "packages/@jobsearch/cv-parser",
+            "packages/@jobsearch/content-generation"
+          ],
+          "schemas": [
+            "cv_variants",
+            "tailored_cvs",
+            "relevance_scores"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/cv-tailoring-engine.ts",
+          "packages/@jobsearch/content-generation/src/bullet-point-reorderer.ts",
+          "packages/@jobsearch/content-generation/src/skills-match-generator.ts",
+          "packages/@jobsearch/content-generation/src/technology-highlighter.ts",
+          "packages/@jobsearch/content-generation/src/relevance-calculator.ts",
+          "packages/@jobsearch/content-generation/src/cv-section-manager.ts",
+          "apps/api-server/src/routes/cv-tailoring.ts",
+          "apps/web-ui/src/components/TailoredCVViewer.tsx",
+          "apps/web-ui/src/components/RelevanceScores.tsx",
+          "Database migration for tailored_cvs table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Complex algorithm requiring integration with existing matching service. Ensure performance optimization for large CVs and maintain backward compatibility with existing CV parsing infrastructure."
+    },
+    {
+      "id": "FBS-039",
+      "title": "CV Formatting Preservation",
+      "summary": "Ensures tailored CVs maintain professional formatting, consistent styling, and proper document structure. Preserves fonts, spacing, margins, and section hierarchy while applying content modifications like highlighting and reordering.",
+      "storyScope": [
+        {
+          "usId": "US-072",
+          "acIds": [
+            "AC-340",
+            "AC-341",
+            "AC-342",
+            "AC-343",
+            "AC-344"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-038"
+      ],
+      "testableOutcomes": [
+        "Original CV formatting including fonts, spacing, and margins is preserved in tailored CV output",
+        "Section headers maintain consistent styling and hierarchy after content modifications",
+        "Bullet point formatting and indentation remain consistent when reordered within experience sections",
+        "Key Skills Match section follows same styling patterns as other CV sections with proper spacing",
+        "Technology highlighting with bold formatting does not break line spacing or create formatting inconsistencies",
+        "Generated tailored CV passes ATS formatting validation checks"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Document Formatting",
+            "ATS Compatibility"
+          ],
+          "tadSections": [
+            "Content Generation Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/content-generation",
+            "packages/@jobsearch/cv-parser"
+          ],
+          "schemas": [
+            "cv_templates",
+            "formatting_rules"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/content-generation/src/format-preserver.ts",
+          "packages/@jobsearch/content-generation/src/style-manager.ts",
+          "packages/@jobsearch/content-generation/src/document-validator.ts",
+          "packages/@jobsearch/content-generation/src/ats-formatter.ts",
+          "Enhanced cv-tailoring-engine.ts with formatting preservation",
+          "Formatting validation test suite"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Content Generation & AI Services",
+      "implementationNotes": "Critical for maintaining professional document quality. Implement robust CSS/styling preservation and validate against common ATS systems. Consider different output formats (PDF, DOCX, HTML)."
+    },
+    {
+      "id": "FBS-040",
+      "title": "Daily Scraping Automation",
+      "summary": "Implements automated daily job scraping workflow using n8n orchestration. Provides scheduled execution at 8:00 AM daily with retry logic, error handling, and completion tracking within 60-minute time windows.",
+      "storyScope": [
         {
           "usId": "US-115",
           "acIds": [
-            "AC-574",
-            "AC-575",
-            "AC-576",
-            "AC-577",
-            "AC-578",
-            "AC-579"
+            "AC-535",
+            "AC-536",
+            "AC-537",
+            "AC-538"
           ]
         },
         {
           "usId": "US-116",
           "acIds": [
-            "AC-580",
-            "AC-581",
-            "AC-582",
-            "AC-583",
-            "AC-584",
-            "AC-585"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-021",
-        "FBS-023",
-        "FBS-024",
-        "FBS-026",
-        "FBS-032"
-      ],
-      "testableOutcomes": [
-        "User can view complete job information including title, company, location, posting date, full description, salary, and employment type",
-        "User can see requirements checklist with green checkmarks for matched requirements and red X for missing requirements",
-        "System displays match percentage and specific profile text that matched each requirement",
-        "User can view prioritized gap analysis with suggestions, timelines, and alternative competencies for addressing missing qualifications",
-        "User can access at least 3 cover letter variants with different focus areas and copy/download functionality",
-        "User can preview tailored CV with reordered sections, highlighted keywords, and download capability",
-        "Job detail page provides tabbed navigation between sections and responsive layout for all screen sizes",
-        "System displays loading indicators during content generation and maintains navigation context"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Job Detail Views",
-            "AI-Powered Features"
-          ],
-          "tadSections": [
-            "web-ui",
-            "@jobsearch/ai-client",
-            "@jobsearch/types"
-          ],
-          "existingModules": [
-            "Skill gap analysis",
-            "Cover letter generation",
-            "CV tailoring",
-            "Match scoring"
-          ],
-          "schemas": [
-            "Job detail schemas",
-            "User profile schemas"
+            "AC-539",
+            "AC-540",
+            "AC-541",
+            "AC-542"
           ]
         },
-        "deliverables": [
-          "Job detail page component",
-          "Requirements checklist component",
-          "Gap analysis display component",
-          "Cover letter variants viewer",
-          "Tailored CV preview component",
-          "Navigation and routing updates",
-          "Responsive layout components",
-          "Loading state management"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Complex integration of multiple AI-powered features. Requires careful state management for async operations and error handling for AI service failures."
-    },
-    {
-      "id": "FBS-036",
-      "title": "Application Kanban Board",
-      "summary": "Implements visual Kanban board for application tracking with drag-and-drop status updates, application count per column, detailed card information, and navigation to detailed views. Provides intuitive interface for managing job application pipeline.",
-      "storyScope": [
         {
           "usId": "US-117",
           "acIds": [
-            "AC-586",
-            "AC-587",
-            "AC-588",
-            "AC-589"
+            "AC-543",
+            "AC-544",
+            "AC-545",
+            "AC-546"
           ]
         },
         {
           "usId": "US-118",
           "acIds": [
-            "AC-590",
-            "AC-591",
-            "AC-592",
-            "AC-593"
-          ]
-        },
-        {
-          "usId": "US-119",
-          "acIds": [
-            "AC-594",
-            "AC-595",
-            "AC-596",
-            "AC-597",
-            "AC-598"
-          ]
-        },
-        {
-          "usId": "US-120",
-          "acIds": [
-            "AC-599",
-            "AC-600",
-            "AC-601",
-            "AC-602"
-          ]
-        },
-        {
-          "usId": "US-121",
-          "acIds": [
-            "AC-603",
-            "AC-604",
-            "AC-605",
-            "AC-606"
+            "AC-547",
+            "AC-548",
+            "AC-549",
+            "AC-550"
           ]
         }
       ],
       "dependencies": [
-        "FBS-028",
-        "FBS-029"
+        "FBS-006",
+        "FBS-011"
       ],
       "testableOutcomes": [
-        "User can view Kanban board with columns for Applied, Under Review, Interview Scheduled, Rejected, and Offer statuses",
-        "Each column header displays accurate count of applications that updates immediately when cards are moved",
-        "User can drag and drop application cards between columns with visual feedback and status updates persisted to database",
-        "Application cards display company name, job title, and application date with consistent formatting and text truncation",
-        "User can click on cards to navigate to detailed application view and return to board maintaining state",
-        "Board provides responsive layout adapting to different screen sizes",
-        "System handles drag-and-drop errors gracefully with card returning to original position and error messaging"
+        "System automatically triggers n8n scraping workflow at 8:00 AM daily when running",
+        "Scraping workflow completes processing all configured job sources within 60 minutes",
+        "System automatically retries failed scraping operations up to 3 times before marking as failed",
+        "Email alert is sent to administrators when daily scraping results in zero jobs scraped",
+        "Workflow execution metadata including duration and job count is logged for each completion",
+        "Individual source completion times and success rates are tracked separately in workflow logs"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -606,490 +816,48 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Application Tracking",
-            "User Interface Design"
+            "Automation & Workflow",
+            "Job Discovery"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/database",
-            "@jobsearch/types"
+            "Job Discovery Service",
+            "Workflow Orchestration Service"
           ],
           "existingModules": [
-            "Application tracking foundation",
-            "Application notes system"
+            "packages/@jobsearch/scrapers",
+            "apps/api-server"
           ],
           "schemas": [
-            "Application schemas",
-            "Status tracking schemas"
+            "jobs",
+            "scraping_logs",
+            "workflow_executions"
           ]
         },
         "deliverables": [
-          "Kanban board main component",
-          "Draggable application card component",
-          "Status column components with counts",
-          "Drag-and-drop handlers and validation",
-          "Application status update API integration",
-          "Responsive board layout",
-          "Error handling and visual feedback",
-          "Navigation integration with detailed views"
+          "packages/@jobsearch/automation/src/daily-scraper.ts",
+          "packages/@jobsearch/automation/src/workflow-orchestrator.ts",
+          "packages/@jobsearch/automation/src/retry-manager.ts",
+          "packages/@jobsearch/automation/src/alert-manager.ts",
+          "packages/@jobsearch/automation/src/execution-tracker.ts",
+          "n8n/workflows/daily-job-scraping.json",
+          "apps/api-server/src/routes/scraping-status.ts",
+          "Database migration for workflow execution tracking"
         ]
       },
       "riskLevel": "medium",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Requires robust drag-and-drop implementation with proper state management. Consider using react-beautiful-dnd or similar library. Handle network failures gracefully during status updates."
-    },
-    {
-      "id": "FBS-037",
-      "title": "Analytics Dashboard System",
-      "summary": "Delivers a comprehensive analytics dashboard with five key visualization components: application funnel chart, conversion rate tracking, job source performance comparison, match score distribution analysis, and weekly activity trends. Includes responsive design, filtering capabilities, and PDF export functionality.",
-      "storyScope": [
-        {
-          "usId": "US-122",
-          "acIds": [
-            "AC-607",
-            "AC-608",
-            "AC-609",
-            "AC-610",
-            "AC-611"
-          ]
-        },
-        {
-          "usId": "US-123",
-          "acIds": [
-            "AC-612",
-            "AC-613",
-            "AC-614",
-            "AC-615"
-          ]
-        },
-        {
-          "usId": "US-124",
-          "acIds": [
-            "AC-616",
-            "AC-617",
-            "AC-618",
-            "AC-619",
-            "AC-620"
-          ]
-        },
-        {
-          "usId": "US-125",
-          "acIds": [
-            "AC-621",
-            "AC-622",
-            "AC-623",
-            "AC-624",
-            "AC-625"
-          ]
-        },
-        {
-          "usId": "US-126",
-          "acIds": [
-            "AC-626",
-            "AC-627",
-            "AC-628",
-            "AC-629",
-            "AC-630",
-            "AC-631"
-          ]
-        },
-        {
-          "usId": "US-127",
-          "acIds": [
-            "AC-632",
-            "AC-633",
-            "AC-634",
-            "AC-635",
-            "AC-636",
-            "AC-637"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-028",
-        "FBS-031",
-        "FBS-019"
-      ],
-      "testableOutcomes": [
-        "User can view funnel chart displaying Applied, Screened, Interviewed, Offered, Rejected stages with accurate counts and percentages",
-        "User can see conversion rates for Applied→Screened, Screened→Interviewed, Interviewed→Offered transitions with warning indicators for below-benchmark rates",
-        "User can view source performance comparison table ranking job sources by effectiveness score with response and success rates",
-        "User can see match score histogram showing frequency distribution across 0-20, 21-40, 41-60, 61-80, 81-100 ranges",
-        "User can view weekly activity trends chart showing applications, interviews, and responses for last 12 weeks with variance indicators",
-        "User can apply date range filters and see all five analytics widgets update consistently to selected period",
-        "User can export PDF report containing all analytics charts and key insights with professional formatting",
-        "Dashboard displays responsive layout on mobile devices with vertically stacked widgets and touch interactions"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Analytics and Reporting"
-          ],
-          "tadSections": [
-            "web-ui",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "Application tracking",
-            "Match scoring",
-            "Job dashboard"
-          ],
-          "schemas": [
-            "Application",
-            "Job",
-            "User"
-          ]
-        },
-        "deliverables": [
-          "Analytics dashboard main component",
-          "Application funnel chart component",
-          "Conversion rate tracking component",
-          "Job source performance component",
-          "Match score distribution component",
-          "Weekly trends chart component",
-          "Analytics data aggregation service",
-          "PDF export service",
-          "Analytics API endpoints",
-          "Responsive layout components"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "User Interface & Dashboard",
-      "implementationNotes": "Complex data visualization requiring multiple chart libraries and statistical calculations. PDF export needs careful formatting. Mobile responsiveness critical for chart readability."
-    },
-    {
-      "id": "FBS-038",
-      "title": "Daily Job Digest Email System",
-      "summary": "Delivers automated daily email digest system that sends users the top 10 new high-match job opportunities (≥70% match score) at 9:00 AM in their timezone. Includes job filtering, ranking, email formatting, and delivery tracking with engagement metrics.",
-      "storyScope": [
-        {
-          "usId": "US-128",
-          "acIds": [
-            "AC-638",
-            "AC-639",
-            "AC-640",
-            "AC-641",
-            "AC-642"
-          ]
-        },
-        {
-          "usId": "US-129",
-          "acIds": [
-            "AC-643",
-            "AC-644",
-            "AC-645"
-          ]
-        },
-        {
-          "usId": "US-130",
-          "acIds": [
-            "AC-646",
-            "AC-647",
-            "AC-648",
-            "AC-649"
-          ]
-        },
-        {
-          "usId": "US-131",
-          "acIds": [
-            "AC-650",
-            "AC-651",
-            "AC-652",
-            "AC-653",
-            "AC-654"
-          ]
-        },
-        {
-          "usId": "US-132",
-          "acIds": [
-            "AC-655",
-            "AC-656",
-            "AC-657",
-            "AC-658"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-019",
-        "FBS-032",
-        "FBS-006"
-      ],
-      "testableOutcomes": [
-        "System sends daily digest email at 9:00 AM user timezone containing up to 10 jobs with match scores ≥70%",
-        "System includes only top 10 highest-scoring jobs when more than 10 high-match jobs are available",
-        "System sends no email when no new jobs have match scores ≥70%",
-        "Email displays job titles as clickable links, company names, match percentages, and dashboard link",
-        "System excludes jobs that were included in previous digests from current digest consideration",
-        "System logs delivery timestamp and recipient for each sent digest email",
-        "System tracks click events when users click job links or dashboard links in digest emails",
-        "Daily digest scheduler triggers at 9:00 AM in each user's timezone with retry logic on failures"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Email Notifications",
-            "Job Matching"
-          ],
-          "tadSections": [
-            "api-server",
-            "n8n-workflows",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "Match scoring",
-            "Job filtering",
-            "User management"
-          ],
-          "schemas": [
-            "User",
-            "Job",
-            "EmailLog"
-          ]
-        },
-        "deliverables": [
-          "Daily digest scheduler service",
-          "Job filtering and ranking engine",
-          "Email template system",
-          "Email delivery service with tracking",
-          "Timezone handling utilities",
-          "Digest generation orchestrator",
-          "Click tracking middleware",
-          "Email analytics API endpoints",
-          "Digest configuration management"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Notifications & Reporting",
-      "implementationNotes": "Timezone handling complexity across multiple users. Email delivery reliability critical. Need robust duplicate prevention and engagement tracking. Consider email provider rate limits."
-    },
-    {
-      "id": "FBS-039",
-      "title": "Weekly Analytics Email Reports",
-      "summary": "Delivers automated weekly email reports containing comprehensive job search analytics including jobs discovered, applications submitted, interviews scheduled, conversion rates, and trending technologies. Includes user preference configuration and customizable delivery scheduling.",
-      "storyScope": [
-        {
-          "usId": "US-133",
-          "acIds": [
-            "AC-659",
-            "AC-660",
-            "AC-661",
-            "AC-662",
-            "AC-663",
-            "AC-664",
-            "AC-665",
-            "AC-666"
-          ]
-        },
-        {
-          "usId": "US-134",
-          "acIds": [
-            "AC-667",
-            "AC-668",
-            "AC-669",
-            "AC-670",
-            "AC-671"
-          ]
-        },
-        {
-          "usId": "US-135",
-          "acIds": [
-            "AC-672",
-            "AC-673",
-            "AC-674",
-            "AC-675",
-            "AC-676"
-          ]
-        },
-        {
-          "usId": "US-136",
-          "acIds": [
-            "AC-677",
-            "AC-678",
-            "AC-679",
-            "AC-680",
-            "AC-681",
-            "AC-682"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-037",
-        "FBS-038",
-        "FBS-028"
-      ],
-      "testableOutcomes": [
-        "System sends weekly report email on Sunday at 9:00 AM user timezone with subject 'Weekly Job Search Report - [Week of Date]'",
-        "Report includes total jobs discovered, applications submitted, and interviews scheduled for the week",
-        "Report calculates and displays application-to-interview conversion rate as percentage with trend indicators",
-        "Report identifies and lists top 5 trending technologies based on job posting frequency",
-        "System displays jobs-viewed-to-applications-submitted ratio and applications-to-interviews ratio",
-        "Report compares current week conversion rates to previous week with up/down trend arrows",
-        "System extracts technology keywords from job descriptions and ranks by appearance frequency",
-        "User can configure preferred delivery day, time slot (6 AM, 9 AM, 12 PM, 6 PM), and email format (HTML/plain text)",
-        "User can enable/disable specific report sections (jobs discovered, applications, interviews, trends)",
-        "System sends report with zero values and encouraging message when no activity occurred during week"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Email Notifications",
-            "Analytics and Reporting"
-          ],
-          "tadSections": [
-            "api-server",
-            "n8n-workflows",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "Analytics dashboard",
-            "Email system",
-            "User preferences"
-          ],
-          "schemas": [
-            "User",
-            "Job",
-            "Application",
-            "UserPreferences"
-          ]
-        },
-        "deliverables": [
-          "Weekly report scheduler service",
-          "Analytics data aggregation engine",
-          "Technology trend analysis service",
-          "Conversion rate calculation utilities",
-          "Report template system (HTML/plain text)",
-          "User preference management API",
-          "Report configuration interface",
-          "Weekly report generation orchestrator",
-          "Email delivery service integration",
-          "Report analytics tracking system"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "Notifications & Reporting",
-      "implementationNotes": "Builds on existing analytics foundation from FBS-037. Technology extraction needs robust keyword parsing. User preference system requires careful validation to prevent empty reports."
-    },
-    {
-      "id": "FBS-040",
-      "title": "Daily Scraping Workflow Automation",
-      "summary": "Implements n8n-based daily job scraping automation with 60-minute execution limits, automatic retry logic, and zero-jobs alerting. Provides reliable, scheduled job discovery with comprehensive error handling and monitoring.",
-      "storyScope": [
-        {
-          "usId": "US-137",
-          "acIds": [
-            "AC-683",
-            "AC-684",
-            "AC-685",
-            "AC-686"
-          ]
-        },
-        {
-          "usId": "US-138",
-          "acIds": [
-            "AC-687",
-            "AC-688",
-            "AC-689",
-            "AC-690"
-          ]
-        },
-        {
-          "usId": "US-139",
-          "acIds": [
-            "AC-691",
-            "AC-692",
-            "AC-693",
-            "AC-694",
-            "AC-695"
-          ]
-        },
-        {
-          "usId": "US-140",
-          "acIds": [
-            "AC-696",
-            "AC-697",
-            "AC-698",
-            "AC-699"
-          ]
-        },
-        {
-          "usId": "US-141",
-          "acIds": [
-            "AC-700",
-            "AC-701",
-            "AC-702",
-            "AC-703"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-008",
-        "FBS-003",
-        "FBS-005"
-      ],
-      "testableOutcomes": [
-        "System automatically triggers scraping workflow at exactly 8:00 AM daily with execution starting within 1 minute",
-        "Workflow processes all configured job boards (RemoteOK, WeWorkRemotely, Himalayas, Indeed) in defined sequence",
-        "System terminates workflow gracefully when execution exceeds 60 minutes and saves partial results",
-        "System automatically retries failed workflows with 5-minute initial delay and exponential backoff for up to 3 attempts",
-        "System sends email alert when workflow completes with zero jobs scraped, including execution details",
-        "n8n dashboard displays workflow execution status, logs, and results for monitoring and debugging"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Job Discovery",
-            "System Architecture"
-          ],
-          "tadSections": [
-            "n8n-workflows",
-            "job-crawler",
-            "api-server"
-          ],
-          "existingModules": [
-            "@jobsearch/logger",
-            "@jobsearch/config"
-          ],
-          "schemas": [
-            "Job",
-            "ScrapingSession",
-            "Platform"
-          ]
-        },
-        "deliverables": [
-          "n8n workflow definition for daily scraping",
-          "Workflow timeout and termination handler",
-          "Retry logic with exponential backoff",
-          "Zero-jobs alert email service",
-          "Workflow monitoring and logging integration",
-          "n8n webhook endpoints for status updates"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Requires n8n workflow configuration, email service integration, and robust error handling for various failure scenarios. Must coordinate with existing scraping infrastructure and maintain state across retries."
+      "domain": "Automation & Workflow",
+      "implementationNotes": "Requires n8n workflow configuration and integration with existing scraper modules. Email service integration needed for alerts. Consider timezone handling for 8:00 AM scheduling."
     }
   ],
-  "createdAt": "2026-02-09T11:24:34.997Z",
-  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
   "partInfo": {
     "partNumber": 4,
-    "totalParts": 7,
+    "totalParts": 8,
     "fbsRange": {
       "start": "FBS-031",
       "end": "FBS-040"
     },
-    "globalFbsCount": 68
+    "globalFbsCount": 73
   }
 }

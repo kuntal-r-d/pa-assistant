@@ -3,144 +3,50 @@
   "prdId": "PRD-001",
   "version": "1.0.0",
   "status": "draft",
-  "title": "Build Sequence: PRD-001 (Part 2 of 7)",
-  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
-  "generationStrategy": "dependency-first",
+  "title": "Build Sequence: PRD-001 (Part 2 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
   "buildSequence": [
     {
       "id": "FBS-011",
-      "title": "Job Data Quality & Error Handling",
-      "summary": "Implements comprehensive error handling, data validation, and quality assurance for job extraction processes. Provides retry mechanisms, encoding detection, and extraction metadata tracking to ensure reliable data processing.",
+      "title": "Rate Limiting & Circuit Breakers",
+      "summary": "Implements comprehensive rate limiting and circuit breaker patterns for all job scrapers to handle platform restrictions gracefully. Includes exponential backoff retry logic and circuit breaker state management to maintain platform relationships and system stability.",
       "storyScope": [
         {
-          "usId": "US-012",
+          "usId": "US-006",
           "acIds": [
-            "AC-060",
-            "AC-061",
-            "AC-062",
-            "AC-063",
-            "AC-064",
-            "AC-065"
+            "AC-022",
+            "AC-023",
+            "AC-024",
+            "AC-025",
+            "AC-026"
+          ]
+        },
+        {
+          "usId": "US-007",
+          "acIds": [
+            "AC-027",
+            "AC-028",
+            "AC-029",
+            "AC-030",
+            "AC-031"
           ]
         }
       ],
       "dependencies": [
-        "FBS-010"
+        "FBS-006"
       ],
       "testableOutcomes": [
-        "System logs extraction errors and continues processing other extractable fields when encountering malformed job listings",
-        "System detects and corrects character encoding problems in job listing content",
-        "System flags job records with missing critical fields for manual review during validation",
-        "System identifies and marks duplicate job listings based on title, company, and description similarity",
-        "System retries extraction up to 3 times before marking listings as failed when processing errors occur",
-        "System includes extraction metadata with source, timestamp, and confidence scores when storing successful extractions",
-        "System maintains processing statistics and error rates for monitoring data quality",
-        "System validates extracted data against schema requirements before storage"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "medium",
-        "estimatedHours": 5,
-        "contextRequirements": {
-          "prdSections": [
-            "Data Processing",
-            "Error Handling"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "@jobsearch/logger",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "Job data extraction modules",
-            "Logging system",
-            "Database repositories"
-          ],
-          "schemas": [
-            "Job data schema",
-            "Error tracking schema"
-          ]
-        },
-        "deliverables": [
-          "Extraction error handler with retry logic",
-          "Character encoding detection and correction",
-          "Data validation framework with quality checks",
-          "Extraction metadata tracking system",
-          "Error logging and monitoring utilities",
-          "Data quality metrics collection"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Job Discovery & Scraping",
-      "implementationNotes": "Focus on graceful degradation and comprehensive logging. Implement circuit breaker patterns for external dependencies and ensure extraction failures don't cascade to system failures."
-    },
-    {
-      "id": "FBS-012",
-      "title": "Job Deduplication System",
-      "summary": "Implements intelligent job deduplication with title and company normalization, completeness scoring, and edge case handling. Provides automatic duplicate detection during discovery and ensures only unique, most complete job listings are presented to users.",
-      "storyScope": [
-        {
-          "usId": "US-013",
-          "acIds": [
-            "AC-066",
-            "AC-067",
-            "AC-068",
-            "AC-069",
-            "AC-070",
-            "AC-071"
-          ]
-        },
-        {
-          "usId": "US-014",
-          "acIds": [
-            "AC-072",
-            "AC-073",
-            "AC-074",
-            "AC-075",
-            "AC-076",
-            "AC-077"
-          ]
-        },
-        {
-          "usId": "US-015",
-          "acIds": [
-            "AC-078",
-            "AC-079",
-            "AC-080",
-            "AC-081"
-          ]
-        },
-        {
-          "usId": "US-016",
-          "acIds": [
-            "AC-082",
-            "AC-083",
-            "AC-084",
-            "AC-085",
-            "AC-086"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-011"
-      ],
-      "testableOutcomes": [
-        "System identifies job listings as duplicates when they have identical titles and company names after case-insensitive comparison",
-        "System normalizes job titles by removing whitespace and punctuation differences before duplicate comparison",
-        "System normalizes company names by handling case differences and common suffixes before duplicate comparison",
-        "System flags jobs from different platforms as duplicates when normalized title and company match",
-        "System does not identify jobs as duplicates when they have different titles but same company",
-        "System does not identify jobs as duplicates when they have same title but different companies",
-        "System retains job listing with description when deduplicating against listing without description",
-        "System retains job listing with salary information when deduplicating against listing without salary",
-        "System retains job listing with location details when deduplicating against listing without location",
-        "System retains most recently discovered listing when duplicate completeness scores are equal",
-        "System calculates completeness scores based on presence of description, salary, location, requirements, and benefits",
-        "System marks discarded duplicate listings with reference to retained listing",
-        "System excludes duplicate listings from search results and shows only retained versions",
-        "System reflects only unique job listings in search result counts",
-        "System handles null or empty titles and company names without incorrect duplicate matching",
-        "System correctly processes special characters and unicode in titles and company names during duplicate detection"
+        "Circuit breaker transitions to 'open' state when scraper receives HTTP 429 rate limit response",
+        "Requests are immediately rejected without HTTP calls when circuit breaker is in 'open' state",
+        "Circuit breaker transitions to 'half-open' state after configured timeout period expires",
+        "Circuit breaker transitions to 'closed' state when test request succeeds in 'half-open' state",
+        "Circuit breaker returns to 'open' state when test request fails in 'half-open' state",
+        "First retry waits for base delay period (1 second) after retryable error",
+        "Subsequent retries double the delay period (1s, 2s, 4s, 8s) with each attempt",
+        "Scraping job fails after maximum number of retries (5 attempts) is reached",
+        "Maximum delay threshold (60 seconds) is enforced for retry attempts",
+        "Non-retryable errors (4xx except 429) fail immediately without retries"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -148,207 +54,207 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Job Discovery & Scraping",
-            "Search & Filtering"
+            "Job Discovery Service"
           ],
           "tadSections": [
-            "@jobsearch/database",
-            "@jobsearch/types",
-            "api-server"
+            "Job Platform Scrapers"
           ],
           "existingModules": [
-            "Job data extraction",
-            "Database repositories",
-            "Search functionality"
+            "packages/@jobsearch/scrapers",
+            "scraping orchestration"
           ],
           "schemas": [
-            "Job data schema",
-            "Duplicate tracking schema"
+            "error handling schema",
+            "retry configuration"
           ]
         },
         "deliverables": [
-          "Job title normalization engine",
-          "Company name normalization utilities",
-          "Duplicate detection algorithm with similarity scoring",
-          "Job completeness scoring system",
-          "Duplicate resolution and retention logic",
-          "Search result filtering for duplicates",
-          "Edge case handling for null/empty values",
-          "Unicode and special character normalization"
+          "packages/@jobsearch/scrapers/src/circuit-breaker.ts",
+          "packages/@jobsearch/scrapers/src/rate-limiter.ts",
+          "packages/@jobsearch/scrapers/src/retry-handler.ts",
+          "Updated base scraper class with circuit breaker integration",
+          "Circuit breaker configuration and monitoring utilities",
+          "Comprehensive test suite for all failure scenarios"
         ]
       },
-      "riskLevel": "medium",
-      "domain": "Job Discovery & Scraping",
-      "implementationNotes": "Implement fuzzy matching algorithms for robust duplicate detection. Consider using string similarity libraries and ensure performance optimization for large datasets. Design database indexes to support efficient duplicate queries."
+      "riskLevel": "high",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "This is a critical infrastructure component that affects all scrapers. Must be implemented with careful consideration of different failure modes, proper state persistence across service restarts, and comprehensive logging for debugging. Circuit breaker states should be observable through metrics/monitoring."
     },
     {
-      "id": "FBS-013",
-      "title": "Job Data Normalization",
-      "summary": "Implements comprehensive data normalization for job listings including country names, technology names, salary currency conversion, and experience level categorization. Processes job data in batches with error handling and reporting capabilities.",
+      "id": "FBS-012",
+      "title": "Job Data Extraction Engine",
+      "summary": "Implements a robust data extraction engine that normalizes job information across different platforms with consistent field mapping and validation. Provides standardized extraction utilities and handles missing or malformed data gracefully.",
       "storyScope": [
         {
-          "usId": "US-017",
+          "usId": "US-009",
           "acIds": [
-            "AC-087",
-            "AC-088",
-            "AC-089",
-            "AC-090",
-            "AC-091"
-          ]
-        },
-        {
-          "usId": "US-018",
-          "acIds": [
-            "AC-092",
-            "AC-093",
-            "AC-094",
-            "AC-095",
-            "AC-096",
-            "AC-097"
-          ]
-        },
-        {
-          "usId": "US-019",
-          "acIds": [
-            "AC-098",
-            "AC-099",
-            "AC-100",
-            "AC-101",
-            "AC-102",
-            "AC-103"
-          ]
-        },
-        {
-          "usId": "US-020",
-          "acIds": [
-            "AC-104",
-            "AC-105",
-            "AC-106",
-            "AC-107",
-            "AC-108",
-            "AC-109"
-          ]
-        },
-        {
-          "usId": "US-021",
-          "acIds": [
-            "AC-110",
-            "AC-111",
-            "AC-112",
-            "AC-113"
+            "AC-037",
+            "AC-038",
+            "AC-039",
+            "AC-040",
+            "AC-041"
           ]
         }
       ],
       "dependencies": [
-        "FBS-010",
-        "FBS-011",
+        "FBS-006"
+      ],
+      "testableOutcomes": [
+        "System extracts job title as non-empty string from standard formatted listings",
+        "System extracts company name as non-empty string from listings with company information",
+        "System extracts location information including city and state/country when available",
+        "Missing fields are marked as null/empty and extraction issues are logged",
+        "Basic information extraction achieves at least 90% accuracy across different listing formats",
+        "Extracted data is validated against job schema before storage",
+        "Data extraction engine handles platform-specific HTML structures consistently"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 6,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery Service"
+          ],
+          "tadSections": [
+            "Job Platform Scrapers"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/scrapers",
+            "job data schema"
+          ],
+          "schemas": [
+            "job data schema",
+            "validation rules"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/scrapers/src/extraction-engine.ts",
+          "packages/@jobsearch/scrapers/src/data-normalizer.ts",
+          "packages/@jobsearch/scrapers/src/field-extractors/",
+          "Data validation and sanitization utilities",
+          "Platform-agnostic extraction interface",
+          "Comprehensive extraction accuracy test suite"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Focus on creating reusable extraction patterns that can handle the variety of HTML structures across platforms. Include robust text cleaning, date parsing, and location standardization. The engine should be extensible for future platforms and provide detailed extraction metrics for monitoring data quality."
+    },
+    {
+      "id": "FBS-013",
+      "title": "Advanced Job Data Extraction",
+      "summary": "Implements comprehensive job data extraction capabilities including salary information, full job descriptions, technology/skills identification, and posting date extraction. Provides structured extraction of all job listing components with proper normalization and validation.",
+      "storyScope": [
+        {
+          "usId": "US-010",
+          "acIds": [
+            "AC-042",
+            "AC-043",
+            "AC-044",
+            "AC-045",
+            "AC-046"
+          ]
+        },
+        {
+          "usId": "US-011",
+          "acIds": [
+            "AC-047",
+            "AC-048",
+            "AC-049",
+            "AC-050"
+          ]
+        },
+        {
+          "usId": "US-012",
+          "acIds": [
+            "AC-051",
+            "AC-052",
+            "AC-053",
+            "AC-054",
+            "AC-055"
+          ]
+        },
+        {
+          "usId": "US-013",
+          "acIds": [
+            "AC-056",
+            "AC-057",
+            "AC-058",
+            "AC-059",
+            "AC-060"
+          ]
+        }
+      ],
+      "dependencies": [
         "FBS-012"
       ],
       "testableOutcomes": [
-        "System normalizes 'USA' to 'United States' and 'UK' to 'United Kingdom' in job location data",
-        "System maps 'React.js' and 'ReactJS' to standardized 'React' in technology requirements",
-        "System converts EUR and GBP salary amounts to USD equivalent using current exchange rates",
-        "System categorizes '0-2 years experience' as 'Entry Level' and '6+ years' as 'Senior Level'",
-        "System processes 100 job records through normalization pipeline within 30 seconds",
-        "System generates summary report showing counts of successfully normalized vs failed records after batch processing"
+        "System extracts salary ranges with minimum and maximum values including currency from job listings",
+        "System extracts single salary amounts and identifies payment frequency (hourly, annual, etc.)",
+        "System normalizes salary formats (K, thousands, per year) to standardized numeric values",
+        "System extracts complete job description text while preserving paragraph structure",
+        "System converts HTML-formatted descriptions to clean text maintaining readability",
+        "System identifies and extracts programming languages as structured lists from job descriptions",
+        "System categorizes technologies into frameworks, databases, cloud platforms, and tools",
+        "System normalizes technology variations (JS/JavaScript, AWS/Amazon Web Services) to standard forms",
+        "System extracts experience requirements with both technology and experience level",
+        "System converts posting dates to ISO format and handles relative dates (2 days ago)",
+        "System extracts and validates application URLs and email addresses",
+        "System uses extraction timestamp as fallback when posting date is unavailable"
       ],
       "status": "not-started",
       "sessionMeta": {
         "estimatedSize": "large",
-        "estimatedHours": 8,
+        "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Job Data Processing",
-            "Data Quality"
+            "Job Data Structure",
+            "Extraction Requirements"
           ],
           "tadSections": [
-            "@jobsearch/database",
-            "@jobsearch/types"
+            "Job Discovery Service",
+            "Job Platform Scrapers"
           ],
           "existingModules": [
-            "job extraction",
-            "data validation"
+            "extraction-engine.ts",
+            "data-normalizer.ts",
+            "field-extractors/"
           ],
           "schemas": [
             "Job",
-            "NormalizationRule",
-            "ProcessingResult"
+            "JobSalary",
+            "JobRequirements"
           ]
         },
         "deliverables": [
-          "Country normalization mapping service",
-          "Technology name standardization engine",
-          "Currency conversion service with exchange rate API",
-          "Experience level categorization module",
-          "Batch processing orchestrator",
-          "Normalization error handling and reporting"
+          "packages/@jobsearch/scrapers/src/extractors/salary-extractor.ts",
+          "packages/@jobsearch/scrapers/src/extractors/description-extractor.ts",
+          "packages/@jobsearch/scrapers/src/extractors/skills-extractor.ts",
+          "packages/@jobsearch/scrapers/src/extractors/date-extractor.ts",
+          "packages/@jobsearch/scrapers/src/normalizers/technology-normalizer.ts",
+          "packages/@jobsearch/scrapers/src/normalizers/salary-normalizer.ts",
+          "Enhanced extraction-engine.ts with advanced extractors",
+          "Comprehensive test suite for all extraction capabilities"
         ]
       },
       "riskLevel": "medium",
-      "domain": "Job Discovery & Scraping",
-      "implementationNotes": "Requires external exchange rate API integration, comprehensive mapping tables for countries and technologies, and robust error handling for batch processing failures."
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Requires sophisticated text parsing and NLP techniques for skill extraction. Salary parsing must handle multiple currencies and formats. Technology normalization needs comprehensive mapping database."
     },
     {
       "id": "FBS-014",
-      "title": "Job Filtering & Search System",
-      "summary": "Implements comprehensive job filtering capabilities including country, technology, salary range, remote work, and experience level filters. Supports multiple simultaneous filters with real-time result updates and empty state handling.",
+      "title": "Extraction Error Handling",
+      "summary": "Implements robust error handling for the job data extraction process, including graceful degradation, timeout management, and comprehensive logging. Ensures system stability when processing malformed or problematic job listings.",
       "storyScope": [
         {
-          "usId": "US-022",
+          "usId": "US-014",
           "acIds": [
-            "AC-114",
-            "AC-115",
-            "AC-116",
-            "AC-117"
-          ]
-        },
-        {
-          "usId": "US-023",
-          "acIds": [
-            "AC-118",
-            "AC-119",
-            "AC-120",
-            "AC-121",
-            "AC-122"
-          ]
-        },
-        {
-          "usId": "US-024",
-          "acIds": [
-            "AC-123",
-            "AC-124",
-            "AC-125",
-            "AC-126",
-            "AC-127",
-            "AC-128"
-          ]
-        },
-        {
-          "usId": "US-025",
-          "acIds": [
-            "AC-129",
-            "AC-130",
-            "AC-131",
-            "AC-132"
-          ]
-        },
-        {
-          "usId": "US-026",
-          "acIds": [
-            "AC-133",
-            "AC-134",
-            "AC-135",
-            "AC-136"
-          ]
-        },
-        {
-          "usId": "US-027",
-          "acIds": [
-            "AC-137",
-            "AC-138",
-            "AC-139",
-            "AC-140",
-            "AC-141"
+            "AC-061",
+            "AC-062",
+            "AC-063",
+            "AC-064"
           ]
         }
       ],
@@ -356,384 +262,91 @@
         "FBS-013"
       ],
       "testableOutcomes": [
-        "User can select multiple countries and see jobs from any selected country displayed using OR logic",
-        "User can select technologies and see only jobs requiring at least one selected technology",
-        "User can set minimum and maximum salary values to filter jobs within specified range",
-        "User can enable remote-only toggle to see exclusively fully remote positions",
-        "User can select experience levels and see jobs matching any selected level",
-        "User can apply multiple filter types simultaneously and see jobs meeting all criteria",
-        "System displays appropriate empty results message when filter combinations yield no matches",
-        "System validates salary range inputs and shows error when minimum exceeds maximum"
+        "System logs detailed error information when encountering malformed job listings and continues processing other fields",
+        "System creates partial job records with available data when required fields cannot be extracted",
+        "System flags missing information in partial records for data quality tracking",
+        "System terminates extraction gracefully when processing exceeds configured timeout threshold",
+        "System logs timeout events with context about the problematic listing",
+        "System alerts administrators when error rate for a source exceeds configured threshold",
+        "System temporarily disables problematic sources after repeated extraction failures",
+        "System maintains extraction success/failure metrics per platform for monitoring"
       ],
       "status": "not-started",
       "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
+        "estimatedSize": "small",
+        "estimatedHours": 3,
         "contextRequirements": {
           "prdSections": [
-            "Job Search",
-            "User Interface"
+            "Error Handling",
+            "System Monitoring"
           ],
           "tadSections": [
-            "web-ui",
-            "api-server",
-            "@jobsearch/database"
+            "Job Discovery Service",
+            "Notification Service"
           ],
           "existingModules": [
-            "job normalization",
-            "search API"
+            "extraction-engine.ts",
+            "circuit-breaker.ts"
           ],
           "schemas": [
-            "JobFilter",
-            "SearchCriteria",
-            "FilterOptions"
+            "ExtractionResult",
+            "ErrorLog"
           ]
         },
         "deliverables": [
-          "Multi-criteria job filtering API endpoints",
-          "Filter validation and error handling",
-          "Real-time search result updates",
-          "Filter combination logic engine",
-          "Empty state and no results handling",
-          "Filter UI components and state management"
+          "packages/@jobsearch/scrapers/src/error-handler.ts",
+          "packages/@jobsearch/scrapers/src/extraction-monitor.ts",
+          "Enhanced extraction-engine.ts with error handling",
+          "Error logging and alerting utilities",
+          "Timeout management configuration",
+          "Test suite for error scenarios"
         ]
       },
       "riskLevel": "medium",
-      "domain": "Job Filtering & Matching",
-      "implementationNotes": "Complex filter combination logic requires careful performance optimization for database queries. Real-time updates need efficient state management to prevent excessive API calls."
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Must balance between data completeness and system stability. Error thresholds need careful tuning to avoid false positives while catching real issues."
     },
     {
       "id": "FBS-015",
-      "title": "Advanced Filtering & Preferences",
-      "summary": "Implements persistent filter preferences that save and restore user selections across sessions. Provides seamless user experience with automatic preference restoration and default settings for new users.",
+      "title": "Job Deduplication System",
+      "summary": "Implements intelligent job deduplication during ingestion process using case-insensitive title and company matching. Automatically selects the most complete version when duplicates are detected, ensuring data quality and preventing redundant job listings.",
       "storyScope": [
         {
-          "usId": "US-028",
+          "usId": "US-015",
           "acIds": [
-            "AC-142",
-            "AC-143",
-            "AC-144",
-            "AC-145"
+            "AC-065",
+            "AC-066",
+            "AC-067",
+            "AC-068",
+            "AC-069",
+            "AC-070"
+          ]
+        },
+        {
+          "usId": "US-016",
+          "acIds": [
+            "AC-071",
+            "AC-072",
+            "AC-073",
+            "AC-074",
+            "AC-075"
           ]
         }
       ],
       "dependencies": [
-        "FBS-014"
+        "FBS-013"
       ],
       "testableOutcomes": [
-        "User's filter selections persist when navigating away from job search page and returning",
-        "User's filter preferences are restored after logging out and logging back in",
-        "User can modify existing filter preferences and changes are saved for future sessions",
-        "New users see default filter settings when first accessing the job search page",
-        "System maintains filter state consistency across browser sessions and page refreshes"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "medium",
-        "estimatedHours": 5,
-        "contextRequirements": {
-          "prdSections": [
-            "User Preferences",
-            "Session Management"
-          ],
-          "tadSections": [
-            "web-ui",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "job filtering",
-            "user authentication"
-          ],
-          "schemas": [
-            "UserPreferences",
-            "FilterPreset",
-            "SessionState"
-          ]
-        },
-        "deliverables": [
-          "User preference persistence service",
-          "Filter preference storage and retrieval API",
-          "Session state management for filters",
-          "Default preference configuration",
-          "Preference migration and versioning support"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "Job Filtering & Matching",
-      "implementationNotes": "Straightforward implementation building on existing filter system. Main considerations are data migration for existing users and handling preference conflicts between sessions."
-    },
-    {
-      "id": "FBS-016",
-      "title": "CV Upload & Processing Foundation",
-      "summary": "Establishes core CV file upload functionality with validation, file processing, and error handling. Supports PDF and DOCX formats with size limits and provides comprehensive upload status feedback.",
-      "storyScope": [
-        {
-          "usId": "US-029",
-          "acIds": [
-            "AC-146",
-            "AC-147",
-            "AC-148",
-            "AC-149",
-            "AC-150",
-            "AC-151"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-004",
-        "FBS-005"
-      ],
-      "testableOutcomes": [
-        "User can upload PDF files under 5MB and receive confirmation message",
-        "User can upload DOCX files under 5MB and receive confirmation message",
-        "System rejects files over 5MB with error message 'File size must be under 5MB'",
-        "System rejects non-PDF/DOCX files with error message 'Only PDF and DOCX files are supported'",
-        "User receives appropriate error message when upload fails due to network issues",
-        "User can retry failed uploads after receiving error message"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "CV Upload Requirements",
-            "File Processing Specifications"
-          ],
-          "tadSections": [
-            "api-server",
-            "@jobsearch/config",
-            "@jobsearch/logger"
-          ],
-          "existingModules": [
-            "Authentication middleware",
-            "Health check endpoints"
-          ],
-          "schemas": [
-            "User schema",
-            "File upload schema"
-          ]
-        },
-        "deliverables": [
-          "CV upload API endpoints",
-          "File validation middleware",
-          "Upload progress tracking",
-          "File storage service",
-          "Upload error handling",
-          "CV upload UI components"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "CV & Profile Management",
-      "implementationNotes": "Requires secure file storage, virus scanning consideration, and robust error handling for various file corruption scenarios. Integration with existing authentication system needed."
-    },
-    {
-      "id": "FBS-017",
-      "title": "CV Data Extraction & Analysis",
-      "summary": "Implements comprehensive CV text extraction and AI-powered data analysis to identify skills, experience, and education information. Provides parsing accuracy validation and user feedback mechanisms.",
-      "storyScope": [
-        {
-          "usId": "US-030",
-          "acIds": [
-            "AC-152",
-            "AC-153",
-            "AC-154",
-            "AC-155",
-            "AC-156",
-            "AC-157"
-          ]
-        },
-        {
-          "usId": "US-031",
-          "acIds": [
-            "AC-158",
-            "AC-159",
-            "AC-160",
-            "AC-161",
-            "AC-162",
-            "AC-163",
-            "AC-164"
-          ]
-        },
-        {
-          "usId": "US-032",
-          "acIds": [
-            "AC-165",
-            "AC-166",
-            "AC-167",
-            "AC-168",
-            "AC-169",
-            "AC-170",
-            "AC-171"
-          ]
-        },
-        {
-          "usId": "US-033",
-          "acIds": [
-            "AC-172",
-            "AC-173",
-            "AC-174",
-            "AC-175",
-            "AC-176",
-            "AC-177",
-            "AC-178"
-          ]
-        },
-        {
-          "usId": "US-034",
-          "acIds": [
-            "AC-179",
-            "AC-180",
-            "AC-181",
-            "AC-182",
-            "AC-183",
-            "AC-184"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-016"
-      ],
-      "testableOutcomes": [
-        "System extracts text from PDF files with at least 95% accuracy",
-        "System extracts text from DOCX files with at least 95% accuracy",
-        "System preserves special characters and maintains logical reading order from multi-column layouts",
-        "System identifies and extracts programming languages, frameworks, databases, and cloud platforms from CV text",
-        "System normalizes skill variations (React.js/ReactJS to React) to standard terms",
-        "System calculates total work experience duration correctly handling overlapping periods and current employment",
-        "System extracts degree information, institutions, graduation dates, and certifications",
-        "User can view organized parsing results with confidence scores for extracted information",
-        "User can edit incorrect or missing information and save corrections",
-        "System flags uncertain extractions and prompts user review when accuracy is below 95%"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "AI Processing Requirements",
-            "Data Extraction Specifications",
-            "Skills Taxonomy"
-          ],
-          "tadSections": [
-            "@jobsearch/ai-client",
-            "@jobsearch/database",
-            "@jobsearch/types"
-          ],
-          "existingModules": [
-            "LiteLLM wrapper",
-            "Prisma client"
-          ],
-          "schemas": [
-            "CV data schema",
-            "Skills schema",
-            "Experience schema",
-            "Education schema"
-          ]
-        },
-        "deliverables": [
-          "PDF text extraction service",
-          "DOCX text extraction service",
-          "AI-powered skills extraction engine",
-          "Experience duration calculator",
-          "Education information extractor",
-          "Data normalization utilities",
-          "Parsing accuracy validator",
-          "User review interface"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "CV & Profile Management",
-      "implementationNotes": "Heavy dependency on AI model performance for accurate extraction. Requires comprehensive skills taxonomy and robust date parsing. Consider fallback mechanisms for AI service unavailability."
-    },
-    {
-      "id": "FBS-018",
-      "title": "User Profile Management",
-      "summary": "Provides comprehensive user profile creation and management functionality including job search preferences, target countries, technology skills, salary expectations, and experience level configuration with validation.",
-      "storyScope": [
-        {
-          "usId": "US-035",
-          "acIds": [
-            "AC-185",
-            "AC-186",
-            "AC-187",
-            "AC-188"
-          ]
-        },
-        {
-          "usId": "US-036",
-          "acIds": [
-            "AC-189",
-            "AC-190",
-            "AC-191",
-            "AC-192"
-          ]
-        },
-        {
-          "usId": "US-037",
-          "acIds": [
-            "AC-193",
-            "AC-194",
-            "AC-195",
-            "AC-196",
-            "AC-197"
-          ]
-        },
-        {
-          "usId": "US-038",
-          "acIds": [
-            "AC-198",
-            "AC-199",
-            "AC-200",
-            "AC-201",
-            "AC-202"
-          ]
-        },
-        {
-          "usId": "US-039",
-          "acIds": [
-            "AC-203",
-            "AC-204",
-            "AC-205",
-            "AC-206"
-          ]
-        },
-        {
-          "usId": "US-040",
-          "acIds": [
-            "AC-207",
-            "AC-208",
-            "AC-209",
-            "AC-210"
-          ]
-        },
-        {
-          "usId": "US-041",
-          "acIds": [
-            "AC-211",
-            "AC-212",
-            "AC-213",
-            "AC-214"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-004",
-        "FBS-014"
-      ],
-      "testableOutcomes": [
-        "User can create profile with target countries, technologies, salary expectations, experience level, and remote preference",
-        "User can view and edit all previously saved profile preferences",
-        "System validates profile requiring at least one target country before saving",
-        "User can search and select from searchable list of countries with autocomplete",
-        "User can search and select technologies with autocomplete suggestions and custom skill addition",
-        "System validates salary inputs requiring numeric values and preventing minimum > maximum",
-        "User can select experience level and enter years of experience with validation",
-        "User can set remote-only preference and system filters non-remote jobs accordingly",
-        "System displays clear validation messages for missing required fields",
-        "User with incomplete profile is redirected to complete profile before accessing job features",
-        "Profile updates are immediately available for job matching algorithm"
+        "System identifies job listings with identical titles and company names as duplicates using case-insensitive matching",
+        "System normalizes whitespace in job titles and company names before duplicate comparison",
+        "System treats 'Software Engineer' and 'software engineer' from same company as duplicates",
+        "System does not identify jobs with different titles but same company as duplicates",
+        "System does not identify jobs with same title but different companies as duplicates",
+        "System evaluates duplicate completeness based on number of non-null fields",
+        "System retains the job listing with more populated fields when duplicates have different completeness levels",
+        "System keeps the job listing with description when one duplicate has description and other doesn't",
+        "System retains the most recently ingested listing when duplicates have equal completeness",
+        "System discards less complete duplicate listings without storing them in database"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -741,210 +354,72 @@
         "estimatedHours": 6,
         "contextRequirements": {
           "prdSections": [
-            "User Profile Requirements",
-            "Job Matching Specifications"
+            "Data Quality",
+            "Deduplication Strategy"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/database",
-            "@jobsearch/types"
+            "Job Discovery Service"
           ],
           "existingModules": [
-            "Filter system",
-            "Authentication middleware"
+            "data-normalizer.ts"
           ],
           "schemas": [
-            "User profile schema",
-            "Country schema",
-            "Technology schema"
+            "Job",
+            "DuplicateDetectionResult"
           ]
         },
         "deliverables": [
-          "User profile API endpoints",
-          "Profile validation service",
-          "Country selection interface",
-          "Technology selection with autocomplete",
-          "Salary configuration form",
-          "Experience level selector",
-          "Remote work preference toggle",
-          "Profile completeness validator",
-          "Profile management UI components"
-        ]
-      },
-      "riskLevel": "low",
-      "domain": "CV & Profile Management",
-      "implementationNotes": "Straightforward CRUD operations with form validation. Requires integration with existing filter system and job matching algorithm. Consider profile migration strategy for schema updates."
-    },
-    {
-      "id": "FBS-019",
-      "title": "Job Match Scoring Foundation",
-      "summary": "Implements a comprehensive hybrid match scoring system that calculates job relevance scores using TF-IDF text similarity, skill overlap, experience matching, and semantic embeddings. Provides weighted scoring algorithm with configurable component weights and robust error handling for missing data.",
-      "storyScope": [
-        {
-          "usId": "US-042",
-          "acIds": [
-            "AC-215",
-            "AC-216",
-            "AC-217",
-            "AC-218",
-            "AC-219",
-            "AC-220"
-          ]
-        },
-        {
-          "usId": "US-043",
-          "acIds": [
-            "AC-221",
-            "AC-222",
-            "AC-223",
-            "AC-224",
-            "AC-225"
-          ]
-        },
-        {
-          "usId": "US-044",
-          "acIds": [
-            "AC-226",
-            "AC-227",
-            "AC-228",
-            "AC-229",
-            "AC-230",
-            "AC-231"
-          ]
-        },
-        {
-          "usId": "US-045",
-          "acIds": [
-            "AC-232",
-            "AC-233",
-            "AC-234",
-            "AC-235",
-            "AC-236"
-          ]
-        },
-        {
-          "usId": "US-046",
-          "acIds": [
-            "AC-237",
-            "AC-238",
-            "AC-239",
-            "AC-240",
-            "AC-241"
-          ]
-        },
-        {
-          "usId": "US-048",
-          "acIds": [
-            "AC-247",
-            "AC-248",
-            "AC-249",
-            "AC-250",
-            "AC-251",
-            "AC-252"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-017",
-        "FBS-018"
-      ],
-      "testableOutcomes": [
-        "System calculates final match scores between 0-100% for any job posting and user profile combination",
-        "TF-IDF component contributes exactly 30% to final match score calculation",
-        "Skill overlap component contributes exactly 40% to final match score calculation",
-        "Experience match component contributes exactly 20% to final match score calculation",
-        "Semantic embeddings component contributes exactly 10% to final match score calculation",
-        "System returns 100% TF-IDF similarity score when comparing identical text content",
-        "System returns near 0% TF-IDF similarity score when comparing completely unrelated text",
-        "System excludes common stopwords from TF-IDF similarity calculations",
-        "System assigns higher weights to rare terms than common terms in TF-IDF calculations",
-        "System returns 100% skill overlap when user possesses all required job skills",
-        "System returns 0% skill overlap when user has no matching job skills",
-        "System performs case-insensitive skill matching for overlap calculations",
-        "System recognizes common skill aliases (JavaScript/JS, React.js/ReactJS) as matches",
-        "System returns 100% experience match when user experience exactly matches job requirements",
-        "System reduces experience match score when user is significantly overqualified",
-        "System defaults experience match to 75% when job has no specified requirements",
-        "System calculates semantic similarity scores between 0-100% using cosine similarity on embedding vectors",
-        "System defaults skill overlap to 50% when job posting has missing skill requirements",
-        "System defaults experience match to 50% when user profile has missing experience information",
-        "System defaults TF-IDF to 25% when job description has insufficient text for analysis",
-        "System defaults semantic embeddings to 25% when embedding generation fails",
-        "System logs errors and continues calculation with default values when any component fails"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Job Matching Algorithm",
-            "Scoring Components",
-            "Error Handling"
-          ],
-          "tadSections": [
-            "@jobsearch/ai-client",
-            "@jobsearch/types",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "CV extraction",
-            "User profile management",
-            "Job data processing"
-          ],
-          "schemas": [
-            "User profile schema",
-            "Job posting schema",
-            "Match score schema"
-          ]
-        },
-        "deliverables": [
-          "Match scoring service with hybrid algorithm implementation",
-          "TF-IDF similarity calculator with stopword filtering",
-          "Skill overlap analyzer with alias recognition",
-          "Experience matching engine with overqualification handling",
-          "Semantic embeddings service with cosine similarity",
-          "Weighted score combiner with configurable weights",
-          "Error handling and default value system",
-          "Match scoring API endpoints",
-          "Unit tests for all scoring components"
+          "packages/@jobsearch/scrapers/src/deduplication-engine.ts",
+          "packages/@jobsearch/scrapers/src/duplicate-detector.ts",
+          "packages/@jobsearch/scrapers/src/completeness-evaluator.ts",
+          "packages/@jobsearch/scrapers/src/text-normalizer.ts",
+          "Database indexes for efficient duplicate detection",
+          "Deduplication metrics and reporting",
+          "Comprehensive test suite covering all duplicate scenarios"
         ]
       },
       "riskLevel": "high",
-      "domain": "Job Filtering & Matching",
-      "implementationNotes": "High complexity due to multiple AI/ML components including TF-IDF vectorization, semantic embeddings, and weighted scoring algorithms. Requires integration with AI client for embeddings and robust error handling for production reliability."
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "High risk due to potential data loss if deduplication logic is incorrect. Requires careful database transaction handling and comprehensive testing. Performance optimization needed for large-scale duplicate detection."
     },
     {
-      "id": "FBS-020",
-      "title": "Match Score Visualization & Error Handling",
-      "summary": "Provides detailed match score breakdown visualization showing individual component contributions and implements comprehensive error handling for edge cases. Creates user-friendly interfaces for understanding match calculations and ensures system reliability when data is incomplete.",
+      "id": "FBS-016",
+      "title": "Search Deduplication & Edge Cases",
+      "summary": "Implements advanced deduplication logic for search results with edge case handling for company names, job titles, and data quality scenarios. Ensures only unique job listings appear in search results while properly handling special characters, abbreviations, and malformed data.",
       "storyScope": [
         {
-          "usId": "US-047",
+          "usId": "US-017",
           "acIds": [
-            "AC-242",
-            "AC-243",
-            "AC-244",
-            "AC-245",
-            "AC-246"
+            "AC-076",
+            "AC-077",
+            "AC-078",
+            "AC-079"
+          ]
+        },
+        {
+          "usId": "US-018",
+          "acIds": [
+            "AC-080",
+            "AC-081",
+            "AC-082",
+            "AC-083",
+            "AC-084"
           ]
         }
       ],
       "dependencies": [
-        "FBS-019"
+        "FBS-015"
       ],
       "testableOutcomes": [
-        "User can view TF-IDF component score with 30% weighting displayed in job details",
-        "User can view skill overlap component score with 40% weighting displayed in job details",
-        "User can view experience match component score with 20% weighting displayed in job details",
-        "User can view semantic embeddings component score with 10% weighting displayed in job details",
-        "System displays component score breakdown where sum of weighted components equals total match score",
-        "Match score breakdown UI shows visual indicators for each component's contribution",
-        "System provides tooltips explaining what each scoring component measures",
-        "User can expand/collapse detailed scoring breakdown for any job listing",
-        "Match score visualization updates in real-time when user profile changes",
-        "System displays error messages when match score calculation fails partially",
-        "System shows which components used default values due to missing data"
+        "Search results display only one instance of jobs with identical title and company combinations",
+        "Most complete job version appears when duplicates exist across multiple platforms",
+        "Paginated search results contain no duplicate jobs across any page",
+        "Job details view shows the most complete version of deduplicated job information",
+        "Company names with special characters are normalized for duplicate comparison",
+        "Abbreviated company names (IBM) are treated as different from full names (International Business Machines)",
+        "Job titles with descriptors (Senior Software Engineer vs Software Engineer - Senior) are treated as different positions",
+        "Jobs with null or empty title/company fields are not matched against any other listings",
+        "Jobs with identical title/company but different locations are identified as duplicates"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -952,49 +427,400 @@
         "estimatedHours": 5,
         "contextRequirements": {
           "prdSections": [
-            "User Interface Design",
-            "Match Score Display",
-            "Error Messaging"
+            "Job Discovery",
+            "Search & Filtering"
           ],
           "tadSections": [
-            "web-ui",
-            "@jobsearch/types"
+            "Job Discovery Service"
           ],
           "existingModules": [
-            "Job listing components",
-            "User profile UI",
-            "Match scoring service"
+            "deduplication-engine",
+            "duplicate-detector",
+            "text-normalizer"
           ],
           "schemas": [
-            "Match score breakdown schema",
-            "UI component props"
+            "Job",
+            "SearchResult"
           ]
         },
         "deliverables": [
-          "Match score breakdown React components",
-          "Score visualization charts and progress bars",
-          "Component weight display utilities",
-          "Error state handling components",
-          "Tooltip and help text system",
-          "Responsive design for score breakdown",
-          "API integration for score details",
-          "Unit tests for UI components"
+          "packages/@jobsearch/scrapers/src/search-deduplicator.ts",
+          "packages/@jobsearch/scrapers/src/edge-case-handler.ts",
+          "Enhanced duplicate-detector.ts with edge case logic",
+          "Search result deduplication middleware",
+          "Comprehensive test suite for edge cases"
         ]
       },
       "riskLevel": "medium",
-      "domain": "Job Filtering & Matching",
-      "implementationNotes": "Medium complexity focused on UI/UX implementation. Requires careful design of score visualization to be intuitive and informative without overwhelming users. Error handling must gracefully degrade when scoring components fail."
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Focus on text normalization algorithms for company names and job titles. Implement fuzzy matching carefully to avoid over-aggressive deduplication. Consider performance impact of complex normalization on search queries."
+    },
+    {
+      "id": "FBS-017",
+      "title": "Data Normalization Pipeline",
+      "summary": "Implements comprehensive data normalization for job listings including country names, technology names, and salary currency conversion. Maintains original data alongside normalized values for audit and verification purposes.",
+      "storyScope": [
+        {
+          "usId": "US-019",
+          "acIds": [
+            "AC-085",
+            "AC-086",
+            "AC-087",
+            "AC-088",
+            "AC-089"
+          ]
+        },
+        {
+          "usId": "US-020",
+          "acIds": [
+            "AC-090",
+            "AC-091",
+            "AC-092",
+            "AC-093",
+            "AC-094",
+            "AC-095"
+          ]
+        },
+        {
+          "usId": "US-021",
+          "acIds": [
+            "AC-096",
+            "AC-097",
+            "AC-098",
+            "AC-099",
+            "AC-100",
+            "AC-101"
+          ]
+        },
+        {
+          "usId": "US-024",
+          "acIds": [
+            "AC-112",
+            "AC-113",
+            "AC-114",
+            "AC-115"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-013",
+        "FBS-014"
+      ],
+      "testableOutcomes": [
+        "Country 'USA' is normalized to 'United States' while preserving original value",
+        "Country 'UK' is normalized to 'United Kingdom' while preserving original value",
+        "Country 'Deutschland' is normalized to 'Germany' while preserving original value",
+        "Unrecognized country names are preserved unchanged",
+        "Technology 'React.js' and 'ReactJS' are both normalized to 'React'",
+        "Technology 'Node.js' maintains its original form after normalization",
+        "Case variations 'PYTHON' and 'python' are normalized to 'Python'",
+        "Unrecognized technology names are preserved unchanged",
+        "EUR salaries are converted to USD using current exchange rates",
+        "GBP salaries are converted to USD using current exchange rates",
+        "USD salaries remain unchanged during normalization",
+        "Salary ranges in foreign currencies have both min and max converted to USD",
+        "Unrecognized currency codes preserve original salary information",
+        "Both original and normalized values are accessible in job records",
+        "Normalization timestamps are recorded for audit purposes"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery",
+            "Data Management"
+          ],
+          "tadSections": [
+            "Job Discovery Service"
+          ],
+          "existingModules": [
+            "data-normalizer",
+            "salary-extractor",
+            "extraction-engine"
+          ],
+          "schemas": [
+            "Job",
+            "NormalizedJob",
+            "SalaryInfo"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/scrapers/src/normalizers/country-normalizer.ts",
+          "packages/@jobsearch/scrapers/src/normalizers/technology-normalizer.ts",
+          "packages/@jobsearch/scrapers/src/normalizers/currency-converter.ts",
+          "Enhanced data-normalizer.ts with comprehensive pipeline",
+          "Normalization mapping configuration files",
+          "Exchange rate service integration",
+          "Audit trail utilities",
+          "Comprehensive normalization test suite"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "External API dependency for currency conversion introduces risk. Implement caching and fallback mechanisms. Consider data migration strategy for existing job records. Performance optimization needed for bulk normalization operations."
+    },
+    {
+      "id": "FBS-018",
+      "title": "Experience Level Categorization & Batch Processing",
+      "summary": "Implements experience level categorization from job requirements text and provides efficient batch processing capabilities for high-volume job normalization operations with error handling and reporting.",
+      "storyScope": [
+        {
+          "usId": "US-022",
+          "acIds": [
+            "AC-102",
+            "AC-103",
+            "AC-104",
+            "AC-105",
+            "AC-106",
+            "AC-107"
+          ]
+        },
+        {
+          "usId": "US-023",
+          "acIds": [
+            "AC-108",
+            "AC-109",
+            "AC-110",
+            "AC-111"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-017"
+      ],
+      "testableOutcomes": [
+        "Jobs requiring '0-2 years experience' are categorized as 'Entry Level'",
+        "Jobs requiring '3-5 years experience' are categorized as 'Mid Level'",
+        "Jobs requiring '6+ years experience' are categorized as 'Senior Level'",
+        "Jobs mentioning 'Junior Developer' are categorized as 'Entry Level'",
+        "Jobs mentioning 'Senior Engineer' are categorized as 'Senior Level'",
+        "Jobs with no clear experience indicators are set to 'Not Specified'",
+        "Batch of 100 jobs processes within 30 seconds",
+        "Single job failure in batch does not prevent other jobs from processing successfully",
+        "Batch processing generates summary report with success and failure counts",
+        "Concurrent batch operations maintain data integrity across all batches"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Discovery",
+            "Data Management"
+          ],
+          "tadSections": [
+            "Job Discovery Service"
+          ],
+          "existingModules": [
+            "data-normalizer",
+            "extraction-engine",
+            "error-handler"
+          ],
+          "schemas": [
+            "Job",
+            "BatchProcessingResult",
+            "ExperienceLevel"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/scrapers/src/normalizers/experience-categorizer.ts",
+          "packages/@jobsearch/scrapers/src/batch-processor.ts",
+          "packages/@jobsearch/scrapers/src/batch-reporter.ts",
+          "Enhanced data-normalizer.ts with experience level detection",
+          "Experience level pattern matching configuration",
+          "Batch processing queue management",
+          "Performance monitoring utilities",
+          "Batch processing test suite"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Text pattern matching for experience levels requires careful regex design to avoid false positives. Batch processing needs memory management for large datasets. Consider implementing job queue system for scalability."
+    },
+    {
+      "id": "FBS-019",
+      "title": "CV Upload & Text Extraction",
+      "summary": "Implements secure file upload functionality for PDF and DOCX CV files with comprehensive text extraction capabilities. Provides robust error handling for file validation, size limits, and extraction failures with clear user feedback.",
+      "storyScope": [
+        {
+          "usId": "US-032",
+          "acIds": [
+            "AC-151",
+            "AC-152",
+            "AC-153",
+            "AC-154",
+            "AC-155"
+          ]
+        },
+        {
+          "usId": "US-033",
+          "acIds": [
+            "AC-156",
+            "AC-157",
+            "AC-158",
+            "AC-159",
+            "AC-160"
+          ]
+        },
+        {
+          "usId": "US-037",
+          "acIds": [
+            "AC-176",
+            "AC-177",
+            "AC-178",
+            "AC-179",
+            "AC-180"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-004"
+      ],
+      "testableOutcomes": [
+        "User can successfully upload PDF files under 5MB and receive confirmation message",
+        "User can successfully upload DOCX files under 5MB and receive confirmation message",
+        "System rejects files over 5MB with error message 'File size must be under 5MB'",
+        "System rejects non-PDF/DOCX files with error message 'Only PDF and DOCX formats are supported'",
+        "System extracts at least 95% of visible text from PDF files accurately",
+        "System extracts at least 95% of document text from DOCX files accurately",
+        "System preserves special characters and formatting in extracted text",
+        "System combines text from all pages in multi-page CV documents",
+        "System returns appropriate error message when CV file is corrupted or unreadable",
+        "System displays helpful error message for poor quality scanned CVs suggesting better quality document",
+        "System rejects password-protected files with clear error message",
+        "System displays retry option when parsing encounters timeout or system errors"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "User Profile Management",
+            "File Upload Security"
+          ],
+          "tadSections": [
+            "User Profile Service"
+          ],
+          "existingModules": [
+            "Authentication middleware",
+            "Environment configuration"
+          ],
+          "schemas": [
+            "User profile schema",
+            "File metadata schema"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/cv-parser/src/file-uploader.ts",
+          "packages/@jobsearch/cv-parser/src/text-extractor.ts",
+          "packages/@jobsearch/cv-parser/src/pdf-parser.ts",
+          "packages/@jobsearch/cv-parser/src/docx-parser.ts",
+          "packages/@jobsearch/cv-parser/src/validation.ts",
+          "packages/@jobsearch/cv-parser/src/error-handler.ts",
+          "apps/api-server/src/routes/cv-upload.ts",
+          "File upload API endpoints with validation",
+          "Text extraction service integration",
+          "Comprehensive test suite for all file formats and error cases"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "User Profile & CV Management",
+      "implementationNotes": "High risk due to file parsing complexity, security considerations for file uploads, and dependency on external libraries for PDF/DOCX processing. Requires careful memory management for large files and robust error handling for various file corruption scenarios."
+    },
+    {
+      "id": "FBS-020",
+      "title": "CV Skills & Experience Extraction",
+      "summary": "Implements intelligent extraction of technical skills, work experience, and professional details from CV text content. Uses pattern matching and NLP techniques to identify programming languages, frameworks, tools, job positions, and calculate experience duration.",
+      "storyScope": [
+        {
+          "usId": "US-034",
+          "acIds": [
+            "AC-161",
+            "AC-162",
+            "AC-163",
+            "AC-164",
+            "AC-165"
+          ]
+        },
+        {
+          "usId": "US-035",
+          "acIds": [
+            "AC-166",
+            "AC-167",
+            "AC-168",
+            "AC-169",
+            "AC-170"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-019"
+      ],
+      "testableOutcomes": [
+        "System identifies and extracts programming languages (Python, JavaScript, Java) from CV text",
+        "System identifies and categorizes frameworks and libraries (React, Django, Spring) appropriately",
+        "System identifies and extracts tools and platforms (AWS, Docker, Git) from CV content",
+        "System identifies and categorizes database technologies (MySQL, PostgreSQL, MongoDB)",
+        "System normalizes extracted technical skills to standard names and versions",
+        "System calculates accurate duration for job positions with start and end dates",
+        "System calculates duration from start date to current date for positions marked as 'Present' or 'Current'",
+        "System extracts job titles and company names for each employment position",
+        "System accounts for concurrent roles when calculating total experience from overlapping periods",
+        "System calculates and provides total years of experience across all positions"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Skills Analysis",
+            "Experience Calculation"
+          ],
+          "tadSections": [
+            "User Profile Service",
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "Text extraction utilities",
+            "Data normalization pipeline"
+          ],
+          "schemas": [
+            "Skills schema",
+            "Experience schema",
+            "Job position schema"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/cv-parser/src/skills-extractor.ts",
+          "packages/@jobsearch/cv-parser/src/experience-extractor.ts",
+          "packages/@jobsearch/cv-parser/src/pattern-matchers/",
+          "packages/@jobsearch/cv-parser/src/normalizers/skills-normalizer.ts",
+          "packages/@jobsearch/cv-parser/src/date-calculator.ts",
+          "packages/@jobsearch/cv-parser/src/experience-calculator.ts",
+          "Skills and frameworks recognition patterns",
+          "Experience duration calculation logic",
+          "Comprehensive test suite for extraction accuracy"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Profile & CV Management",
+      "implementationNotes": "Medium risk due to variability in CV formats and need for accurate pattern matching. Requires extensive testing with diverse CV samples and may need machine learning approaches for improved accuracy in skill recognition."
     }
   ],
-  "createdAt": "2026-02-09T11:24:34.997Z",
-  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
   "partInfo": {
     "partNumber": 2,
-    "totalParts": 7,
+    "totalParts": 8,
     "fbsRange": {
       "start": "FBS-011",
       "end": "FBS-020"
     },
-    "globalFbsCount": 68
+    "globalFbsCount": 73
   }
 }

@@ -3,178 +3,159 @@
   "prdId": "PRD-001",
   "version": "1.0.0",
   "status": "draft",
-  "title": "Build Sequence: PRD-001 (Part 5 of 7)",
-  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
-  "generationStrategy": "dependency-first",
+  "title": "Build Sequence: PRD-001 (Part 5 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
   "buildSequence": [
     {
       "id": "FBS-041",
-      "title": "Automated Match Scoring Pipeline",
-      "summary": "Creates automated pipeline that triggers match scoring after daily scraping completion, processes jobs in batches of 10, and provides comprehensive error handling and progress monitoring for efficient job evaluation.",
+      "title": "Automated Match Score Calculation",
+      "summary": "Implements automated match score calculation triggered after daily job scraping completion. Processes jobs in controlled batches of 10 with resource management and comprehensive error handling.",
       "storyScope": [
         {
-          "usId": "US-142",
+          "usId": "US-119",
           "acIds": [
-            "AC-704",
-            "AC-705",
-            "AC-706",
-            "AC-707"
+            "AC-551",
+            "AC-552",
+            "AC-553",
+            "AC-554",
+            "AC-555"
           ]
         },
         {
-          "usId": "US-143",
+          "usId": "US-120",
           "acIds": [
-            "AC-708",
-            "AC-709",
-            "AC-710",
-            "AC-711"
+            "AC-556",
+            "AC-557",
+            "AC-558",
+            "AC-559"
           ]
         },
         {
-          "usId": "US-144",
+          "usId": "US-121",
           "acIds": [
-            "AC-712",
-            "AC-713",
-            "AC-714",
-            "AC-715"
+            "AC-560",
+            "AC-561",
+            "AC-562",
+            "AC-563",
+            "AC-564"
           ]
         },
         {
-          "usId": "US-145",
+          "usId": "US-122",
           "acIds": [
-            "AC-716",
-            "AC-717",
-            "AC-718",
-            "AC-719"
-          ]
-        },
-        {
-          "usId": "US-146",
-          "acIds": [
-            "AC-720",
-            "AC-721",
-            "AC-722",
-            "AC-723"
+            "AC-565",
+            "AC-566",
+            "AC-567",
+            "AC-568"
           ]
         }
       ],
       "dependencies": [
-        "FBS-019",
-        "FBS-040",
-        "FBS-027"
+        "FBS-030",
+        "FBS-040"
       ],
       "testableOutcomes": [
-        "System automatically initiates match scoring within 5 minutes after successful daily scraping completion",
-        "System processes exactly 10 jobs per batch with configurable wait interval between batches",
-        "System calculates match scores between 0-100 for all new jobs using skills, location, salary, and experience alignment",
-        "System continues processing remaining jobs when individual jobs fail, logging errors and marking failed jobs as 'scoring_failed'",
-        "System generates summary report after completion showing total jobs scored, failures, and processing duration",
-        "System displays real-time progress indicator with current phase and percentage completion during scoring execution"
+        "Match scoring process automatically initiates within 5 minutes after daily job scraping completes",
+        "System processes newly scraped jobs in batches of exactly 10 jobs per batch with 1-second delays",
+        "All successfully processed jobs have match scores between 0.0 and 1.0 stored in database",
+        "System skips jobs with missing data and logs issues without stopping batch processing",
+        "CPU usage remains below 80% and memory usage below 75% during batch processing",
+        "Process log entries track start/end timestamps, job counts, and performance metrics for each execution"
       ],
       "status": "not-started",
       "sessionMeta": {
         "estimatedSize": "large",
-        "estimatedHours": 8,
+        "estimatedHours": 6,
         "contextRequirements": {
           "prdSections": [
-            "Job Matching",
-            "System Architecture"
+            "Automation & Workflow",
+            "Intelligent Matching"
           ],
           "tadSections": [
-            "api-server",
-            "job-crawler",
-            "@jobsearch/database"
+            "Intelligent Matching Service",
+            "Workflow Orchestration Service"
           ],
           "existingModules": [
-            "@jobsearch/types",
-            "@jobsearch/logger",
-            "@jobsearch/config"
+            "packages/@jobsearch/matching",
+            "packages/@jobsearch/automation"
           ],
           "schemas": [
-            "Job",
-            "UserProfile",
-            "MatchScore",
-            "ScoringSession"
+            "jobs",
+            "match_scores",
+            "processing_logs"
           ]
         },
         "deliverables": [
-          "Automated scoring trigger service",
-          "Batch processing orchestrator with resource monitoring",
-          "Match scoring pipeline with error handling",
-          "Progress tracking and reporting system",
-          "Scoring session management API",
-          "Real-time status monitoring components"
+          "packages/@jobsearch/automation/src/match-score-processor.ts",
+          "packages/@jobsearch/automation/src/batch-manager.ts",
+          "packages/@jobsearch/automation/src/resource-monitor.ts",
+          "packages/@jobsearch/automation/src/scoring-validator.ts",
+          "packages/@jobsearch/automation/src/process-tracker.ts",
+          "apps/api-server/src/routes/scoring-status.ts",
+          "n8n/workflows/automated-match-scoring.json",
+          "Database migration for match scoring process logs"
         ]
       },
       "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Must integrate with existing match scoring algorithms and handle resource management for batch processing. Requires careful coordination between scraping completion events and scoring initiation to avoid race conditions."
+      "domain": "Automation & Workflow",
+      "implementationNotes": "Integrates with existing hybrid match scoring algorithm. Requires careful resource monitoring and batch size optimization. Consider database connection pooling for batch operations."
     },
     {
       "id": "FBS-042",
-      "title": "Advanced Circuit Breaker System",
-      "summary": "Implements sophisticated circuit breaker pattern with failure detection, 1-hour cooldown periods, health check validation, and graceful degradation to ensure system resilience during platform unavailability.",
+      "title": "Circuit Breaker System",
+      "summary": "Implements comprehensive circuit breaker system for scraper reliability. Provides automatic failure detection, 1-hour cooldown periods, health checks, and graceful degradation when platforms are unavailable.",
       "storyScope": [
         {
-          "usId": "US-147",
+          "usId": "US-123",
           "acIds": [
-            "AC-724",
-            "AC-725",
-            "AC-726",
-            "AC-727",
-            "AC-728"
+            "AC-569",
+            "AC-570",
+            "AC-571",
+            "AC-572",
+            "AC-573"
           ]
         },
         {
-          "usId": "US-148",
+          "usId": "US-124",
           "acIds": [
-            "AC-729",
-            "AC-730",
-            "AC-731",
-            "AC-732"
+            "AC-574",
+            "AC-575",
+            "AC-576",
+            "AC-577"
           ]
         },
         {
-          "usId": "US-149",
+          "usId": "US-125",
           "acIds": [
-            "AC-733",
-            "AC-734",
-            "AC-735",
-            "AC-736",
-            "AC-737"
+            "AC-578",
+            "AC-579",
+            "AC-580",
+            "AC-581"
           ]
         },
         {
-          "usId": "US-150",
+          "usId": "US-126",
           "acIds": [
-            "AC-738",
-            "AC-739",
-            "AC-740",
-            "AC-741"
-          ]
-        },
-        {
-          "usId": "US-151",
-          "acIds": [
-            "AC-742",
-            "AC-743",
-            "AC-744",
-            "AC-745"
+            "AC-582",
+            "AC-583",
+            "AC-584",
+            "AC-585"
           ]
         }
       ],
       "dependencies": [
-        "FBS-007",
-        "FBS-005",
+        "FBS-011",
         "FBS-006"
       ],
       "testableOutcomes": [
-        "System opens circuit breaker after exactly 3 consecutive failures and rejects subsequent requests without attempting to scrape",
-        "System enforces 1-hour cooldown period from circuit breaker opening timestamp before transitioning to half-open state",
-        "System performs lightweight health check in half-open state and closes circuit breaker on success or reopens on failure",
-        "System continues returning job search results from available platforms when some circuit breakers are open",
-        "System returns current state (closed/open/half-open) for each scraper when circuit breaker status is queried",
-        "System logs all circuit breaker state changes with timestamps and displays failure rates and availability percentages in dashboard"
+        "Circuit breaker opens and prevents further attempts after 3 consecutive scraper failures",
+        "Circuit breaker enforces 1-hour cooldown period before allowing any retry attempts",
+        "Circuit breaker transitions to half-open state after cooldown and performs single health check",
+        "Successful health check in half-open state closes circuit breaker and resumes normal operations",
+        "Failed health check in half-open state reopens circuit breaker and restarts cooldown period",
+        "Search results display available platform data with clear notifications about unavailable sources",
+        "System displays cached job listings with unavailability messages when all scrapers are down"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -182,101 +163,152 @@
         "estimatedHours": 8,
         "contextRequirements": {
           "prdSections": [
-            "Job Discovery",
-            "System Reliability"
+            "Infrastructure & Reliability",
+            "Job Discovery"
           ],
           "tadSections": [
-            "job-crawler",
-            "api-server",
-            "@jobsearch/database"
+            "Job Discovery Service",
+            "Job Platform Scrapers"
           ],
           "existingModules": [
-            "@jobsearch/logger",
-            "@jobsearch/config",
-            "@jobsearch/common"
+            "packages/@jobsearch/scrapers",
+            "apps/web-ui",
+            "apps/api-server"
           ],
           "schemas": [
-            "Platform",
-            "CircuitBreakerState",
-            "HealthCheck"
+            "circuit_breaker_state",
+            "scraper_health",
+            "platform_status"
           ]
         },
         "deliverables": [
-          "Circuit breaker state machine implementation",
-          "Persistent state storage with Redis/database",
-          "Health check validation service",
-          "Graceful degradation middleware",
-          "Circuit breaker monitoring dashboard",
-          "State transition logging and alerting system"
+          "packages/@jobsearch/reliability/src/circuit-breaker.ts",
+          "packages/@jobsearch/reliability/src/health-checker.ts",
+          "packages/@jobsearch/reliability/src/cooldown-manager.ts",
+          "packages/@jobsearch/reliability/src/state-tracker.ts",
+          "packages/@jobsearch/reliability/src/degradation-handler.ts",
+          "apps/api-server/src/middleware/circuit-breaker-middleware.ts",
+          "apps/web-ui/src/components/PlatformStatusIndicator.tsx",
+          "apps/web-ui/src/components/UnavailabilityNotice.tsx",
+          "Database migration for circuit breaker state tracking",
+          "Enhanced scraper base class with circuit breaker integration"
         ]
       },
-      "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Requires persistent state management across system restarts, careful timing for cooldown periods, and integration with existing scraping infrastructure. Must handle concurrent access to circuit breaker state and provide thread-safe operations."
+      "riskLevel": "high",
+      "domain": "Infrastructure & Reliability",
+      "implementationNotes": "Critical system reliability component requiring careful state management and persistence. Must integrate with all existing scrapers without breaking changes. Consider Redis for distributed circuit breaker state if scaling horizontally."
     },
     {
       "id": "FBS-043",
-      "title": "Enhanced Retry & Error Handling",
-      "summary": "Implements intelligent retry mechanisms with exponential backoff for API requests, configurable retry limits, and comprehensive error classification. Provides robust handling of transient failures while avoiding unnecessary retries for permanent errors.",
+      "title": "Circuit Breaker State Management",
+      "summary": "Implements independent circuit breaker state management for each job platform scraper. Ensures platform failures are isolated and don't affect other scrapers' availability.",
       "storyScope": [
         {
-          "usId": "US-152",
+          "usId": "US-127",
           "acIds": [
-            "AC-746",
-            "AC-747",
-            "AC-748",
-            "AC-749",
-            "AC-750",
-            "AC-751"
-          ]
-        },
-        {
-          "usId": "US-153",
-          "acIds": [
-            "AC-752",
-            "AC-753",
-            "AC-754",
-            "AC-755"
-          ]
-        },
-        {
-          "usId": "US-154",
-          "acIds": [
-            "AC-756",
-            "AC-757",
-            "AC-758",
-            "AC-759",
-            "AC-760",
-            "AC-761"
-          ]
-        },
-        {
-          "usId": "US-155",
-          "acIds": [
-            "AC-762",
-            "AC-763",
-            "AC-764",
-            "AC-765"
+            "AC-586",
+            "AC-587",
+            "AC-588",
+            "AC-589"
           ]
         }
       ],
       "dependencies": [
-        "FBS-007",
-        "FBS-008",
         "FBS-042"
       ],
       "testableOutcomes": [
-        "First retry occurs exactly 1 second after initial failure",
-        "Retry delays follow exponential backoff pattern: 1s, 2s, 4s, 8s, 16s",
-        "Retry delays are capped at 30 seconds maximum regardless of exponential calculation",
-        "System stops retrying after exactly 3 attempts by default and returns error",
-        "Configuration changes for max retry count apply immediately without system restart",
-        "5xx server errors trigger retry mechanism with exponential backoff",
-        "4xx client errors (except 429) do not trigger any retry attempts",
-        "429 rate limit errors trigger retry mechanism with exponential backoff",
-        "Network connectivity failures trigger retry mechanism",
-        "System logs each retry attempt with attempt number, delay duration, and timestamp",
-        "Retry metrics show success rate and average retry count for monitoring"
+        "Each job platform scraper maintains independent circuit breaker state with separate failure counts",
+        "RemoteOK scraper circuit breaker opens after 3 failures while Indeed scraper remains operational",
+        "System status endpoint returns individual circuit breaker states for all configured platforms",
+        "Circuit breaker state persistence survives service restarts and maintains per-platform isolation"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Circuit Breaker System"
+          ],
+          "tadSections": [
+            "Job Platform Scrapers",
+            "Job Discovery Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/reliability/src/circuit-breaker.ts",
+            "packages/@jobsearch/scrapers/src/base-scraper.ts"
+          ],
+          "schemas": [
+            "circuit_breaker_states",
+            "scraper_health_logs"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/reliability/src/per-platform-state-manager.ts",
+          "packages/@jobsearch/reliability/src/state-isolation.ts",
+          "Enhanced circuit-breaker.ts with platform-specific state",
+          "Database migration for platform-specific circuit breaker states",
+          "State management test suite"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Infrastructure & Reliability",
+      "implementationNotes": "Must ensure thread-safe state management across concurrent scraper operations. Platform identification should be consistent across all scraper instances."
+    },
+    {
+      "id": "FBS-044",
+      "title": "Retry Logic System",
+      "summary": "Implements comprehensive retry logic with exponential backoff, error classification, and configurable retry limits. Handles transient failures gracefully while avoiding unnecessary retries for permanent errors.",
+      "storyScope": [
+        {
+          "usId": "US-128",
+          "acIds": [
+            "AC-590",
+            "AC-591",
+            "AC-592",
+            "AC-593",
+            "AC-594",
+            "AC-595"
+          ]
+        },
+        {
+          "usId": "US-129",
+          "acIds": [
+            "AC-596",
+            "AC-597",
+            "AC-598",
+            "AC-599"
+          ]
+        },
+        {
+          "usId": "US-130",
+          "acIds": [
+            "AC-600",
+            "AC-601",
+            "AC-602"
+          ]
+        },
+        {
+          "usId": "US-131",
+          "acIds": [
+            "AC-603",
+            "AC-604",
+            "AC-605",
+            "AC-606",
+            "AC-607"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-043"
+      ],
+      "testableOutcomes": [
+        "System retries transient failures (5xx, timeout, connection errors) with exponential backoff: 1s, 2s, 4s, 8s",
+        "System caps retry delays at 30 seconds maximum regardless of exponential calculation",
+        "System immediately returns success on any successful retry attempt without additional delays",
+        "System does not retry 4xx client errors and returns failure immediately",
+        "System respects configurable maximum retry count with default of 3 attempts",
+        "System logs each retry attempt with attempt number, delay duration, and error classification"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -284,228 +316,91 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "API Integration",
+            "Retry Logic System",
             "Error Handling"
           ],
           "tadSections": [
-            "api-server",
-            "@jobsearch/common"
+            "Job Platform Scrapers",
+            "API Gateway"
           ],
           "existingModules": [
-            "Circuit breaker system",
-            "Job scraping infrastructure"
+            "packages/@jobsearch/scrapers/src/retry-handler.ts",
+            "packages/@jobsearch/reliability/src/circuit-breaker.ts"
           ],
           "schemas": [
-            "Configuration schema",
-            "Logging schema"
+            "retry_logs",
+            "error_classifications"
           ]
         },
         "deliverables": [
-          "Exponential backoff retry service",
-          "Configurable retry policy manager",
-          "Error classification middleware",
-          "Retry metrics collection service",
-          "Enhanced logging for retry operations",
-          "Configuration management for retry settings"
+          "packages/@jobsearch/reliability/src/retry-engine.ts",
+          "packages/@jobsearch/reliability/src/error-classifier.ts",
+          "packages/@jobsearch/reliability/src/backoff-calculator.ts",
+          "packages/@jobsearch/reliability/src/retry-config-manager.ts",
+          "packages/@jobsearch/reliability/src/retry-logger.ts",
+          "Enhanced base scraper classes with retry integration",
+          "Retry configuration management utilities",
+          "Comprehensive retry logic test suite"
         ]
       },
       "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Integrates with existing circuit breaker system. Requires careful handling of concurrent retry operations and proper resource cleanup on timeout."
-    },
-    {
-      "id": "FBS-044",
-      "title": "Performance Monitoring & Optimization",
-      "summary": "Establishes comprehensive performance monitoring for scraping operations and match scoring processes. Implements timeout enforcement, alerting thresholds, and performance tracking to ensure SLA compliance and proactive issue detection.",
-      "storyScope": [
-        {
-          "usId": "US-178",
-          "acIds": [
-            "AC-864",
-            "AC-865",
-            "AC-866",
-            "AC-867"
-          ]
-        },
-        {
-          "usId": "US-179",
-          "acIds": [
-            "AC-868",
-            "AC-869",
-            "AC-870",
-            "AC-871"
-          ]
-        },
-        {
-          "usId": "US-180",
-          "acIds": [
-            "AC-872",
-            "AC-873",
-            "AC-874",
-            "AC-875"
-          ]
-        },
-        {
-          "usId": "US-181",
-          "acIds": [
-            "AC-876",
-            "AC-877",
-            "AC-878",
-            "AC-879"
-          ]
-        },
-        {
-          "usId": "US-182",
-          "acIds": [
-            "AC-880",
-            "AC-881",
-            "AC-882",
-            "AC-883"
-          ]
-        },
-        {
-          "usId": "US-183",
-          "acIds": [
-            "AC-884",
-            "AC-885",
-            "AC-886",
-            "AC-887"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-008",
-        "FBS-019",
-        "FBS-041"
-      ],
-      "testableOutcomes": [
-        "Daily scraping process completes within 60 minutes with recorded completion timestamp",
-        "Individual platform scraping operations timeout after exactly 15 minutes",
-        "System continues processing remaining platforms when one platform times out",
-        "Warning alert triggers when total scraping time exceeds 50 minutes",
-        "Warning alert triggers when any platform exceeds 12 minutes execution time",
-        "Individual job match scoring completes within 10 seconds for any job complexity",
-        "Batch processing of exactly 300 jobs completes within 50 minutes",
-        "CPU and memory usage remain within acceptable limits during 50-minute batch processing",
-        "Alert triggers when individual job scoring exceeds 10 seconds",
-        "Escalation alerts sent when batch processing exceeds 50 minutes",
-        "Historical performance data is accessible for administrator analysis"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Performance Requirements",
-            "Monitoring"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "api-server",
-            "@jobsearch/logger"
-          ],
-          "existingModules": [
-            "Job scraping system",
-            "Match scoring pipeline",
-            "Health monitoring"
-          ],
-          "schemas": [
-            "Performance metrics schema",
-            "Alert configuration schema"
-          ]
-        },
-        "deliverables": [
-          "Performance monitoring service with metrics collection",
-          "Timeout enforcement middleware for scraping operations",
-          "Alert threshold configuration and notification system",
-          "Performance analytics dashboard components",
-          "Historical performance data aggregation service",
-          "Resource usage monitoring utilities"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Requires integration with existing logging system and careful performance measurement without impacting actual operation performance. Alert system needs proper escalation paths."
+      "domain": "Infrastructure & Reliability",
+      "implementationNotes": "Error classification must be accurate to prevent infinite retry loops. Backoff calculation should handle edge cases like system clock changes. Integration with circuit breaker must prevent conflicts."
     },
     {
       "id": "FBS-045",
-      "title": "AI Performance & Dashboard Optimization",
-      "summary": "Optimizes AI content generation performance and dashboard loading times. Implements performance monitoring for Ollama operations, efficient pagination and infinite scroll for large datasets, and ensures fast dashboard rendering within SLA requirements.",
+      "title": "Job Dashboard UI",
+      "summary": "Implements the main job dashboard interface with card-based layout, match score display, technology tags, and salary information. Provides responsive design and progressive loading for optimal user experience.",
       "storyScope": [
         {
-          "usId": "US-184",
+          "usId": "US-090",
           "acIds": [
-            "AC-888",
-            "AC-889",
-            "AC-890",
-            "AC-891"
+            "AC-421",
+            "AC-422",
+            "AC-423",
+            "AC-424"
           ]
         },
         {
-          "usId": "US-185",
+          "usId": "US-091",
           "acIds": [
-            "AC-892",
-            "AC-893",
-            "AC-894",
-            "AC-895"
+            "AC-425",
+            "AC-426",
+            "AC-427",
+            "AC-428"
           ]
         },
         {
-          "usId": "US-186",
+          "usId": "US-092",
           "acIds": [
-            "AC-896",
-            "AC-897",
-            "AC-898",
-            "AC-899"
+            "AC-429",
+            "AC-430",
+            "AC-431",
+            "AC-432"
           ]
         },
         {
-          "usId": "US-187",
+          "usId": "US-093",
           "acIds": [
-            "AC-900",
-            "AC-901",
-            "AC-902",
-            "AC-903"
-          ]
-        },
-        {
-          "usId": "US-188",
-          "acIds": [
-            "AC-904",
-            "AC-905",
-            "AC-906",
-            "AC-907"
-          ]
-        },
-        {
-          "usId": "US-189",
-          "acIds": [
-            "AC-908",
-            "AC-909",
-            "AC-910"
+            "AC-433",
+            "AC-434",
+            "AC-435",
+            "AC-436"
           ]
         }
       ],
       "dependencies": [
-        "FBS-024",
-        "FBS-032",
-        "FBS-033"
+        "FBS-030",
+        "FBS-017"
       ],
       "testableOutcomes": [
-        "Cover letter variants generate within 90 seconds on 8GB RAM system",
-        "User receives error message with retry option when generation exceeds 90 seconds",
-        "Warning alert triggers when generation time exceeds 75 seconds",
-        "Performance degradation alert generates when memory usage exceeds 90%",
-        "Job dashboard renders complete job list within 2 seconds for 100, 500, and 1000 jobs",
-        "95% of dashboard load requests complete within 2 seconds across multiple browser sessions",
-        "Pagination controls display when more than 1000 jobs are available",
-        "Any paginated page loads within 2 seconds regardless of total dataset size",
-        "Only current page data loads from backend when using pagination with large datasets",
-        "Next batch of jobs loads within 2 seconds when scrolling near bottom with infinite scroll",
-        "Loading indicators appear and disappear smoothly without layout shifts during infinite scroll",
-        "Alerts trigger when dashboard load times exceed 2 seconds",
-        "Detailed timing breakdowns available for database query, rendering, and network components"
+        "Dashboard displays jobs in responsive card layout with multiple cards per row on desktop, single column on mobile",
+        "Empty state message appears when no jobs are available with appropriate call-to-action",
+        "Progressive loading triggers when scrolling near bottom, loading additional job cards seamlessly",
+        "Match scores display as color-coded percentages: green (70-100%), yellow (40-69%), red (0-39%)",
+        "Technology tags show maximum 5 technologies with '+X more' expandable indicator for additional skills",
+        "Salary information displays in format '$X - $Y per year' with currency symbols and 'not disclosed' fallback",
+        "Matching technologies between user profile and job requirements are visually highlighted on cards"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -513,102 +408,98 @@
         "estimatedHours": 8,
         "contextRequirements": {
           "prdSections": [
-            "Performance Requirements",
-            "User Interface"
+            "Job Dashboard",
+            "User Interface Design"
           ],
           "tadSections": [
-            "web-ui",
-            "api-server",
-            "@jobsearch/ai-client"
+            "Web Frontend",
+            "User Profile Service"
           ],
           "existingModules": [
-            "Cover letter generation",
-            "Job dashboard",
-            "AI integration"
+            "apps/web-ui/src/components/JobFilters.tsx",
+            "packages/@jobsearch/matching/src/hybrid-scorer.ts"
           ],
           "schemas": [
-            "Performance metrics schema",
-            "Pagination schema"
+            "jobs",
+            "user_profiles",
+            "match_scores"
           ]
         },
         "deliverables": [
-          "AI performance monitoring service with timeout handling",
-          "Optimized pagination API endpoints with configurable page sizes",
-          "Infinite scroll implementation with smooth loading states",
-          "Dashboard performance optimization utilities",
-          "Memory usage monitoring for AI operations",
-          "Performance analytics collection for dashboard loads",
-          "Alert system for performance threshold violations"
+          "apps/web-ui/src/components/JobDashboard.tsx",
+          "apps/web-ui/src/components/JobCard.tsx",
+          "apps/web-ui/src/components/MatchScoreIndicator.tsx",
+          "apps/web-ui/src/components/TechnologyTags.tsx",
+          "apps/web-ui/src/components/SalaryDisplay.tsx",
+          "apps/web-ui/src/components/EmptyState.tsx",
+          "apps/web-ui/src/hooks/useInfiniteScroll.ts",
+          "apps/web-ui/src/hooks/useJobDashboard.ts",
+          "Dashboard styling and responsive CSS",
+          "Job dashboard integration test suite"
         ]
       },
       "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Requires careful memory management for AI operations and efficient database query optimization for large datasets. Frontend optimization must balance user experience with performance constraints."
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Performance optimization crucial for large job datasets. Virtual scrolling may be needed for thousands of jobs. Match score color coding should be accessible for colorblind users."
     },
     {
       "id": "FBS-046",
-      "title": "Data Privacy & Security Compliance",
-      "summary": "Implements comprehensive data locality enforcement ensuring all user data (CV, preferences, applications) remains stored exclusively in local PostgreSQL database. Establishes network monitoring and validation to prevent unauthorized external data transmission while maintaining optional Claude API integration for processing.",
+      "title": "Job Dashboard Actions & Sorting",
+      "summary": "Implements quick action buttons on job cards (Save, Apply, View Details) with dynamic state management and job sorting capabilities by match percentage, posting date, and salary. Provides intuitive controls for job management and prioritization.",
       "storyScope": [
         {
-          "usId": "US-190",
+          "usId": "US-094",
           "acIds": [
-            "AC-911",
-            "AC-912",
-            "AC-913",
-            "AC-914"
+            "AC-437",
+            "AC-438",
+            "AC-439",
+            "AC-440",
+            "AC-441"
           ]
         },
         {
-          "usId": "US-191",
+          "usId": "US-095",
           "acIds": [
-            "AC-915",
-            "AC-916",
-            "AC-917"
+            "AC-442",
+            "AC-443",
+            "AC-444",
+            "AC-445"
           ]
         },
         {
-          "usId": "US-192",
+          "usId": "US-096",
           "acIds": [
-            "AC-918",
-            "AC-919",
-            "AC-920",
-            "AC-921"
+            "AC-446",
+            "AC-447",
+            "AC-448",
+            "AC-449"
           ]
         },
         {
-          "usId": "US-193",
+          "usId": "US-097",
           "acIds": [
-            "AC-922",
-            "AC-923",
-            "AC-924",
-            "AC-925"
-          ]
-        },
-        {
-          "usId": "US-194",
-          "acIds": [
-            "AC-926",
-            "AC-927",
-            "AC-928"
+            "AC-450",
+            "AC-451",
+            "AC-452",
+            "AC-453"
           ]
         }
       ],
       "dependencies": [
-        "FBS-004",
-        "FBS-017",
-        "FBS-018",
-        "FBS-023",
-        "FBS-025"
+        "FBS-045"
       ],
       "testableOutcomes": [
-        "CV upload and processing operations store data only in local PostgreSQL database with no external HTTP requests",
-        "Job search preferences save and retrieve exclusively from local database tables without external API calls",
-        "Job application data persists locally with status updates recorded only in PostgreSQL instance",
-        "Claude API integration transmits only processing data, never complete user profiles, with results stored locally",
-        "Network monitoring confirms no user data transmission to unauthorized external endpoints except Claude API",
-        "Database connection validation shows all user data queries execute against local PostgreSQL instance only",
-        "System logs demonstrate no evidence of user data transmission to unauthorized external services"
+        "Job cards display Save, Apply, and View Details buttons with appropriate styling and hover states",
+        "Save button changes to 'Saved' state with visual confirmation when clicked and job is added to saved jobs",
+        "Apply button redirects to external job posting URL or internal application process when clicked",
+        "View Details button opens job detail page with complete job information when clicked",
+        "Applied jobs show disabled Apply button with 'Applied' status text",
+        "Sort by Match % orders jobs from highest to lowest match score with unscored jobs at end",
+        "Sort direction toggle reverses job order for match percentage sorting",
+        "Sort by Date orders jobs from most recent to oldest posting date with undated jobs at end",
+        "Sort by Salary orders jobs from highest to lowest salary using maximum value for ranges",
+        "Current sort option is visually highlighted in sort dropdown menu",
+        "Posting date is visible on job cards when sorted by date"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -616,264 +507,104 @@
         "estimatedHours": 5,
         "contextRequirements": {
           "prdSections": [
-            "Data Privacy",
-            "Security Requirements"
+            "Job Dashboard",
+            "User Actions",
+            "Sorting"
           ],
           "tadSections": [
-            "@jobsearch/database",
-            "@jobsearch/ai-client",
-            "api-server"
+            "User Interface Components",
+            "Application Management Service"
           ],
           "existingModules": [
-            "CV processing",
-            "User preferences",
-            "Application tracking"
+            "JobCard",
+            "JobDashboard",
+            "useJobDashboard"
           ],
           "schemas": [
-            "User data tables",
-            "Application tracking schema"
+            "jobs",
+            "user_applications",
+            "saved_jobs"
           ]
         },
         "deliverables": [
-          "Data locality validation middleware",
-          "Network monitoring service",
-          "Claude API data filtering",
-          "Database connection validator",
-          "Privacy compliance audit utilities"
+          "apps/web-ui/src/components/JobCardActions.tsx",
+          "apps/web-ui/src/components/SortControls.tsx",
+          "apps/web-ui/src/hooks/useJobActions.ts",
+          "apps/web-ui/src/hooks/useJobSorting.ts",
+          "Enhanced JobCard.tsx with action buttons",
+          "Enhanced JobDashboard.tsx with sorting controls",
+          "apps/api-server/src/routes/job-actions.ts",
+          "Job actions and sorting test suite"
         ]
       },
-      "riskLevel": "high",
-      "domain": "Security & Deployment",
-      "implementationNotes": "Critical security feature requiring careful validation of all data flows. Must implement comprehensive network monitoring and establish clear boundaries between local storage and optional external processing."
+      "riskLevel": "low",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Focus on responsive button layouts and smooth state transitions. Ensure sorting performance with large job datasets. Implement optimistic UI updates for better user experience."
     },
     {
       "id": "FBS-047",
-      "title": "Memory Management & Resource Control",
-      "summary": "Establishes comprehensive memory management system with documented allocation budgets, container-level limits, and automated monitoring with warning/critical thresholds. Implements automatic Ollama model unloading at critical memory levels to prevent system instability.",
+      "title": "Dashboard Filtering UI",
+      "summary": "Implements comprehensive job filtering interface with salary range, technology, location, remote work, company, and job level filters. Provides advanced filtering capabilities with search, multi-select, and dynamic result updates to help users find relevant job opportunities.",
       "storyScope": [
         {
-          "usId": "US-293",
+          "usId": "US-098",
           "acIds": [
-            "AC-1404",
-            "AC-1405",
-            "AC-1406",
-            "AC-1407",
-            "AC-1408",
-            "AC-1409",
-            "AC-1410",
-            "AC-1411",
-            "AC-1412"
+            "AC-454",
+            "AC-455",
+            "AC-456",
+            "AC-457",
+            "AC-458"
           ]
         },
         {
-          "usId": "US-294",
+          "usId": "US-099",
           "acIds": [
-            "AC-1413",
-            "AC-1414",
-            "AC-1415",
-            "AC-1416",
-            "AC-1417",
-            "AC-1418",
-            "AC-1419",
-            "AC-1420"
+            "AC-459",
+            "AC-460",
+            "AC-461",
+            "AC-462",
+            "AC-463"
           ]
         },
         {
-          "usId": "US-295",
+          "usId": "US-100",
           "acIds": [
-            "AC-1421",
-            "AC-1422",
-            "AC-1423"
+            "AC-464",
+            "AC-465",
+            "AC-466",
+            "AC-467",
+            "AC-468"
           ]
         },
         {
-          "usId": "US-296",
+          "usId": "US-101",
           "acIds": [
-            "AC-1424",
-            "AC-1425",
-            "AC-1426"
-          ]
-        },
-        {
-          "usId": "US-297",
-          "acIds": [
-            "AC-1427",
-            "AC-1428",
-            "AC-1429",
-            "AC-1430"
+            "AC-469",
+            "AC-470",
+            "AC-471",
+            "AC-472"
           ]
         }
       ],
       "dependencies": [
-        "FBS-003",
-        "FBS-005",
-        "FBS-023"
+        "FBS-026",
+        "FBS-027"
       ],
       "testableOutcomes": [
-        "System documentation displays memory allocation budgets totaling exactly 8GB across all services",
-        "Container configurations enforce memory limits: Ollama 4GB, PostgreSQL 1GB, Chromium 1.5GB, n8n 512MB, Redis 256MB, API Server 256MB, LiteLLM 256MB, Web UI 128MB",
-        "Memory monitoring triggers warning alert when total usage reaches 6.4GB (80% threshold)",
-        "Memory monitoring triggers critical alert when total usage reaches 7.2GB (90% threshold)",
-        "Ollama model automatically unloads when memory reaches 90% threshold, increasing available memory",
-        "System memory usage below 80% maintains all services without alerts or automatic interventions",
-        "Memory alerts include current usage and percentage information for administrative action"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "medium",
-        "estimatedHours": 4,
-        "contextRequirements": {
-          "prdSections": [
-            "System Requirements",
-            "Performance Specifications"
-          ],
-          "tadSections": [
-            "Container Infrastructure",
-            "@jobsearch/ai-client"
-          ],
-          "existingModules": [
-            "Docker compose configuration",
-            "Health monitoring"
-          ],
-          "schemas": [
-            "System metrics schema"
-          ]
-        },
-        "deliverables": [
-          "Memory allocation documentation",
-          "Container memory limit configurations",
-          "Memory monitoring service",
-          "Alert threshold management",
-          "Ollama model auto-unload service"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "System Infrastructure",
-      "implementationNotes": "Requires careful coordination between container orchestration and monitoring systems. Auto-unload mechanism must be thoroughly tested to prevent service disruption while maintaining system stability."
-    },
-    {
-      "id": "FBS-048",
-      "title": "LinkedIn Legal Compliance & Opt-in",
-      "summary": "Implements comprehensive legal compliance system for LinkedIn scraping with mandatory disclaimer, explicit consent mechanism, and opt-in disabled by default configuration. Prominently promotes email parsing as zero-risk alternative while ensuring users understand ToS violation risks.",
-      "storyScope": [
-        {
-          "usId": "US-298",
-          "acIds": [
-            "AC-1431",
-            "AC-1432",
-            "AC-1433",
-            "AC-1434",
-            "AC-1435"
-          ]
-        },
-        {
-          "usId": "US-299",
-          "acIds": [
-            "AC-1436",
-            "AC-1437",
-            "AC-1438",
-            "AC-1439",
-            "AC-1440"
-          ]
-        },
-        {
-          "usId": "US-300",
-          "acIds": [
-            "AC-1441",
-            "AC-1442",
-            "AC-1443",
-            "AC-1444",
-            "AC-1445"
-          ]
-        },
-        {
-          "usId": "US-301",
-          "acIds": [
-            "AC-1446",
-            "AC-1447",
-            "AC-1448",
-            "AC-1449",
-            "AC-1450"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-007",
-        "FBS-018",
-        "FBS-032"
-      ],
-      "testableOutcomes": [
-        "Legal disclaimer modal blocks access to LinkedIn scraping controls until user interaction",
-        "Disclaimer displays comprehensive warning about LinkedIn Terms of Service violation risks and potential account suspension",
-        "Explicit consent checkbox with acknowledgment text prevents access until checked and confirmed",
-        "Consent timestamp records in user preferences when user provides explicit consent",
-        "New user accounts initialize with LinkedIn scraping disabled by default in all configurations",
-        "Users without consent cannot access LinkedIn scraping in job search options or automated searches",
-        "Email parsing prominently featured as recommended zero-risk alternative in all LinkedIn-related interfaces",
-        "Previously consented users bypass disclaimer but system verifies consent status on each access",
-        "System excludes LinkedIn from scraping sources when user has not provided explicit consent"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "medium",
-        "estimatedHours": 4,
-        "contextRequirements": {
-          "prdSections": [
-            "Legal Compliance",
-            "User Interface",
-            "Job Scraping"
-          ],
-          "tadSections": [
-            "web-ui",
-            "@jobsearch/database",
-            "job-crawler"
-          ],
-          "existingModules": [
-            "User preferences",
-            "Job scraping configuration",
-            "Platform management"
-          ],
-          "schemas": [
-            "User preferences schema",
-            "Consent tracking schema"
-          ]
-        },
-        "deliverables": [
-          "Legal disclaimer modal component",
-          "Consent management service",
-          "User preference opt-in system",
-          "Email parsing promotion components",
-          "LinkedIn scraping access control"
-        ]
-      },
-      "riskLevel": "high",
-      "domain": "Security & Deployment",
-      "implementationNotes": "Critical legal compliance feature requiring careful UX design to ensure informed consent. Must balance legal protection with user experience while strongly promoting safer alternatives."
-    },
-    {
-      "id": "FBS-049",
-      "title": "LinkedIn Stealth Scraping Foundation",
-      "summary": "Establishes stealth browser automation infrastructure using Playwright with anti-detection plugins and human-like browser fingerprints. Provides foundation for undetected LinkedIn job scraping with proper stealth configuration and detection monitoring.",
-      "storyScope": [
-        {
-          "usId": "US-202",
-          "acIds": [
-            "AC-957",
-            "AC-958",
-            "AC-959",
-            "AC-960"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-007",
-        "FBS-008"
-      ],
-      "testableOutcomes": [
-        "Playwright browser launches with playwright-extra and stealth plugin successfully loaded and configured",
-        "Browser runs in headed mode with randomized human-like user agent and viewport settings applied",
-        "LinkedIn pages load without triggering bot detection warnings or CAPTCHA challenges",
-        "Stealth plugins successfully mask automation signatures and browser fingerprints during LinkedIn navigation"
+        "Salary filter displays minimum and maximum input fields with currency formatting",
+        "Jobs with salary >= minimum threshold are displayed when minimum salary filter is applied",
+        "Jobs with salary <= maximum threshold are displayed when maximum salary filter is applied",
+        "Jobs without salary information are excluded when any salary filter is active",
+        "Technology filter displays searchable multi-select dropdown with alphabetically sorted options",
+        "Jobs matching ANY selected technology are displayed when multiple technologies are selected",
+        "Location filter provides city/region search with autocomplete suggestions",
+        "Remote Only filter displays only fully remote positions when selected",
+        "Hybrid filter shows jobs with hybrid work arrangements when applied",
+        "Company size filter (startup, mid-size, enterprise) filters jobs by company category",
+        "Specific company search allows selection of individual companies with autocomplete",
+        "Job level filter (junior, mid, senior, lead) displays only jobs at selected levels",
+        "Multiple filters combine with AND logic to show jobs matching all criteria",
+        "Filter combinations update results dynamically without page refresh"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -881,164 +612,316 @@
         "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "LinkedIn Integration",
-            "Stealth Operations"
+            "Job Filtering",
+            "Search Interface",
+            "User Preferences"
           ],
           "tadSections": [
-            "job-crawler"
+            "Job Discovery Service",
+            "User Interface Components"
           ],
           "existingModules": [
-            "@jobsearch/config",
-            "@jobsearch/logger"
+            "JobFilters",
+            "useJobFilters",
+            "filter-engine",
+            "query-builder"
           ],
           "schemas": [
-            "Job",
-            "ScrapingSession"
+            "jobs",
+            "companies",
+            "technologies",
+            "locations"
           ]
         },
         "deliverables": [
-          "LinkedIn stealth scraper class with Playwright integration",
-          "Stealth plugin configuration and initialization",
-          "Human-like browser fingerprint generation",
-          "Detection monitoring and validation utilities",
-          "LinkedIn-specific scraper implementation"
+          "apps/web-ui/src/components/SalaryRangeFilter.tsx",
+          "apps/web-ui/src/components/TechnologyFilter.tsx",
+          "apps/web-ui/src/components/LocationFilter.tsx",
+          "apps/web-ui/src/components/RemoteWorkFilter.tsx",
+          "apps/web-ui/src/components/CompanyFilter.tsx",
+          "apps/web-ui/src/components/JobLevelFilter.tsx",
+          "apps/web-ui/src/components/FilterDropdown.tsx",
+          "apps/web-ui/src/components/SearchableSelect.tsx",
+          "apps/web-ui/src/hooks/useFilterOptions.ts",
+          "Enhanced useJobFilters.ts with all filter types",
+          "Enhanced filter-engine.ts with advanced filtering logic",
+          "apps/api-server/src/routes/filter-options.ts",
+          "Comprehensive filtering test suite"
         ]
       },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Requires careful configuration of playwright-extra stealth plugins to avoid LinkedIn's sophisticated bot detection. Must implement proper error handling for detection scenarios and maintain browser state consistency."
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Complex filter combinations require careful query optimization. Implement debounced search for performance. Consider filter state persistence across sessions. Ensure mobile-responsive filter interface."
     },
     {
-      "id": "FBS-050",
-      "title": "LinkedIn Human-like Behavior Simulation",
-      "summary": "Implements comprehensive human-like behavior patterns including gamma distribution timing, realistic mouse movements, variable scrolling, and business hours restrictions. Coordinates all behavior patterns to create authentic human interaction simulation.",
+      "id": "FBS-048",
+      "title": "Filter Management UI",
+      "summary": "Implements active filter display with removable tags, clear all functionality, and result count display. Provides users with clear visibility of applied filters and easy management of complex filter combinations.",
       "storyScope": [
         {
-          "usId": "US-203",
+          "usId": "US-102",
           "acIds": [
-            "AC-961",
-            "AC-962",
-            "AC-963",
-            "AC-964",
-            "AC-965"
-          ]
-        },
-        {
-          "usId": "US-213",
-          "acIds": [
-            "AC-1006",
-            "AC-1007",
-            "AC-1008",
-            "AC-1009"
-          ]
-        },
-        {
-          "usId": "US-214",
-          "acIds": [
-            "AC-1010",
-            "AC-1011",
-            "AC-1012",
-            "AC-1013"
-          ]
-        },
-        {
-          "usId": "US-215",
-          "acIds": [
-            "AC-1014",
-            "AC-1015",
-            "AC-1016",
-            "AC-1017",
-            "AC-1018"
-          ]
-        },
-        {
-          "usId": "US-216",
-          "acIds": [
-            "AC-1019",
-            "AC-1020",
-            "AC-1021",
-            "AC-1022",
-            "AC-1023"
-          ]
-        },
-        {
-          "usId": "US-217",
-          "acIds": [
-            "AC-1024",
-            "AC-1025",
-            "AC-1026",
-            "AC-1027",
-            "AC-1028"
-          ]
-        },
-        {
-          "usId": "US-218",
-          "acIds": [
-            "AC-1029",
-            "AC-1030",
-            "AC-1031",
-            "AC-1032",
-            "AC-1033"
+            "AC-473",
+            "AC-474",
+            "AC-475",
+            "AC-476",
+            "AC-477"
           ]
         }
       ],
       "dependencies": [
-        "FBS-049"
+        "FBS-047"
       ],
       "testableOutcomes": [
-        "System applies random delays between 2-8 seconds during page navigation with gamma distribution timing",
-        "Mouse movements follow realistic Bezier curves with variable speeds and random final position offsets",
-        "Scroll behavior varies distance between 100-400 pixels with random pauses every 3-7 actions",
-        "Sessions automatically terminate after randomly selected duration between 15-25 minutes",
-        "System only operates during business hours (9 AM - 6 PM) and queues operations outside these hours",
-        "95% of gamma distribution wait intervals fall between 1 and 20 seconds with mean 8 seconds",
-        "Business hours restrictions prevent weekend operations and enforce timezone-based calculations"
+        "Active filters display as removable tags above job list with clear visual styling",
+        "Clicking filter tag removes that specific filter and updates results immediately",
+        "Clear All Filters button removes all active filters and displays all jobs",
+        "Job count displays 'X jobs found' message reflecting current filter criteria",
+        "Empty state shows 'No jobs match your criteria' message when no results found",
+        "Empty state includes suggestion to adjust filters with actionable guidance",
+        "Filter tags show appropriate labels for each filter type (salary, technology, location, etc.)",
+        "Filter management area is responsive and works on mobile devices"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Filter Management",
+            "User Experience"
+          ],
+          "tadSections": [
+            "User Interface Components"
+          ],
+          "existingModules": [
+            "ActiveFilters",
+            "FilterTag",
+            "useFilterState"
+          ],
+          "schemas": []
+        },
+        "deliverables": [
+          "Enhanced ActiveFilters.tsx with complete filter management",
+          "Enhanced FilterTag.tsx with removal functionality",
+          "apps/web-ui/src/components/FilterResultsCount.tsx",
+          "apps/web-ui/src/components/NoResultsMessage.tsx",
+          "Enhanced useFilterState.ts with clear all functionality",
+          "Filter management styling and responsive CSS",
+          "Filter management test suite"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Focus on intuitive filter tag design and smooth removal animations. Ensure clear visual hierarchy between active filters and results. Implement proper accessibility for screen readers."
+    },
+    {
+      "id": "FBS-049",
+      "title": "Job Detail Page",
+      "summary": "Implements comprehensive job detail page with full job information, requirements checklist with match status, and detailed gap analysis. Provides complete view of job opportunity with personalized matching insights.",
+      "storyScope": [
+        {
+          "usId": "US-103",
+          "acIds": [
+            "AC-478",
+            "AC-479",
+            "AC-480",
+            "AC-481"
+          ]
+        },
+        {
+          "usId": "US-104",
+          "acIds": [
+            "AC-482",
+            "AC-483",
+            "AC-484",
+            "AC-485",
+            "AC-486",
+            "AC-487"
+          ]
+        },
+        {
+          "usId": "US-105",
+          "acIds": [
+            "AC-488",
+            "AC-489",
+            "AC-490",
+            "AC-491",
+            "AC-492",
+            "AC-493"
+          ]
+        },
+        {
+          "usId": "US-108",
+          "acIds": [
+            "AC-506",
+            "AC-507",
+            "AC-508",
+            "AC-509",
+            "AC-510"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-030",
+        "FBS-032",
+        "FBS-033",
+        "FBS-034",
+        "FBS-035"
+      ],
+      "testableOutcomes": [
+        "Job detail page displays complete job title, company name, location, and posting date in dedicated information section",
+        "Full untruncated job description appears with preserved formatting when user scrolls to description section",
+        "Missing metadata fields show 'Not specified' placeholder text or are hidden from display",
+        "Requirements checklist displays all identified job requirements categorized by skills, experience, education, and certifications",
+        "Each requirement shows visual indicator (green checkmark for match, red X for missing, yellow warning for partial) based on user profile comparison",
+        "Clicking any requirement item reveals additional details explaining match status determination",
+        "Overall match percentage score displays prominently in gap analysis section",
+        "Missing requirements appear as prioritized list ranked by importance to the role",
+        "Gap analysis includes specific suggestions for addressing each missing requirement",
+        "High match percentage (>80%) displays encouraging messaging highlighting strong role fit",
+        "Low match percentage (<50%) shows constructive feedback about significant gaps",
+        "Section navigation menu remains sticky at top and updates active tab based on scroll position",
+        "Navigation adapts to mobile-friendly collapsible menu format on mobile devices"
       ],
       "status": "not-started",
       "sessionMeta": {
         "estimatedSize": "large",
-        "estimatedHours": 8,
+        "estimatedHours": 7,
         "contextRequirements": {
           "prdSections": [
-            "Human Behavior Simulation",
-            "Timing Patterns"
+            "Job Detail Views",
+            "Matching Algorithm",
+            "User Interface"
           ],
           "tadSections": [
-            "job-crawler"
+            "Intelligent Matching Service",
+            "Web Frontend"
           ],
           "existingModules": [
-            "@jobsearch/config",
-            "@jobsearch/logger"
+            "hybrid-scorer.ts",
+            "skill-gap-analyzer.ts",
+            "gap-report-generator.ts"
           ],
           "schemas": [
-            "ScrapingSession",
-            "BehaviorMetrics"
+            "jobs",
+            "user_profiles",
+            "match_scores"
           ]
         },
         "deliverables": [
-          "Gamma distribution timing service",
-          "Bezier curve mouse movement engine",
-          "Variable scroll behavior controller",
-          "Session duration management system",
-          "Business hours validation service",
-          "Behavior pattern coordination orchestrator",
-          "Human-like interaction logging utilities"
+          "apps/web-ui/src/pages/JobDetailPage.tsx",
+          "apps/web-ui/src/components/JobInformation.tsx",
+          "apps/web-ui/src/components/JobDescription.tsx",
+          "apps/web-ui/src/components/RequirementsChecklist.tsx",
+          "apps/web-ui/src/components/GapAnalysisSection.tsx",
+          "apps/web-ui/src/components/JobDetailNavigation.tsx",
+          "apps/web-ui/src/hooks/useJobDetail.ts",
+          "apps/api-server/src/routes/job-detail.ts"
         ]
       },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Complex coordination of multiple behavior patterns requires careful state management. Gamma distribution implementation must be mathematically accurate while maintaining performance. Session timing must handle graceful termination during active operations."
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Requires integration with existing matching algorithms and gap analysis engines. Complex responsive design for mobile navigation. Performance optimization needed for large job descriptions and requirements lists."
+    },
+    {
+      "id": "FBS-050",
+      "title": "Job Detail Content Generation Views",
+      "summary": "Adds cover letter variants and tailored CV preview sections to job detail page. Integrates with existing content generation services to display personalized application materials.",
+      "storyScope": [
+        {
+          "usId": "US-106",
+          "acIds": [
+            "AC-494",
+            "AC-495",
+            "AC-496",
+            "AC-497",
+            "AC-498",
+            "AC-499"
+          ]
+        },
+        {
+          "usId": "US-107",
+          "acIds": [
+            "AC-500",
+            "AC-501",
+            "AC-502",
+            "AC-503",
+            "AC-504",
+            "AC-505"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-036",
+        "FBS-037",
+        "FBS-038",
+        "FBS-039",
+        "FBS-049"
+      ],
+      "testableOutcomes": [
+        "Cover letter section displays at least 3 different variants with distinct style labels (professional, creative, technical)",
+        "Each cover letter variant shows preview of first paragraph and brief description of tone and approach",
+        "Clicking expand on cover letter variant reveals full text with proper formatting and job-specific personalization",
+        "Cover letter variants incorporate relevant keywords from job posting and highlight different qualification aspects",
+        "Selected cover letter provides options to copy to clipboard, download as PDF, or edit content",
+        "Cover letter generation in progress shows loading state with estimated completion time",
+        "Tailored CV section displays visual preview of CV formatted specifically for the job posting",
+        "Tailored CV shows relevant skills and experiences prominently featured and reordered to match job priorities",
+        "Job-specific keywords from posting are naturally incorporated into experience descriptions in tailored CV",
+        "Tailored CV highlights modified sections compared to base CV with visual indicators",
+        "Tailored CV preview provides options to download as PDF, make manual edits, or revert to original",
+        "CV tailoring in progress displays loading state with progress indication and estimated completion time"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Content Generation",
+            "CV Tailoring",
+            "Cover Letter Generation"
+          ],
+          "tadSections": [
+            "Content Generation Service",
+            "Hybrid AI Service"
+          ],
+          "existingModules": [
+            "cover-letter-generator.ts",
+            "cv-tailoring-engine.ts",
+            "format-preserver.ts"
+          ],
+          "schemas": [
+            "cover_letters",
+            "tailored_cvs",
+            "user_profiles"
+          ]
+        },
+        "deliverables": [
+          "apps/web-ui/src/components/CoverLetterSection.tsx",
+          "apps/web-ui/src/components/CoverLetterVariantCard.tsx",
+          "apps/web-ui/src/components/TailoredCVSection.tsx",
+          "apps/web-ui/src/components/CVPreview.tsx",
+          "apps/web-ui/src/components/ContentGenerationLoader.tsx",
+          "apps/web-ui/src/hooks/useCoverLetterGeneration.ts",
+          "apps/web-ui/src/hooks/useCVTailoring.ts"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Depends on AI service availability and response times. Requires careful handling of generation failures and loading states. PDF generation and editing functionality adds complexity."
     }
   ],
-  "createdAt": "2026-02-09T11:24:34.997Z",
-  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
   "partInfo": {
     "partNumber": 5,
-    "totalParts": 7,
+    "totalParts": 8,
     "fbsRange": {
       "start": "FBS-041",
       "end": "FBS-050"
     },
-    "globalFbsCount": 68
+    "globalFbsCount": 73
   }
 }

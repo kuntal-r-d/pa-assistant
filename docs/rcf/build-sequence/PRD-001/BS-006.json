@@ -3,748 +3,70 @@
   "prdId": "PRD-001",
   "version": "1.0.0",
   "status": "draft",
-  "title": "Build Sequence: PRD-001 (Part 6 of 7)",
-  "buildPhilosophy": "Generated using dependency-first strategy. Each FBS represents a testable, deployable increment.",
-  "generationStrategy": "dependency-first",
+  "title": "Build Sequence: PRD-001 (Part 6 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
   "buildSequence": [
     {
       "id": "FBS-051",
-      "title": "LinkedIn Job Extraction & Validation",
-      "summary": "Implements comprehensive LinkedIn job data extraction with pagination handling, daily session limits, error recovery, and data validation. Provides robust job scraping with anti-detection measures and quality assurance for extracted data.",
+      "title": "Kanban Application Board",
+      "summary": "Implements Kanban board interface for application status tracking with drag-and-drop functionality. Provides visual pipeline management for job applications across different stages.",
       "storyScope": [
         {
-          "usId": "US-204",
+          "usId": "US-109",
           "acIds": [
-            "AC-966",
-            "AC-967",
-            "AC-968",
-            "AC-969",
-            "AC-970"
+            "AC-511",
+            "AC-512",
+            "AC-513",
+            "AC-514"
           ]
         },
         {
-          "usId": "US-205",
+          "usId": "US-110",
           "acIds": [
-            "AC-971",
-            "AC-972",
-            "AC-973",
-            "AC-974",
-            "AC-975"
+            "AC-515",
+            "AC-516",
+            "AC-517",
+            "AC-518"
           ]
         },
         {
-          "usId": "US-206",
+          "usId": "US-111",
           "acIds": [
-            "AC-976",
-            "AC-977",
-            "AC-978",
-            "AC-979",
-            "AC-980"
+            "AC-519",
+            "AC-520",
+            "AC-521",
+            "AC-522"
           ]
         },
         {
-          "usId": "US-207",
+          "usId": "US-112",
           "acIds": [
-            "AC-981",
-            "AC-982",
-            "AC-983",
-            "AC-984",
-            "AC-985"
+            "AC-523",
+            "AC-524",
+            "AC-525",
+            "AC-526"
           ]
         }
       ],
       "dependencies": [
-        "FBS-050"
+        "FBS-028",
+        "FBS-029"
       ],
       "testableOutcomes": [
-        "System extracts job title, company name, location, and posting date from LinkedIn job cards",
-        "System captures full job description, requirements, benefits, LinkedIn job ID, and application URL from job details",
-        "Daily scraping sessions extract between 20-40 jobs with automatic termination at limits",
-        "System handles pagination to access additional job listings beyond first page",
-        "CAPTCHA detection triggers session pause and incident logging for manual review",
-        "Rate limiting responses trigger exponential backoff with maximum 5-minute delays",
-        "Job validation ensures required fields are present and identifies duplicate jobs from previous sessions",
-        "Extracted jobs include LinkedIn source attribution and preserve original formatting",
-        "Session reports generate with success metrics and validation failure details"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Job Extraction",
-            "Data Validation",
-            "Error Handling"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "@jobsearch/types",
-            "@jobsearch/database",
-            "@jobsearch/logger"
-          ],
-          "schemas": [
-            "Job",
-            "ScrapingSession",
-            "JobSource"
-          ]
-        },
-        "deliverables": [
-          "LinkedIn job extraction engine with selector management",
-          "Pagination navigation and handling system",
-          "Daily session limit controller with job counting",
-          "Error recovery system for CAPTCHA, rate limiting, and timeouts",
-          "Job data validation and duplicate detection service",
-          "LinkedIn job storage service with source attribution",
-          "Session reporting and metrics collection system"
-        ]
-      },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Requires robust selector management for LinkedIn's dynamic page structure. Error handling must gracefully recover from various failure modes while preserving session state. Data validation must handle LinkedIn's inconsistent data formats and missing fields."
-    },
-    {
-      "id": "FBS-052",
-      "title": "LinkedIn Session Management",
-      "summary": "Implements persistent LinkedIn browser session management with cookie and localStorage preservation, automatic session restoration, and 7-day rotation policy. Provides secure local storage with encryption and integrity validation to maintain authentication across scraping sessions.",
-      "storyScope": [
-        {
-          "usId": "US-208",
-          "acIds": [
-            "AC-986",
-            "AC-987",
-            "AC-988",
-            "AC-989"
-          ]
-        },
-        {
-          "usId": "US-209",
-          "acIds": [
-            "AC-990",
-            "AC-991",
-            "AC-992",
-            "AC-993"
-          ]
-        },
-        {
-          "usId": "US-210",
-          "acIds": [
-            "AC-994",
-            "AC-995",
-            "AC-996",
-            "AC-997"
-          ]
-        },
-        {
-          "usId": "US-211",
-          "acIds": [
-            "AC-998",
-            "AC-999",
-            "AC-1000",
-            "AC-1001"
-          ]
-        },
-        {
-          "usId": "US-212",
-          "acIds": [
-            "AC-1002",
-            "AC-1003",
-            "AC-1004",
-            "AC-1005"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-049",
-        "FBS-050"
-      ],
-      "testableOutcomes": [
-        "System captures and stores all LinkedIn cookies and localStorage data after successful login",
-        "Browser session remains active without re-authentication when reopened after closure",
-        "System automatically restores LinkedIn session from stored data on startup",
-        "Session data older than 7 days triggers automatic rotation with fresh login requirement",
-        "Session data is encrypted before writing to disk and only readable by application user",
-        "System detects corrupted or invalid session data and gracefully handles restoration failures",
-        "Integrity checksums verify session data hasn't been tampered with during loading",
-        "System purges older sessions when storage exceeds size limits"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "LinkedIn Integration",
-            "Security Requirements"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "LinkedIn stealth scraper",
-            "Playwright integration"
-          ],
-          "schemas": [
-            "Session storage schema",
-            "Encryption utilities"
-          ]
-        },
-        "deliverables": [
-          "Session persistence service with cookie/localStorage capture",
-          "Session restoration engine with validation",
-          "7-day rotation scheduler with automatic cleanup",
-          "Encrypted local storage implementation",
-          "Session integrity validation utilities",
-          "Session management API endpoints"
-        ]
-      },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Requires careful handling of LinkedIn's session security measures. Must implement robust encryption for stored credentials and handle edge cases like partial session corruption or LinkedIn security updates that invalidate stored sessions."
-    },
-    {
-      "id": "FBS-053",
-      "title": "LinkedIn Detection & Response System",
-      "summary": "Implements comprehensive detection system for LinkedIn bot detection signals including CAPTCHA challenges, rate limiting, unusual redirects, and account warnings. Provides automatic pause mechanisms with exponential backoff and detailed logging for detection events.",
-      "storyScope": [
-        {
-          "usId": "US-219",
-          "acIds": [
-            "AC-1034",
-            "AC-1035",
-            "AC-1036",
-            "AC-1037"
-          ]
-        },
-        {
-          "usId": "US-220",
-          "acIds": [
-            "AC-1038",
-            "AC-1039",
-            "AC-1040",
-            "AC-1041"
-          ]
-        },
-        {
-          "usId": "US-221",
-          "acIds": [
-            "AC-1042",
-            "AC-1043",
-            "AC-1044",
-            "AC-1045"
-          ]
-        },
-        {
-          "usId": "US-222",
-          "acIds": [
-            "AC-1046",
-            "AC-1047",
-            "AC-1048",
-            "AC-1049"
-          ]
-        },
-        {
-          "usId": "US-223",
-          "acIds": [
-            "AC-1050",
-            "AC-1051",
-            "AC-1052",
-            "AC-1053",
-            "AC-1054"
-          ]
-        },
-        {
-          "usId": "US-224",
-          "acIds": [
-            "AC-1055",
-            "AC-1056",
-            "AC-1057",
-            "AC-1058",
-            "AC-1059",
-            "AC-1060"
-          ]
-        },
-        {
-          "usId": "US-225",
-          "acIds": [
-            "AC-1061",
-            "AC-1062",
-            "AC-1063",
-            "AC-1064",
-            "AC-1065"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-052"
-      ],
-      "testableOutcomes": [
-        "System detects CAPTCHA elements within 5 seconds and immediately stops scraping operations",
-        "System identifies HTTP 429 responses and rate limit messages as detection signals",
-        "System flags more than 3 unexpected redirects within 10 minutes as suspicious patterns",
-        "System detects account warning messages about unusual activity or automated behavior",
-        "All active scraping operations stop within 10 seconds when any detection signal occurs",
-        "First detection triggers 24-hour pause, second detection within 7 days triggers 48-hour pause",
-        "Fourth detection within 30 days applies maximum 7-day pause duration",
-        "System logs all detection events with type, timestamp, context, and triggered response",
-        "Detection history shows frequency, types, and pause durations for last 90 days",
-        "Backoff multiplier resets to base level after 30 consecutive days without detections"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "LinkedIn Integration",
-            "Error Handling"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "@jobsearch/logger",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "LinkedIn scraper",
-            "Circuit breaker system"
-          ],
-          "schemas": [
-            "Detection event schema",
-            "Pause tracking schema"
-          ]
-        },
-        "deliverables": [
-          "CAPTCHA detection service with element scanning",
-          "Rate limit detection middleware",
-          "Redirect pattern analyzer",
-          "Account warning detection engine",
-          "Automatic pause orchestrator with exponential backoff",
-          "Detection event logging and analytics system",
-          "Detection history API and dashboard components"
-        ]
-      },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Critical for account protection. Must balance sensitivity to avoid false positives while ensuring all genuine detection signals trigger appropriate responses. Requires extensive testing with LinkedIn's various detection mechanisms."
-    },
-    {
-      "id": "FBS-054",
-      "title": "LinkedIn Fingerprint Randomization",
-      "summary": "Implements comprehensive browser fingerprint randomization system to prevent LinkedIn bot detection. Generates realistic fingerprints with canvas randomization, WebGL variation, font enumeration masking, and timezone/language consistency matching user profiles.",
-      "storyScope": [
-        {
-          "usId": "US-226",
-          "acIds": [
-            "AC-1066",
-            "AC-1067",
-            "AC-1068",
-            "AC-1069"
-          ]
-        },
-        {
-          "usId": "US-227",
-          "acIds": [
-            "AC-1070",
-            "AC-1071",
-            "AC-1072",
-            "AC-1073"
-          ]
-        },
-        {
-          "usId": "US-228",
-          "acIds": [
-            "AC-1074",
-            "AC-1075",
-            "AC-1076",
-            "AC-1077"
-          ]
-        },
-        {
-          "usId": "US-229",
-          "acIds": [
-            "AC-1078",
-            "AC-1079",
-            "AC-1080",
-            "AC-1081"
-          ]
-        },
-        {
-          "usId": "US-230",
-          "acIds": [
-            "AC-1082",
-            "AC-1083",
-            "AC-1084",
-            "AC-1085",
-            "AC-1086"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-052"
-      ],
-      "testableOutcomes": [
-        "System generates complete fingerprint profiles with user agent, screen resolution, and hardware specs using fingerprint-generator library",
-        "Each browser session has unique fingerprint profile with internally consistent components",
-        "Canvas fingerprinting returns randomized but session-consistent signatures",
-        "WebGL renderer information varies between sessions with realistic GPU vendor and renderer strings",
-        "Font enumeration returns randomized subset of common fonts that remain consistent within sessions",
-        "Timezone settings automatically match user's declared geographic location",
-        "Browser language headers correspond to user's profile language and regional settings",
-        "All locale-related parameters maintain internal consistency across timezone, language, and date formats",
-        "Fingerprint components update automatically when user changes profile location",
-        "Generated fingerprints match statistical distributions of real browser usage patterns"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "LinkedIn Integration",
-            "User Profile Management"
-          ],
-          "tadSections": [
-            "job-crawler",
-            "@jobsearch/config"
-          ],
-          "existingModules": [
-            "Playwright stealth configuration",
-            "User profile service"
-          ],
-          "schemas": [
-            "User profile schema",
-            "Fingerprint configuration schema"
-          ]
-        },
-        "deliverables": [
-          "Fingerprint generation service with fingerprint-generator integration",
-          "Canvas fingerprint randomization engine",
-          "WebGL renderer variation system",
-          "Font enumeration masking utilities",
-          "Timezone and language consistency manager",
-          "Fingerprint profile storage and retrieval API",
-          "Fingerprint validation and testing utilities"
-        ]
-      },
-      "riskLevel": "high",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Requires deep understanding of browser fingerprinting techniques and LinkedIn's detection methods. Must ensure all fingerprint components are statistically realistic and internally consistent while providing sufficient variation to avoid correlation across sessions."
-    },
-    {
-      "id": "FBS-055",
-      "title": "LinkedIn Email Integration",
-      "summary": "Establishes IMAP connection to user email accounts for accessing LinkedIn job alert emails. Provides secure credential management, connection validation, and email folder access with proper error handling and retry mechanisms.",
-      "storyScope": [
-        {
-          "usId": "US-231",
-          "acIds": [
-            "AC-1087",
-            "AC-1088",
-            "AC-1089",
-            "AC-1090",
-            "AC-1091"
-          ]
-        },
-        {
-          "usId": "US-232",
-          "acIds": [
-            "AC-1092",
-            "AC-1093",
-            "AC-1094",
-            "AC-1095",
-            "AC-1096"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-004",
-        "FBS-046"
-      ],
-      "testableOutcomes": [
-        "System establishes IMAP connection successfully when provided with valid Gmail/Outlook credentials",
-        "System returns appropriate error message when IMAP credentials are invalid or expired",
-        "System can access and list mailbox folders after successful IMAP connection",
-        "System handles network timeouts gracefully with exponential backoff retry mechanism up to 3 attempts",
-        "System properly closes IMAP connections without resource leaks when disconnecting",
-        "System identifies emails from 'jobs-noreply@linkedin.com' sender address as LinkedIn job alerts",
-        "System filters emails containing job alert keywords ('job alert', 'new jobs', 'recommended jobs') in subject line",
-        "System excludes promotional LinkedIn emails that don't contain job listings",
-        "System processes only emails within specified date range when date filters are applied"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
-        "contextRequirements": {
-          "prdSections": [
-            "Email Integration",
-            "LinkedIn Integration"
-          ],
-          "tadSections": [
-            "api-server",
-            "@jobsearch/config"
-          ],
-          "existingModules": [
-            "authentication",
-            "environment validation"
-          ],
-          "schemas": [
-            "email configuration",
-            "IMAP settings"
-          ]
-        },
-        "deliverables": [
-          "IMAP connection service with credential validation",
-          "Email filtering service for LinkedIn job alerts",
-          "Connection retry mechanism with exponential backoff",
-          "Email folder access and navigation utilities",
-          "Secure credential storage and encryption",
-          "Connection health monitoring and logging",
-          "Email filtering API endpoints",
-          "Configuration management for email settings"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Requires secure handling of email credentials with encryption at rest. IMAP connections must be properly pooled and managed to avoid resource exhaustion. Email filtering logic needs to be robust against LinkedIn template changes."
-    },
-    {
-      "id": "FBS-056",
-      "title": "LinkedIn Email Processing & Manual Import",
-      "summary": "Processes LinkedIn job alert emails to extract job URLs, titles, companies, and posting dates. Includes manual job URL import functionality with rate limiting and status tracking for comprehensive LinkedIn job discovery.",
-      "storyScope": [
-        {
-          "usId": "US-233",
-          "acIds": [
-            "AC-1097",
-            "AC-1098",
-            "AC-1099",
-            "AC-1100",
-            "AC-1101"
-          ]
-        },
-        {
-          "usId": "US-234",
-          "acIds": [
-            "AC-1102",
-            "AC-1103",
-            "AC-1104",
-            "AC-1105",
-            "AC-1106"
-          ]
-        },
-        {
-          "usId": "US-235",
-          "acIds": [
-            "AC-1107",
-            "AC-1108",
-            "AC-1109",
-            "AC-1110",
-            "AC-1111"
-          ]
-        },
-        {
-          "usId": "US-236",
-          "acIds": [
-            "AC-1112",
-            "AC-1113",
-            "AC-1114",
-            "AC-1115",
-            "AC-1116"
-          ]
-        },
-        {
-          "usId": "US-237",
-          "acIds": [
-            "AC-1117",
-            "AC-1118",
-            "AC-1119",
-            "AC-1120",
-            "AC-1121"
-          ]
-        },
-        {
-          "usId": "US-238",
-          "acIds": [
-            "AC-1122",
-            "AC-1123",
-            "AC-1124",
-            "AC-1125",
-            "AC-1126"
-          ]
-        },
-        {
-          "usId": "US-239",
-          "acIds": [
-            "AC-1127",
-            "AC-1128",
-            "AC-1129",
-            "AC-1130"
-          ]
-        },
-        {
-          "usId": "US-240",
-          "acIds": [
-            "AC-1131",
-            "AC-1132",
-            "AC-1133",
-            "AC-1134"
-          ]
-        },
-        {
-          "usId": "US-241",
-          "acIds": [
-            "AC-1135",
-            "AC-1136",
-            "AC-1137",
-            "AC-1138"
-          ]
-        },
-        {
-          "usId": "US-242",
-          "acIds": [
-            "AC-1139",
-            "AC-1140",
-            "AC-1141",
-            "AC-1142"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-055",
-        "FBS-012",
-        "FBS-051"
-      ],
-      "testableOutcomes": [
-        "System extracts job URLs containing '/jobs/view/' pattern from LinkedIn job alert email HTML content",
-        "System captures all unique job URLs when email contains multiple job listings",
-        "System handles malformed URLs gracefully and returns clean URLs without tracking parameters",
-        "System extracts job titles from structured email sections with HTML tags removed",
-        "System correctly associates job titles with corresponding URLs in multi-job emails",
-        "System extracts company names including legal suffixes (Inc, LLC, Corp) with proper text encoding",
-        "System converts relative posting dates ('2 days ago') to absolute dates using email timestamp",
-        "System handles multiple LinkedIn email template formats and logs unrecognized templates for analysis",
-        "System validates extracted job URLs are properly formatted LinkedIn job links",
-        "System identifies and merges duplicate jobs from multiple email sources",
-        "User can submit valid LinkedIn job URL through manual import form",
-        "System rejects non-LinkedIn URLs with appropriate validation error messages",
-        "System fetches complete job details (title, company, location, description) from manually imported URLs",
-        "System enforces 30-second minimum delay between consecutive LinkedIn job detail requests",
-        "System displays real-time status updates (queued, processing, completed, failed) for imported jobs",
-        "User can view estimated processing time for queued manual import requests"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 8,
-        "contextRequirements": {
-          "prdSections": [
-            "Email Processing",
-            "Manual Import",
-            "Rate Limiting"
-          ],
-          "tadSections": [
-            "api-server",
-            "web-ui",
-            "@jobsearch/database"
-          ],
-          "existingModules": [
-            "job deduplication",
-            "LinkedIn scraping",
-            "data validation"
-          ],
-          "schemas": [
-            "job data schema",
-            "import status tracking"
-          ]
-        },
-        "deliverables": [
-          "Email content parsing engine with HTML/text support",
-          "Job URL extraction service with validation",
-          "Job title and company name extraction utilities",
-          "Posting date parsing with relative date conversion",
-          "Multi-template email format handler",
-          "Data validation and deduplication service",
-          "Manual job URL import API endpoints",
-          "Rate limiting service with 30-second enforcement",
-          "Job detail fetching service with retry logic",
-          "Import status tracking system with real-time updates",
-          "Manual import UI components with validation",
-          "Queue management system for rate-limited requests"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "LinkedIn Stealth Operations",
-      "implementationNotes": "Email parsing must be resilient to LinkedIn template changes. Rate limiting is critical to avoid detection. Manual import provides fallback when automated scraping is unavailable. Real-time status updates require WebSocket or SSE implementation."
-    },
-    {
-      "id": "FBS-057",
-      "title": "Database Backup Foundation",
-      "summary": "Implements automated daily database backup system with compression, 7-day retention management, and monthly restore testing. Ensures data protection through scheduled backups, storage optimization, and backup validity verification.",
-      "storyScope": [
-        {
-          "usId": "US-165",
-          "acIds": [
-            "AC-808",
-            "AC-809",
-            "AC-810",
-            "AC-811"
-          ]
-        },
-        {
-          "usId": "US-166",
-          "acIds": [
-            "AC-812",
-            "AC-813",
-            "AC-814",
-            "AC-815"
-          ]
-        },
-        {
-          "usId": "US-167",
-          "acIds": [
-            "AC-816",
-            "AC-817",
-            "AC-818",
-            "AC-819"
-          ]
-        },
-        {
-          "usId": "US-168",
-          "acIds": [
-            "AC-820",
-            "AC-821",
-            "AC-822",
-            "AC-823",
-            "AC-824"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-003",
-        "FBS-005",
-        "FBS-006"
-      ],
-      "testableOutcomes": [
-        "System automatically initiates database backup process at exactly 2:00 AM system time daily",
-        "System creates timestamped backup file in designated backup directory after successful completion",
-        "System logs error details and sends alert notifications when backup process encounters failures",
-        "System adjusts backup schedule correctly when system time changes due to daylight saving transitions",
-        "System compresses backup files to at least 30% smaller size than uncompressed version",
-        "System verifies compressed backup file integrity using checksums after compression completes",
-        "System logs error and alerts administrators when insufficient local storage space is detected",
-        "System automatically deletes backup files older than 7 days during daily backup process",
-        "System deletes oldest backup when exactly 7 backups exist and new backup is created",
-        "System logs backup deletion details with timestamp and retries failed deletions on next cycle",
-        "System initiates automated restore test on first day of each month using most recent backup",
-        "System verifies data integrity by comparing key database metrics during restore test",
-        "System logs detailed error information and sends immediate alerts when restore test fails",
-        "System cleans up test database and releases resources after restore test completion",
-        "System generates detailed restore test report including duration, integrity status, and issues"
+        "Applications page displays horizontal Kanban board layout with distinct status columns",
+        "Kanban board shows columns for Applied, Interview Scheduled, In Progress, Offer, and Rejected statuses in logical workflow order",
+        "Each column displays clear header showing status name and count of applications in that column",
+        "Application cards appear in columns matching their current status with company name, job title, and application date",
+        "Cards within same status column are ordered by most recent application date first",
+        "Applications with no status appear in Applied column by default",
+        "Column headers display accurate count of cards, showing 0 for empty columns",
+        "Card counts update automatically when cards are moved between columns",
+        "Clicking and holding application card makes it draggable with visual feedback",
+        "Hovering dragged card over different column highlights target column as valid drop zone",
+        "Releasing card over valid column moves card to new column and updates application status",
+        "Releasing card outside valid drop zones returns card to original position without status change",
+        "Card count updates immediately when applications are added or deleted"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -752,337 +74,181 @@
         "estimatedHours": 6,
         "contextRequirements": {
           "prdSections": [
-            "Database Management",
-            "Backup Strategy",
-            "Data Recovery"
+            "Application Management",
+            "Kanban Interface",
+            "Status Tracking"
           ],
           "tadSections": [
-            "@jobsearch/database",
-            "@jobsearch/config",
-            "@jobsearch/logger"
+            "Application Management Service",
+            "Web Frontend"
           ],
           "existingModules": [
-            "PostgreSQL connection",
-            "health monitoring",
-            "log management"
+            "status-manager.ts",
+            "status-validator.ts",
+            "status-transitions.ts"
           ],
           "schemas": [
-            "backup metadata",
-            "restore test results"
+            "job_applications",
+            "application_statuses"
           ]
         },
         "deliverables": [
-          "Daily backup scheduler with cron job integration",
-          "Database backup service with PostgreSQL dump utilities",
-          "Backup compression service with integrity verification",
-          "Backup retention management with 7-day cleanup",
-          "Monthly restore testing automation service",
-          "Backup storage management with space monitoring",
-          "Alert notification system for backup failures",
-          "Restore test validation and reporting utilities",
-          "Backup configuration management module",
-          "Backup status monitoring and logging system"
+          "apps/web-ui/src/pages/ApplicationsPage.tsx",
+          "apps/web-ui/src/components/KanbanBoard.tsx",
+          "apps/web-ui/src/components/KanbanColumn.tsx",
+          "apps/web-ui/src/components/ApplicationCard.tsx",
+          "apps/web-ui/src/components/DragDropProvider.tsx",
+          "apps/web-ui/src/hooks/useKanbanBoard.ts",
+          "apps/web-ui/src/hooks/useDragDrop.ts",
+          "apps/api-server/src/routes/kanban-applications.ts"
         ]
       },
       "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Backup process must not interfere with normal database operations. Compression and integrity verification are critical for reliable recovery. Monthly restore testing requires isolated test environment to avoid data corruption. Alert system must be reliable for backup failure notifications."
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Drag-and-drop functionality requires careful touch device support. Status transition validation must prevent invalid moves. Performance optimization needed for large numbers of applications. Real-time updates for collaborative scenarios."
     },
     {
-      "id": "FBS-058",
-      "title": "Data Retention & Cleanup Policies",
-      "summary": "Implements automated data retention policies with scheduled cleanup processes for unsaved jobs (90 days), generated content (30 days), and raw analytics data (6 months). Provides comprehensive monitoring and reporting for all cleanup operations.",
+      "id": "FBS-052",
+      "title": "Kanban Persistence & Empty States",
+      "summary": "Implements automatic persistence of drag-and-drop status changes and proper handling of empty Kanban columns. Ensures application status updates are saved to the database and empty columns remain functional for drag operations.",
       "storyScope": [
         {
-          "usId": "US-169",
+          "usId": "US-113",
           "acIds": [
-            "AC-825",
-            "AC-826",
-            "AC-827",
-            "AC-828",
-            "AC-829"
+            "AC-527",
+            "AC-528",
+            "AC-529",
+            "AC-530"
           ]
         },
         {
-          "usId": "US-170",
+          "usId": "US-114",
           "acIds": [
-            "AC-830",
-            "AC-831",
-            "AC-832",
-            "AC-833",
-            "AC-834"
-          ]
-        },
-        {
-          "usId": "US-171",
-          "acIds": [
-            "AC-835",
-            "AC-836",
-            "AC-837",
-            "AC-838",
-            "AC-839"
-          ]
-        },
-        {
-          "usId": "US-172",
-          "acIds": [
-            "AC-840",
-            "AC-841",
-            "AC-842",
-            "AC-843"
-          ]
-        },
-        {
-          "usId": "US-173",
-          "acIds": [
-            "AC-844",
-            "AC-845",
-            "AC-846",
-            "AC-847"
+            "AC-531",
+            "AC-532",
+            "AC-533",
+            "AC-534"
           ]
         }
       ],
       "dependencies": [
-        "FBS-006",
-        "FBS-057"
+        "FBS-051"
       ],
       "testableOutcomes": [
-        "System automatically deletes unsaved job records that are exactly 90 days old when cleanup process runs",
-        "System preserves unsaved job records that are less than 90 days old during cleanup execution",
-        "System deletes generated content (cover letters, resumes, emails) that is exactly 30 days old",
-        "System removes raw analytics data that is exactly 6 months (180 days) old while preserving aggregated data",
-        "System executes all three cleanup processes automatically at 2 AM daily within 5 minutes of scheduled time",
-        "System prevents concurrent cleanup executions when previous process is still running",
-        "System logs successful cleanup completion with record counts deleted and execution time",
-        "System generates detailed error logs with specific failure reasons when cleanup encounters issues",
-        "System provides metrics showing deletion counts and storage space freed for each data type",
-        "System generates alerts when cleanup execution exceeds configured duration threshold"
+        "Application status is immediately updated in database when drag-and-drop operation completes successfully",
+        "Card returns to original position and error message displays when drag-and-drop fails due to network issues",
+        "All cards appear in correct positions after page refresh, reflecting latest status changes",
+        "Last modified timestamp updates when application status changes via drag-and-drop",
+        "Empty columns remain visible with headers and structure when containing no applications",
+        "Empty columns highlight as valid drop targets when cards are dragged over them",
+        "Cards can be successfully dropped into empty columns and count updates to 1",
+        "Helpful message displays when all columns are empty, guiding users to add applications"
       ],
       "status": "not-started",
       "sessionMeta": {
-        "estimatedSize": "large",
-        "estimatedHours": 7,
+        "estimatedSize": "small",
+        "estimatedHours": 3,
         "contextRequirements": {
           "prdSections": [
-            "Data Management",
-            "System Administration"
+            "Application Management"
           ],
           "tadSections": [
-            "@jobsearch/database",
-            "@jobsearch/logger"
+            "Application Management Service"
           ],
           "existingModules": [
-            "Daily scheduler",
-            "Database backup service",
-            "Logging system"
+            "KanbanBoard",
+            "ApplicationCard",
+            "DragDropProvider"
           ],
           "schemas": [
-            "Job schema",
-            "Analytics schema",
-            "Generated content schema"
+            "applications",
+            "application_status_history"
           ]
         },
         "deliverables": [
-          "Data retention policy configuration module",
-          "Unsaved jobs cleanup service with 90-day retention",
-          "Generated content cleanup service with 30-day retention",
-          "Raw analytics cleanup service with 6-month retention",
-          "Scheduled cleanup orchestrator with cron integration",
-          "Cleanup monitoring and metrics collection service",
-          "Error handling and logging for all cleanup operations",
-          "Cleanup reporting API endpoints",
-          "Database queries for age-based record identification",
-          "Comprehensive test suite for all cleanup scenarios"
+          "Enhanced useDragDrop.ts with persistence logic",
+          "Enhanced useKanbanBoard.ts with error handling",
+          "Enhanced KanbanColumn.tsx with empty state handling",
+          "Enhanced ApplicationCard.tsx with drag state management",
+          "apps/api-server/src/routes/application-status-update.ts",
+          "Drag-and-drop persistence test suite"
         ]
       },
       "riskLevel": "low",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Requires careful database transaction handling to prevent data corruption during cleanup. Must implement proper error recovery to handle constraint violations. Consider implementing dry-run mode for testing cleanup logic before production deployment."
+      "domain": "User Interface & Dashboard",
+      "implementationNotes": "Focus on optimistic updates with rollback on failure. Implement proper error boundaries for drag operations and ensure empty column drop zones remain active."
     },
     {
-      "id": "FBS-059",
-      "title": "Docker Volume Persistence",
-      "summary": "Configures named Docker volumes for all persistent data storage including PostgreSQL, backups, LinkedIn sessions, and user uploads. Validates volume persistence across container lifecycle events and implements volume management best practices.",
+      "id": "FBS-053",
+      "title": "Follow-up Reminder System",
+      "summary": "Implements automated email reminder system that sends follow-up notifications 7 days after job applications. Includes snooze functionality (3, 7, 14 days) and dismiss options with proper email content and action handling.",
       "storyScope": [
         {
-          "usId": "US-248",
+          "usId": "US-085",
           "acIds": [
-            "AC-1167",
-            "AC-1168",
-            "AC-1169",
-            "AC-1170",
-            "AC-1171"
+            "AC-395",
+            "AC-396",
+            "AC-397",
+            "AC-398",
+            "AC-399"
           ]
         },
         {
-          "usId": "US-249",
+          "usId": "US-086",
           "acIds": [
-            "AC-1172",
-            "AC-1173",
-            "AC-1174",
-            "AC-1175"
+            "AC-400",
+            "AC-401",
+            "AC-402",
+            "AC-403",
+            "AC-404",
+            "AC-405"
           ]
         },
         {
-          "usId": "US-250",
+          "usId": "US-087",
           "acIds": [
-            "AC-1176",
-            "AC-1177",
-            "AC-1178"
+            "AC-406",
+            "AC-407",
+            "AC-408",
+            "AC-409"
+          ]
+        },
+        {
+          "usId": "US-089",
+          "acIds": [
+            "AC-416",
+            "AC-417",
+            "AC-418",
+            "AC-419",
+            "AC-420"
           ]
         }
       ],
       "dependencies": [
-        "FBS-003",
-        "FBS-057"
+        "FBS-028",
+        "FBS-040"
       ],
       "testableOutcomes": [
-        "Docker-compose configuration defines named volume 'postgres_data' mounted to /var/lib/postgresql/data",
-        "Docker-compose configuration defines named volume 'backup_data' mounted to backup directory",
-        "Docker-compose configuration defines named volume 'linkedin_sessions' mounted to session directory",
-        "Docker-compose configuration defines named volume 'user_uploads' mounted to uploads directory",
-        "All named volumes are declared in top-level volumes section of docker-compose.yml",
-        "Named volumes remain on Docker host after executing 'docker-compose down'",
-        "Previously stored data is accessible in recreated containers after 'docker-compose up'",
-        "Volume data persists across individual container recreation via 'docker-compose up --force-recreate'",
-        "All persistent data remains intact after container image updates and restarts",
-        "Volume names use consistent naming convention with project prefix",
-        "Volumes are mounted with appropriate permissions for their respective services",
-        "Volume names are environment-specific to prevent conflicts across environments"
-      ],
-      "status": "not-started",
-      "sessionMeta": {
-        "estimatedSize": "medium",
-        "estimatedHours": 4,
-        "contextRequirements": {
-          "prdSections": [
-            "Container Infrastructure",
-            "Data Persistence"
-          ],
-          "tadSections": [
-            "Docker configuration",
-            "Volume management"
-          ],
-          "existingModules": [
-            "docker-compose.yml",
-            "Container services"
-          ],
-          "schemas": [
-            "Docker volume configuration"
-          ]
-        },
-        "deliverables": [
-          "Updated docker-compose.yml with named volumes configuration",
-          "Volume management documentation and best practices guide",
-          "Environment-specific volume naming conventions",
-          "Volume permission configuration for all services",
-          "Volume persistence validation scripts",
-          "Container lifecycle testing procedures",
-          "Volume backup preparation configuration",
-          "Multi-environment volume isolation setup"
-        ]
-      },
-      "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Critical to test volume persistence thoroughly before production deployment. Must ensure proper permissions are set for each service's volume access. Consider implementing volume health checks to validate mount points during container startup."
-    },
-    {
-      "id": "FBS-060",
-      "title": "Comprehensive Docker Backup System",
-      "summary": "Implements complete Docker environment backup including all named volumes, custom-built images, container configurations, docker-compose files, and network configurations. Provides backup validation, external storage export, and comprehensive backup reporting.",
-      "storyScope": [
-        {
-          "usId": "US-251",
-          "acIds": [
-            "AC-1179",
-            "AC-1180",
-            "AC-1181",
-            "AC-1182",
-            "AC-1183",
-            "AC-1184"
-          ]
-        },
-        {
-          "usId": "US-252",
-          "acIds": [
-            "AC-1185",
-            "AC-1186",
-            "AC-1187",
-            "AC-1188"
-          ]
-        },
-        {
-          "usId": "US-253",
-          "acIds": [
-            "AC-1189",
-            "AC-1190",
-            "AC-1191",
-            "AC-1192",
-            "AC-1193"
-          ]
-        },
-        {
-          "usId": "US-254",
-          "acIds": [
-            "AC-1194",
-            "AC-1195",
-            "AC-1196",
-            "AC-1197",
-            "AC-1198"
-          ]
-        },
-        {
-          "usId": "US-255",
-          "acIds": [
-            "AC-1199",
-            "AC-1200",
-            "AC-1201",
-            "AC-1202",
-            "AC-1203"
-          ]
-        },
-        {
-          "usId": "US-256",
-          "acIds": [
-            "AC-1204",
-            "AC-1205",
-            "AC-1206",
-            "AC-1207",
-            "AC-1208"
-          ]
-        },
-        {
-          "usId": "US-257",
-          "acIds": [
-            "AC-1209",
-            "AC-1210",
-            "AC-1211",
-            "AC-1212",
-            "AC-1213",
-            "AC-1214"
-          ]
-        }
-      ],
-      "dependencies": [
-        "FBS-057",
-        "FBS-059"
-      ],
-      "testableOutcomes": [
-        "System identifies and includes all named volumes (postgres_data, backup_data, linkedin_sessions, user_uploads) in backup",
-        "Database volume contents are fully captured during backup creation",
-        "Session data and uploaded files are preserved in volume backups",
-        "All custom Docker images are exported to tar archives during backup",
-        "Exported images contain all layers and metadata when backup is validated",
-        "All tagged image versions are preserved in backup archives",
-        "Container configurations including environment variables, port mappings, and resource limits are captured",
-        "Docker-compose.yml, override files, and environment files are included in backup",
-        "Custom Docker network configurations with subnets, drivers, and labels are captured",
-        "Complete backup is packaged into single archive file for external export",
-        "Exported backup integrity is verified after copy to external location",
-        "Backup validation confirms all expected components are present with data integrity verified",
-        "Comprehensive backup report is generated showing all backed up components",
-        "Specific missing components are reported when validation finds issues",
-        "Progress status is displayed during large backup archive export operations"
+        "Email reminder is sent to user when application has 'Applied' status and created date is exactly 7 days ago",
+        "No email reminder is sent when application created date is less than 7 days ago",
+        "No duplicate email reminder is sent when reminder was already sent for application over 7 days old",
+        "Separate email reminders are sent for each eligible application when multiple applications qualify",
+        "Reminder is logged as failed and no email sent when user has invalid or missing email address",
+        "Next reminder is scheduled 3 days from now when user clicks '3 days' snooze option in email",
+        "Next reminder is scheduled 7 days from now when user clicks '7 days' snooze option in email",
+        "Next reminder is scheduled 14 days from now when user clicks '14 days' snooze option in email",
+        "New reminder email is sent when snooze period expires for snoozed reminder",
+        "Subsequent reminders continue to be sent when reminder has been snoozed multiple times",
+        "Error message displays and no snooze action taken when invalid or expired snooze link is clicked",
+        "No further reminders are sent for job application when user clicks 'Dismiss' option in email",
+        "Dismissed application is skipped when system runs future reminder jobs",
+        "Job application details show reminder status as 'Dismissed' when reminder has been dismissed",
+        "Error message displays and no dismiss action taken when invalid or expired dismiss link is clicked",
+        "Reminder email contains job title, company name, and application date when received",
+        "Reminder email contains clearly labeled buttons for 'Snooze 3 days', 'Snooze 7 days', 'Snooze 14 days', and 'Dismiss'",
+        "Reminder email includes subject line that clearly identifies it as a follow-up reminder",
+        "Reminder email includes helpful text suggesting follow-up actions user can take",
+        "User is taken to confirmation page showing action taken when clicking any action button in email"
       ],
       "status": "not-started",
       "sessionMeta": {
@@ -1090,54 +256,627 @@
         "estimatedHours": 8,
         "contextRequirements": {
           "prdSections": [
-            "Container Infrastructure",
-            "Backup & Recovery",
-            "Data Management"
+            "Follow-up Management",
+            "Email Notifications"
           ],
           "tadSections": [
-            "Docker configuration",
-            "Backup services",
-            "@jobsearch/logger"
+            "Notification Service",
+            "Workflow Orchestration Service"
           ],
           "existingModules": [
-            "Database backup service",
-            "Docker volume management",
-            "Logging system"
+            "daily-scraper",
+            "workflow-orchestrator"
           ],
           "schemas": [
-            "Docker configuration schemas",
-            "Backup metadata schema"
+            "applications",
+            "reminder_schedules",
+            "email_logs"
           ]
         },
         "deliverables": [
-          "Docker volume backup service with volume identification and export",
-          "Docker image backup service with tar archive creation",
-          "Container configuration backup service with metadata capture",
-          "Docker-compose and environment file backup utilities",
-          "Docker network configuration backup service",
-          "Backup packaging and archive creation service",
-          "External storage export service with progress tracking",
-          "Backup validation service with integrity checking",
-          "Comprehensive backup reporting system",
-          "Error handling and logging for all backup operations",
-          "Backup orchestrator coordinating all backup components",
-          "Recovery documentation and procedures"
+          "packages/@jobsearch/reminders/src/reminder-scheduler.ts",
+          "packages/@jobsearch/reminders/src/email-sender.ts",
+          "packages/@jobsearch/reminders/src/reminder-manager.ts",
+          "packages/@jobsearch/reminders/src/snooze-handler.ts",
+          "packages/@jobsearch/reminders/src/dismiss-handler.ts",
+          "packages/@jobsearch/reminders/src/email-templates/",
+          "apps/api-server/src/routes/reminder-actions.ts",
+          "n8n/workflows/daily-reminder-job.json",
+          "Database migration for reminder_schedules table",
+          "Email template files for reminders",
+          "Comprehensive reminder system test suite"
         ]
       },
       "riskLevel": "medium",
-      "domain": "Data Management & Backup",
-      "implementationNotes": "Requires careful coordination of Docker API calls to avoid service disruption during backup. Must handle large volume backups efficiently with progress tracking. Consider implementing incremental backup capabilities for large datasets. Critical to test complete restore procedures to validate backup effectiveness."
+      "domain": "Follow-up & Notifications",
+      "implementationNotes": "Requires email service integration and secure token generation for action links. Implement proper duplicate prevention and handle edge cases for timezone differences in scheduling."
+    },
+    {
+      "id": "FBS-054",
+      "title": "Reminder Status Management",
+      "summary": "Implements automatic cancellation of follow-up reminders when application status changes to non-applicable states (Interviewing, Rejected). Ensures reminder lifecycle is properly managed based on application status transitions.",
+      "storyScope": [
+        {
+          "usId": "US-088",
+          "acIds": [
+            "AC-410",
+            "AC-411",
+            "AC-412",
+            "AC-413",
+            "AC-414",
+            "AC-415"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-053",
+        "FBS-028"
+      ],
+      "testableOutcomes": [
+        "All pending reminders are cancelled when application status changes from 'Applied' to 'Interviewing'",
+        "All pending reminders are cancelled when application status changes from 'Applied' to 'Rejected'",
+        "Snoozed reminders are cancelled when application status changes from 'Applied' to 'Interviewing'",
+        "Snoozed reminders are cancelled when application status changes from 'Applied' to 'Rejected'",
+        "No reminder cancellation occurs when application with 'Applied' status has no pending reminders and status changes to 'Interviewing' or 'Rejected'",
+        "New reminders are not automatically re-enabled when application status changes back to 'Applied' after reminders were cancelled"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 4,
+        "contextRequirements": {
+          "prdSections": [
+            "Application Management",
+            "Follow-up Management"
+          ],
+          "tadSections": [
+            "Application Management Service",
+            "Notification Service"
+          ],
+          "existingModules": [
+            "status-manager",
+            "reminder-scheduler"
+          ],
+          "schemas": [
+            "applications",
+            "reminder_schedules",
+            "application_status_history"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/reminders/src/status-change-handler.ts",
+          "packages/@jobsearch/reminders/src/reminder-canceller.ts",
+          "Enhanced status-manager.ts with reminder integration",
+          "Enhanced application status update endpoints",
+          "Status change event handlers",
+          "Reminder cancellation test suite"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Follow-up & Notifications",
+      "implementationNotes": "Implement event-driven architecture to handle status changes. Ensure proper cleanup of scheduled reminders and maintain audit trail of cancellation actions."
+    },
+    {
+      "id": "FBS-055",
+      "title": "Data Privacy & Local Storage",
+      "summary": "Implements comprehensive local data storage architecture ensuring all user data (CV, preferences, applications) is stored exclusively in local PostgreSQL database with no unauthorized external transmission. Establishes data privacy verification mechanisms and optional Claude API integration with minimal data sharing.",
+      "storyScope": [
+        {
+          "usId": "US-136",
+          "acIds": [
+            "AC-622",
+            "AC-623",
+            "AC-624"
+          ]
+        },
+        {
+          "usId": "US-137",
+          "acIds": [
+            "AC-625",
+            "AC-626",
+            "AC-627"
+          ]
+        },
+        {
+          "usId": "US-138",
+          "acIds": [
+            "AC-628",
+            "AC-629",
+            "AC-630"
+          ]
+        },
+        {
+          "usId": "US-139",
+          "acIds": [
+            "AC-631",
+            "AC-632",
+            "AC-633",
+            "AC-634"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-003",
+        "FBS-019",
+        "FBS-024",
+        "FBS-028"
+      ],
+      "testableOutcomes": [
+        "CV data uploaded through system is stored only in local PostgreSQL database with no external network requests",
+        "User preferences configuration saves exclusively to local database without external API calls",
+        "Job application creation and updates persist only in local PostgreSQL with no external data transmission",
+        "Claude API integration transmits only minimal request data and stores responses locally",
+        "System operates fully offline for all CV viewing, editing, and preference management functions",
+        "Network monitoring shows no unauthorized external data transmission during any system operation"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Data Privacy Requirements",
+            "Local Storage Architecture"
+          ],
+          "tadSections": [
+            "User Profile Service",
+            "API Gateway"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/profile",
+            "packages/@jobsearch/ai-service"
+          ],
+          "schemas": [
+            "user_profiles",
+            "applications",
+            "cv_data"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/privacy/src/local-storage-enforcer.ts",
+          "packages/@jobsearch/privacy/src/data-transmission-monitor.ts",
+          "packages/@jobsearch/privacy/src/claude-api-gateway.ts",
+          "apps/api-server/src/middleware/privacy-enforcement.ts",
+          "Database migration for privacy audit logs"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Deployment & Security",
+      "implementationNotes": "Critical security implementation requiring careful network request monitoring and data flow validation. Must ensure Claude API integration maintains privacy boundaries while preserving functionality."
+    },
+    {
+      "id": "FBS-056",
+      "title": "Data Transmission Verification",
+      "summary": "Implements comprehensive network traffic monitoring and data flow verification system to guarantee no unauthorized external data transmission occurs during system operations. Provides audit trails and real-time monitoring capabilities.",
+      "storyScope": [
+        {
+          "usId": "US-140",
+          "acIds": [
+            "AC-635",
+            "AC-636",
+            "AC-637"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-055"
+      ],
+      "testableOutcomes": [
+        "Network traffic monitoring shows zero user data transmission to unauthorized external services",
+        "Data flow verification confirms all user data persistence occurs exclusively in local PostgreSQL database",
+        "System startup performs no automatic data synchronization or backup to external services",
+        "Privacy audit logs capture and verify all network requests with data classification",
+        "Real-time monitoring dashboard displays current data transmission status and violations"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "small",
+        "estimatedHours": 3,
+        "contextRequirements": {
+          "prdSections": [
+            "Security Monitoring",
+            "Data Privacy Verification"
+          ],
+          "tadSections": [
+            "API Gateway",
+            "Notification Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/privacy"
+          ],
+          "schemas": [
+            "privacy_audit_logs"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/privacy/src/network-monitor.ts",
+          "packages/@jobsearch/privacy/src/data-flow-verifier.ts",
+          "packages/@jobsearch/privacy/src/audit-logger.ts",
+          "apps/web-ui/src/components/PrivacyMonitorDashboard.tsx",
+          "Network monitoring configuration and test suite"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Deployment & Security",
+      "implementationNotes": "Requires integration with system-level network monitoring tools and careful configuration to avoid false positives while maintaining security guarantees."
+    },
+    {
+      "id": "FBS-057",
+      "title": "URL Import System",
+      "summary": "Implements comprehensive job URL import system supporting major job platforms (Indeed, Glassdoor, RemoteOK, WeWorkRemotely, AngelList) and company career pages. Provides intelligent content extraction, data normalization through existing pipeline, and robust error handling for various URL formats and edge cases.",
+      "storyScope": [
+        {
+          "usId": "US-154",
+          "acIds": [
+            "AC-690",
+            "AC-691",
+            "AC-692",
+            "AC-693",
+            "AC-694",
+            "AC-695",
+            "AC-696",
+            "AC-697"
+          ]
+        },
+        {
+          "usId": "US-155",
+          "acIds": [
+            "AC-698",
+            "AC-699",
+            "AC-700",
+            "AC-701",
+            "AC-702",
+            "AC-703",
+            "AC-704"
+          ]
+        },
+        {
+          "usId": "US-156",
+          "acIds": [
+            "AC-705",
+            "AC-706",
+            "AC-707",
+            "AC-708",
+            "AC-709",
+            "AC-710"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-012",
+        "FBS-013",
+        "FBS-017"
+      ],
+      "testableOutcomes": [
+        "Valid Indeed job URL successfully imports with complete job title, company, description, and requirements extracted",
+        "Valid Glassdoor job URL successfully imports with all available job details and salary information normalized",
+        "Valid RemoteOK job URL successfully imports and integrates with existing RemoteOK scraper data structures",
+        "Valid WeWorkRemotely job URL successfully imports with location data standardized through existing pipeline",
+        "Valid AngelList job URL successfully imports with startup-specific metadata properly categorized",
+        "Company career page URLs successfully import with job details extracted using generic content detection",
+        "Invalid URL format submission returns specific validation error message without system crash",
+        "Non-existent URL submission returns appropriate error message with retry suggestions",
+        "Imported job data undergoes complete normalization pipeline producing schema-compliant records",
+        "Extracted salary data is normalized to consistent format matching existing job records",
+        "Missing optional fields are handled gracefully with null values and no processing errors"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Job Import Requirements",
+            "Content Extraction Specifications"
+          ],
+          "tadSections": [
+            "Job Discovery Service",
+            "Job Platform Scrapers"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/scrapers",
+            "packages/@jobsearch/scrapers/src/extraction-engine.ts"
+          ],
+          "schemas": [
+            "jobs",
+            "job_platforms"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/url-import/src/url-importer.ts",
+          "packages/@jobsearch/url-import/src/platform-detectors/",
+          "packages/@jobsearch/url-import/src/extractors/indeed-extractor.ts",
+          "packages/@jobsearch/url-import/src/extractors/glassdoor-extractor.ts",
+          "packages/@jobsearch/url-import/src/extractors/generic-extractor.ts",
+          "packages/@jobsearch/url-import/src/url-validator.ts",
+          "apps/api-server/src/routes/url-import.ts",
+          "apps/web-ui/src/components/URLImportForm.tsx",
+          "Database migration for imported jobs tracking"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Complex implementation requiring platform-specific extraction logic and robust error handling. Must integrate seamlessly with existing scraping infrastructure while handling diverse URL formats and content structures."
+    },
+    {
+      "id": "FBS-058",
+      "title": "URL Import Error Handling & Validation",
+      "summary": "Implements comprehensive error handling and validation for URL-based job imports. Provides clear error messages for various failure scenarios including network issues, authentication requirements, and malformed content.",
+      "storyScope": [
+        {
+          "usId": "US-157",
+          "acIds": [
+            "AC-711",
+            "AC-712",
+            "AC-713",
+            "AC-714",
+            "AC-715",
+            "AC-716",
+            "AC-717"
+          ]
+        },
+        {
+          "usId": "US-158",
+          "acIds": [
+            "AC-718",
+            "AC-719",
+            "AC-720",
+            "AC-721",
+            "AC-722"
+          ]
+        },
+        {
+          "usId": "US-159",
+          "acIds": [
+            "AC-723",
+            "AC-724",
+            "AC-725",
+            "AC-726"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-057"
+      ],
+      "testableOutcomes": [
+        "System displays 'Job posting not found' error message when URL returns 404 status",
+        "System displays 'Connection timeout' error message when URL fetch exceeds timeout limit",
+        "System displays 'Access blocked' error message when encountering anti-bot protection",
+        "System displays 'Unable to parse job data' error message when HTML structure is malformed",
+        "System displays 'Authentication required' error message when URL requires login",
+        "System automatically adds https:// protocol to URLs submitted without protocol",
+        "System rejects URLs with unsupported protocols (ftp, file) with appropriate error message",
+        "System logs all import success and failure events with platform identifier and error type",
+        "Analytics endpoint returns success/failure rates grouped by platform for monitoring"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "URL Import System"
+          ],
+          "tadSections": [
+            "Job Discovery Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/url-import"
+          ],
+          "schemas": [
+            "imported_jobs",
+            "import_logs"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/url-import/src/error-handler.ts",
+          "packages/@jobsearch/url-import/src/url-validator.ts",
+          "packages/@jobsearch/url-import/src/import-logger.ts",
+          "packages/@jobsearch/url-import/src/retry-manager.ts",
+          "apps/api-server/src/routes/import-analytics.ts",
+          "apps/web-ui/src/components/ImportErrorDisplay.tsx",
+          "Database migration for import_logs table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Focus on comprehensive error classification and user-friendly error messages. Implement robust retry logic for transient failures. Ensure all error scenarios are properly logged for debugging and analytics."
+    },
+    {
+      "id": "FBS-059",
+      "title": "Text-based Job Entry",
+      "summary": "Enables users to manually paste job description text and uses AI parsing to extract structured job data. Includes text validation, AI-powered extraction, and normalization pipeline integration for consistent data quality.",
+      "storyScope": [
+        {
+          "usId": "US-160",
+          "acIds": [
+            "AC-727",
+            "AC-728",
+            "AC-729",
+            "AC-730",
+            "AC-731"
+          ]
+        },
+        {
+          "usId": "US-161",
+          "acIds": [
+            "AC-732",
+            "AC-733",
+            "AC-734",
+            "AC-735",
+            "AC-736",
+            "AC-737",
+            "AC-738",
+            "AC-739"
+          ]
+        },
+        {
+          "usId": "US-162",
+          "acIds": [
+            "AC-740",
+            "AC-741",
+            "AC-742",
+            "AC-743",
+            "AC-744",
+            "AC-745"
+          ]
+        },
+        {
+          "usId": "US-165",
+          "acIds": [
+            "AC-757",
+            "AC-758",
+            "AC-759",
+            "AC-760",
+            "AC-761"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-034",
+        "FBS-017",
+        "FBS-022"
+      ],
+      "testableOutcomes": [
+        "Text input field accepts up to 10,000 characters with validation error for excess content",
+        "System preserves original formatting including line breaks and special characters during processing",
+        "AI parsing extracts job title with minimum 80% accuracy on standard job postings",
+        "AI parsing extracts company name with minimum 85% accuracy on standard job postings",
+        "AI parsing extracts job requirements as structured list from requirements sections",
+        "AI parsing extracts required skills as structured list from job descriptions",
+        "AI parsing extracts salary ranges in standardized format with currency identification",
+        "AI parsing correctly identifies remote work status (remote/hybrid/on-site) from text",
+        "Normalization pipeline standardizes job titles according to predefined taxonomy",
+        "Normalization pipeline converts salary ranges to consistent currency and time period format",
+        "System provides manual entry form when AI parsing service is unavailable",
+        "System handles non-English job text with graceful fallback to manual entry"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 8,
+        "contextRequirements": {
+          "prdSections": [
+            "AI-Powered Gap Analysis",
+            "Data Normalization Pipeline"
+          ],
+          "tadSections": [
+            "Intelligent Matching Service",
+            "Job Discovery Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/ai-analysis",
+            "packages/@jobsearch/scrapers/src/normalizers"
+          ],
+          "schemas": [
+            "jobs",
+            "job_parsing_logs"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/text-parser/src/job-text-parser.ts",
+          "packages/@jobsearch/text-parser/src/ai-extractor.ts",
+          "packages/@jobsearch/text-parser/src/text-validator.ts",
+          "packages/@jobsearch/text-parser/src/field-extractor.ts",
+          "packages/@jobsearch/text-parser/src/parsing-prompts/",
+          "apps/web-ui/src/components/JobTextEntry.tsx",
+          "apps/web-ui/src/components/TextParsingProgress.tsx",
+          "apps/api-server/src/routes/text-job-entry.ts",
+          "Database migration for job_parsing_logs table"
+        ]
+      },
+      "riskLevel": "high",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Critical dependency on AI service reliability. Implement robust fallback mechanisms and comprehensive error handling. Focus on parsing accuracy metrics and user feedback collection for continuous improvement."
+    },
+    {
+      "id": "FBS-060",
+      "title": "AI Parsing Review & Confidence Handling",
+      "summary": "Provides user interface for reviewing and correcting AI-parsed job fields with confidence indicators. Enables manual corrections and feedback collection to improve parsing accuracy over time.",
+      "storyScope": [
+        {
+          "usId": "US-163",
+          "acIds": [
+            "AC-746",
+            "AC-747",
+            "AC-748",
+            "AC-749",
+            "AC-750",
+            "AC-751",
+            "AC-752"
+          ]
+        },
+        {
+          "usId": "US-164",
+          "acIds": [
+            "AC-753",
+            "AC-754",
+            "AC-755",
+            "AC-756"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-059"
+      ],
+      "testableOutcomes": [
+        "Review screen displays all extracted fields in editable form with clear field labels",
+        "Form immediately reflects changes when user modifies any parsed field value",
+        "Empty fields that could not be parsed are clearly marked as requiring manual input",
+        "Fields with low confidence parsing are highlighted with visual indicators for verification",
+        "User can click on original text reference to view source text section used for extraction",
+        "Manual corrections override AI-parsed values when job is saved to database",
+        "System prevents saving when required fields are missing or contain invalid data",
+        "Each parsed field displays confidence indicator (high/medium/low) with appropriate styling",
+        "System suggests manual verification for fields with confidence below threshold",
+        "User can provide optional feedback on parsing accuracy after making corrections",
+        "System logs low-confidence parsing cases for model improvement tracking"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 6,
+        "contextRequirements": {
+          "prdSections": [
+            "AI-Powered Gap Analysis"
+          ],
+          "tadSections": [
+            "Intelligent Matching Service"
+          ],
+          "existingModules": [
+            "packages/@jobsearch/text-parser"
+          ],
+          "schemas": [
+            "jobs",
+            "parsing_feedback"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/text-parser/src/confidence-calculator.ts",
+          "packages/@jobsearch/text-parser/src/feedback-collector.ts",
+          "apps/web-ui/src/components/JobReviewForm.tsx",
+          "apps/web-ui/src/components/ConfidenceIndicator.tsx",
+          "apps/web-ui/src/components/FieldVerification.tsx",
+          "apps/web-ui/src/components/SourceTextReference.tsx",
+          "apps/web-ui/src/hooks/useJobReview.ts",
+          "apps/api-server/src/routes/parsing-feedback.ts",
+          "Database migration for parsing_feedback table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Job Discovery & Ingestion",
+      "implementationNotes": "Focus on intuitive user experience for field correction workflow. Implement clear confidence visualization and efficient feedback collection. Ensure seamless integration with existing job creation pipeline."
     }
   ],
-  "createdAt": "2026-02-09T11:24:34.997Z",
-  "updatedAt": "2026-02-09T11:24:34.997Z",
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
   "partInfo": {
     "partNumber": 6,
-    "totalParts": 7,
+    "totalParts": 8,
     "fbsRange": {
       "start": "FBS-051",
       "end": "FBS-060"
     },
-    "globalFbsCount": 68
+    "globalFbsCount": 73
   }
 }

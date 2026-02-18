@@ -1,0 +1,284 @@
+{
+  "bsId": "BS-008",
+  "prdId": "PRD-001",
+  "version": "1.0.0",
+  "status": "draft",
+  "title": "Build Sequence: PRD-001 (Part 8 of 8)",
+  "buildPhilosophy": "Generated using vertical-slice strategy. Each FBS represents a testable, deployable increment.",
+  "generationStrategy": "vertical-slice",
+  "buildSequence": [
+    {
+      "id": "FBS-071",
+      "title": "Notification Center System",
+      "summary": "Delivers a comprehensive notification center with centralized notification management, read/unread status tracking, and dismissal functionality. Provides unified interface for all system notifications including follow-ups, job matches, and scraping status updates.",
+      "storyScope": [
+        {
+          "usId": "US-198",
+          "acIds": [
+            "AC-920",
+            "AC-921",
+            "AC-922",
+            "AC-923"
+          ]
+        },
+        {
+          "usId": "US-203",
+          "acIds": [
+            "AC-939",
+            "AC-940",
+            "AC-941",
+            "AC-942",
+            "AC-943"
+          ]
+        },
+        {
+          "usId": "US-204",
+          "acIds": [
+            "AC-944",
+            "AC-945",
+            "AC-946",
+            "AC-947"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-053",
+        "FBS-024"
+      ],
+      "testableOutcomes": [
+        "Notification center icon is clearly visible on main dashboard page with unread count badge",
+        "Notification center displays chronological list of all notifications ordered by most recent first",
+        "Empty state message appears when user has no notifications available",
+        "New notifications display with visual unread indicator until clicked",
+        "Clicking notification automatically marks it as read with visual state change",
+        "Dismiss button removes notification from list permanently across page refreshes",
+        "Dismissed notifications do not reappear when notification center is revisited"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "large",
+        "estimatedHours": 7,
+        "contextRequirements": {
+          "prdSections": [
+            "Notification System",
+            "User Interface"
+          ],
+          "tadSections": [
+            "Notification Service",
+            "Web Frontend"
+          ],
+          "existingModules": [
+            "reminder-scheduler.ts",
+            "profile-service.ts"
+          ],
+          "schemas": [
+            "users",
+            "reminder_schedules"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/notifications/src/notification-center.ts",
+          "packages/@jobsearch/notifications/src/notification-manager.ts",
+          "packages/@jobsearch/notifications/src/read-status-tracker.ts",
+          "apps/web-ui/src/components/NotificationCenter.tsx",
+          "apps/web-ui/src/components/NotificationItem.tsx",
+          "apps/web-ui/src/components/NotificationBadge.tsx",
+          "apps/api-server/src/routes/notifications.ts",
+          "Database migration for notifications table"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Follow-up & Notifications",
+      "implementationNotes": "Design scalable notification architecture to handle multiple notification types. Implement efficient read/unread state management with real-time updates. Consider pagination for large notification lists."
+    },
+    {
+      "id": "FBS-072",
+      "title": "Deadline & Notification Management",
+      "summary": "Implements automated deadline tracking and notification generation for job applications, follow-up reminders, job matches, and scraping status updates. Provides comprehensive notification delivery for all time-sensitive job search activities.",
+      "storyScope": [
+        {
+          "usId": "US-199",
+          "acIds": [
+            "AC-924",
+            "AC-925",
+            "AC-926"
+          ]
+        },
+        {
+          "usId": "US-200",
+          "acIds": [
+            "AC-927",
+            "AC-928",
+            "AC-929",
+            "AC-930"
+          ]
+        },
+        {
+          "usId": "US-201",
+          "acIds": [
+            "AC-931",
+            "AC-932",
+            "AC-933",
+            "AC-934"
+          ]
+        },
+        {
+          "usId": "US-202",
+          "acIds": [
+            "AC-935",
+            "AC-936",
+            "AC-937",
+            "AC-938"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-071",
+        "FBS-040",
+        "FBS-030"
+      ],
+      "testableOutcomes": [
+        "Follow-up reminder notifications appear in notification center when reminder time arrives",
+        "Reminder notifications include job title, company name, and specific reminder message",
+        "New job match notifications are created when jobs exceed user's match threshold",
+        "Job match notifications display job title, company, match score, and link to job details",
+        "No notifications are created for jobs below user's match threshold",
+        "Scraping completion notifications show timestamp and total number of new jobs discovered",
+        "Scraping error notifications include error type and suggested next steps",
+        "Deadline notifications are created for jobs with deadlines within 3 days",
+        "Deadline notifications display job title, company, exact deadline date, and days remaining",
+        "No deadline notifications are created for jobs with passed deadlines"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Notification System",
+            "Application Deadlines",
+            "Job Matching"
+          ],
+          "tadSections": [
+            "Notification Service",
+            "Workflow Orchestration Service"
+          ],
+          "existingModules": [
+            "reminder-scheduler.ts",
+            "hybrid-scorer.ts",
+            "workflow-orchestrator.ts"
+          ],
+          "schemas": [
+            "notifications",
+            "applications",
+            "jobs",
+            "match_preferences"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/notifications/src/deadline-tracker.ts",
+          "packages/@jobsearch/notifications/src/match-notifier.ts",
+          "packages/@jobsearch/notifications/src/scraping-notifier.ts",
+          "packages/@jobsearch/notifications/src/notification-scheduler.ts",
+          "n8n/workflows/deadline-notification-job.json",
+          "Enhanced notification-manager.ts with all notification types",
+          "Database migration for notification_types and deadline_tracking tables"
+        ]
+      },
+      "riskLevel": "medium",
+      "domain": "Follow-up & Notifications",
+      "implementationNotes": "Integrate with existing workflow orchestration for automated notification generation. Implement efficient deadline checking to avoid performance issues. Ensure notification deduplication to prevent spam."
+    },
+    {
+      "id": "FBS-073",
+      "title": "Notification Preferences & Persistence",
+      "summary": "Implements user notification preferences management with granular control over notification types and ensures notifications persist until explicitly dismissed by the user. Provides settings interface for configuring follow-up reminders, job matches, scraping status, and deadline notifications.",
+      "storyScope": [
+        {
+          "usId": "US-205",
+          "acIds": [
+            "AC-948",
+            "AC-949",
+            "AC-950",
+            "AC-951",
+            "AC-952",
+            "AC-953"
+          ]
+        },
+        {
+          "usId": "US-206",
+          "acIds": [
+            "AC-954",
+            "AC-955",
+            "AC-956",
+            "AC-957"
+          ]
+        }
+      ],
+      "dependencies": [
+        "FBS-071",
+        "FBS-072"
+      ],
+      "testableOutcomes": [
+        "Notification preferences page displays toggle options for follow-up reminders, new matched jobs, scraping status, and deadline notifications",
+        "System creates no follow-up reminder notifications when user has disabled follow-up reminder preference",
+        "System creates no new job match notifications when user has disabled new matched job preference",
+        "System creates no scraping status notifications when user has disabled scraping status preference",
+        "System creates no deadline notifications when user has disabled deadline notification preference",
+        "Notification preference changes are persisted to database and applied to future notifications immediately",
+        "All undismissed notifications remain visible after user logout and login cycle",
+        "Notifications from previous days remain visible in notification center until explicitly dismissed",
+        "Read but undismissed notifications remain present and marked as read in notification center",
+        "Undismissed notifications are synchronized and visible when accessing from different devices"
+      ],
+      "status": "not-started",
+      "sessionMeta": {
+        "estimatedSize": "medium",
+        "estimatedHours": 5,
+        "contextRequirements": {
+          "prdSections": [
+            "Notification Management",
+            "User Preferences"
+          ],
+          "tadSections": [
+            "Notification Service",
+            "User Profile Service"
+          ],
+          "existingModules": [
+            "notification-center.ts",
+            "notification-manager.ts",
+            "profile-service.ts"
+          ],
+          "schemas": [
+            "notifications",
+            "user_preferences",
+            "notification_types"
+          ]
+        },
+        "deliverables": [
+          "packages/@jobsearch/notifications/src/preference-manager.ts",
+          "packages/@jobsearch/notifications/src/preference-validator.ts",
+          "packages/@jobsearch/notifications/src/persistence-manager.ts",
+          "apps/web-ui/src/components/NotificationPreferences.tsx",
+          "apps/web-ui/src/components/PreferenceToggle.tsx",
+          "apps/api-server/src/routes/notification-preferences.ts",
+          "Database migration for notification_preferences table"
+        ]
+      },
+      "riskLevel": "low",
+      "domain": "Follow-up & Notifications",
+      "implementationNotes": "Requires integration with existing notification system and user profile service. Must ensure preference changes are applied retroactively to existing notification generation logic. Cross-device synchronization depends on user authentication state."
+    }
+  ],
+  "createdAt": "2026-02-18T11:12:42.019Z",
+  "updatedAt": "2026-02-18T11:12:42.019Z",
+  "partInfo": {
+    "partNumber": 8,
+    "totalParts": 8,
+    "fbsRange": {
+      "start": "FBS-071",
+      "end": "FBS-073"
+    },
+    "globalFbsCount": 73
+  }
+}
