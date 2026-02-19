@@ -374,7 +374,7 @@
     "Rich Text Editor": "Text editing interface that allows formatting (bold, italic, lists) beyond plain text"
   },
   "createdAt": "2026-02-08T09:00:00Z",
-  "updatedAt": "2026-02-10T05:29:16.550Z",
+  "updatedAt": "2026-02-13T15:42:14.452Z",
   "_changesSummary": "Major restructuring to Core Job Assistant MVP: Updated title and scope, removed 39 requirements (moved to PRD-002 and PRD-003), renumbered remaining 27 requirements, added 8 new core requirements for manual job input, CV variants, match customization, content editing, and notifications",
   "_removed": [
     "REQ-012",

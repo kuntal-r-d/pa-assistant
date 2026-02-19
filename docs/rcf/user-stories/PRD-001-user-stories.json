@@ -7053,8 +7053,35 @@
           "testable": true
         }
       ]
+    },
+    {
+      "id": "US-207",
+      "reqId": "REQ-036",
+      "title": "Demo feature verification on dashboard",
+      "description": "As a job seeker, I want to see a demo section on the dashboard so that I can verify the system works correctly and all components are properly connected.",
+      "asA": "job seeker",
+      "iWant": "to see a demo section on the dashboard",
+      "soThat": "I can verify the system works correctly and all components are properly connected",
+      "acceptanceCriteria": [
+        {
+          "id": "AC-958",
+          "description": "Given the demo feature is enabled, when the user opens the dashboard, then a demo section is visible with a status indicator showing all components are connected",
+          "testable": true
+        },
+        {
+          "id": "AC-959",
+          "description": "Given a component in the demo section fails to respond, when the dashboard loads the demo section, then an error indicator is displayed for the failing component with a descriptive message",
+          "testable": true
+        },
+        {
+          "id": "AC-960",
+          "description": "Given the user is viewing the demo section, when they click the refresh status button, then all component statuses are re-checked and the display updates within 3 seconds",
+          "testable": true
+        }
+      ],
+      "fbsId": null
     }
   ],
   "createdAt": "2026-02-10T18:36:14.284Z",
-  "updatedAt": "2026-02-10T18:36:14.284Z"
+  "updatedAt": "2026-02-13T05:10:03.009Z"
 }
